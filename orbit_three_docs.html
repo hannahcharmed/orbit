@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Three Documents</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:1000px;margin:0 auto}
+
+/* Header */
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+/* Tab nav */
+.tabs{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:0 32px;display:flex;gap:0;position:sticky;top:53px;z-index:199}
+.tab{padding:12px 20px;font-size:11px;font-weight:500;color:#4a5280;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;letter-spacing:.02em;white-space:nowrap}
+.tab:hover{color:#a0aec0}
+.tab.active{color:#e8f0ff;border-bottom-color:#6C63FF}
+
+/* Panels */
+.panel{display:none;padding:0}
+.panel.active{display:block}
+
+/* Shared section styles */
+.sec{padding:28px 32px;border-bottom:1px solid #1a2150}
+.sec:last-child{border-bottom:none}
+.sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.sec-title{font-family:Georgia,serif;font-size:18px;color:#e8f0ff;margin-bottom:6px}
+.sec-desc{font-size:11px;color:#6b7ab5;line-height:1.7;max-width:640px;margin-bottom:14px}
+.div{width:24px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:14px}
+h3{font-family:Georgia,serif;font-size:14px;font-weight:400;color:#e8f0ff;margin:16px 0 6px}
+h3:first-child{margin-top:0}
+h4{font-size:9px;font-weight:500;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase;margin:12px 0 5px}
+p{font-size:11px;color:#8892b0;line-height:1.75;margin-bottom:8px}
+p:last-child{margin-bottom:0}
+strong{color:#c4b5fd;font-weight:500}
+code{font-family:'Courier New',monospace;font-size:10px;background:#0d1228;border:1px solid #1a2150;border-radius:4px;padding:1px 5px;color:#a78bfa}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* Endpoint cards */
+.endpoint{background:#0d1228;border:1px solid #1a2150;border-radius:10px;margin-bottom:10px;overflow:hidden}
+.ep-head{padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a2150}
+.method{font-family:'Courier New',monospace;font-size:9px;font-weight:500;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.get{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+.post{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+.put{background:#1a1200;color:#fbbf24;border:1px solid #412402}
+.delete{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.patch{background:#06122a;color:#6C63FF;border:1px solid #1a2150}
+.ep-path{font-family:'Courier New',monospace;font-size:11px;color:#e8f0ff;flex:1}
+.ep-desc{font-size:10px;color:#6b7ab5}
+.ep-auth{font-size:8px;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:1px 7px;color:#4a5280}
+.ep-body{padding:12px 14px}
+
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;margin-top:4px}
+.tbl th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:6px 10px;border-bottom:1px solid #1a2150;background:#090d1c}
+.tbl td{font-size:10px;color:#8892b0;padding:7px 10px;border-bottom:1px solid #090d1c;vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#0a0e1e}
+.tbl td strong{color:#c4b5fd}
+.type{font-family:'Courier New',monospace;font-size:9px;color:#6C63FF}
+.req{display:inline-block;font-size:7px;padding:1px 5px;background:#1a0a0a;color:#f09595;border:1px solid #501313;border-radius:3px;margin-left:3px}
+.opt{display:inline-block;font-size:7px;padding:1px 5px;background:#0d1228;color:#4a5280;border:1px solid #1a2150;border-radius:3px;margin-left:3px}
+.pk{display:inline-block;font-size:7px;padding:1px 5px;background:#1a1200;color:#fbbf24;border:1px solid #412402;border-radius:3px;margin-left:3px}
+.fk{display:inline-block;font-size:7px;padding:1px 5px;background:#06122a;color:#6C63FF;border:1px solid #1a2150;border-radius:3px;margin-left:3px}
+.nn{display:inline-block;font-size:7px;padding:1px 5px;background:#1a0a0a;color:#f09595;border:1px solid #501313;border-radius:3px;margin-left:3px}
+.idx{display:inline-block;font-size:7px;padding:1px 5px;background:#0a1a10;color:#4ade80;border:1px solid #173404;border-radius:3px;margin-left:3px}
+.fname{font-family:'Courier New',monospace;font-size:10px;color:#e8f0ff}
+
+/* Code blocks */
+.code-block{background:#040608;border:1px solid #1a2150;border-radius:8px;padding:12px 14px;margin:6px 0;overflow-x:auto}
+.code-block pre{font-family:'Courier New',monospace;font-size:10px;color:#a0aec0;line-height:1.6;white-space:pre}
+.code-label{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:5px}
+
+/* Info callouts */
+.info{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0;font-size:10px;color:#8892b0;line-height:1.6}
+.info.v{border-left-color:#a78bfa}
+.info.g{border-left-color:#4ade80}
+.info.r{border-left-color:#f09595}
+.info-label{font-size:7px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;color:#6C63FF}
+.info.v .info-label{color:#a78bfa}
+.info.g .info-label{color:#4ade80}
+.info.r .info-label{color:#f09595}
+
+/* Status badges */
+.s200{background:#0a1a10;color:#4ade80;border:1px solid #173404;font-size:9px;padding:2px 8px;border-radius:4px;display:inline-block}
+.s400{background:#1a1200;color:#fbbf24;border:1px solid #412402;font-size:9px;padding:2px 8px;border-radius:4px;display:inline-block}
+.s401{background:#1a0a0a;color:#f09595;border:1px solid #501313;font-size:9px;padding:2px 8px;border-radius:4px;display:inline-block}
+.s429{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e;font-size:9px;padding:2px 8px;border-radius:4px;display:inline-block}
+.pri-1{background:#1a0a0a;color:#f09595;border:1px solid #501313;font-size:8px;padding:1px 6px;border-radius:3px;display:inline-block}
+.pri-2{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e;font-size:8px;padding:1px 6px;border-radius:3px;display:inline-block}
+.pri-3{background:#0d1228;color:#4a5280;border:1px solid #1a2150;font-size:8px;padding:1px 6px;border-radius:3px;display:inline-block}
+
+/* GTM specific */
+.card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.card.accent{border-color:#2d3260}
+.card-eye{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.card-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:4px}
+.card-body{font-size:10px;color:#6b7ab5;line-height:1.6}
+.bullet{display:flex;gap:7px;margin-bottom:5px;align-items:flex-start}
+.bullet:last-child{margin-bottom:0}
+.bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:5px;flex-shrink:0}
+.bdot.v{background:#a78bfa}
+.bdot.g{background:#4ade80}
+.btext{font-size:10px;color:#8892b0;line-height:1.5}
+.btext strong{color:#c4b5fd;font-weight:500}
+.callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0}
+.callout.v{border-left-color:#a78bfa}
+.callout.g{border-left-color:#4ade80}
+.callout-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+.callout.v .callout-label{color:#a78bfa}
+.callout.g .callout-label{color:#4ade80}
+.callout-text{font-size:11px;color:#8892b0;line-height:1.6}
+.callout-text strong{color:#e8f0ff;font-weight:500}
+.phase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #1a2150;border-radius:10px;overflow:hidden}
+.phase{padding:14px;border-right:1px solid #1a2150}
+.phase:last-child{border-right:none}
+.phase-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.phase-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:8px}
+.phase-item{font-size:9px;color:#6b7ab5;margin-bottom:4px;padding-left:9px;position:relative;line-height:1.4}
+.phase-item::before{content:'';position:absolute;left:0;top:5px;width:3px;height:3px;border-radius:50%;background:#2d3260}
+.kpi{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:12px;text-align:center}
+.kpi-num{font-family:Georgia,serif;font-size:22px;color:#e8f0ff;margin-bottom:2px}
+.kpi-label{font-size:9px;color:#4a5280;line-height:1.4;text-transform:uppercase;letter-spacing:.05em}
+.channel{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:12px;margin-bottom:8px}
+.channel:last-child{margin-bottom:0}
+.ch-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.ch-name{font-size:11px;font-weight:500;color:#e8f0ff}
+.ch-effort{font-size:8px;padding:2px 7px;border-radius:20px}
+.high-e{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.med-e{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+.low-e{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+.tl-item{display:flex;gap:14px;margin-bottom:20px}
+.tl-item:last-child{margin-bottom:0}
+.tl-left{display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tl-line{width:1px;flex:1;margin:4px 0;min-height:16px;background:#1a2150}
+.tl-content{flex:1;padding-bottom:4px}
+.tl-phase{font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.tl-title{font-size:13px;font-weight:500;color:#e8f0ff;margin-bottom:2px;font-family:Georgia,serif}
+.tl-period{font-size:9px;color:#4a5280;margin-bottom:6px}
+.tag{display:inline-block;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 8px;font-size:9px;color:#8892b0;margin-right:4px;margin-top:4px}
+.tag.g{background:#0a1a10;border-color:#173404;color:#4ade80}
+
+/* Enum/metric */
+.metric-def{background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:12px;margin-bottom:8px}
+.metric-def:last-child{margin-bottom:0}
+.md-name{font-family:'Courier New',monospace;font-size:11px;color:#a78bfa;margin-bottom:3px}
+.md-formula{font-family:'Courier New',monospace;font-size:9px;color:#6C63FF;background:#040608;border:1px solid #1a2150;border-radius:4px;padding:6px 8px;margin:5px 0;display:block}
+.md-desc{font-size:10px;color:#8892b0;line-height:1.6}
+
+/* footer */
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <span class="ver">v1.0 · March 2026</span>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('api')">API Specification</div>
+  <div class="tab" onclick="showTab('dd')">Data Dictionary</div>
+  <div class="tab" onclick="showTab('gtm')">Go-to-Market Plan</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 1: API SPECIFICATION
+═══════════════════════════════════════════════════ -->
+<div class="panel active" id="panel-api">
+
+  <div class="sec">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">API overview</div>
+    <div class="div"></div>
+    <p>The Orbit API is a RESTful HTTP API providing programmatic access to all platform data and intelligence features. Base URL: <code>https://api.orbitapp.io/v1</code></p>
+    <div class="g2" style="margin-top:12px">
+      <div class="card">
+        <div class="card-title">Rate limits</div>
+        <div style="margin-top:8px">
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Free:</strong> 100 req/hr</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Creator:</strong> 1,000 req/hr</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Pro:</strong> 5,000 req/hr</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Agency:</strong> 20,000 req/hr</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Response envelope</div>
+        <div class="code-block" style="margin-top:8px"><pre>{ "success": true,
+  "data": { ... },
+  "meta": {
+    "request_id": "req_abc",
+    "timestamp": "2026-03-18T10:00:00Z"
+  }
+}</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">Authentication</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/auth/token</span><span class="ep-desc">Obtain access token</span><span class="ep-auth">Public</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><span class="fname">email</span><span class="req">required</span></td><td><span class="type">string</span></td><td>User email address</td></tr>
+        <tr><td><span class="fname">password</span><span class="req">required</span></td><td><span class="type">string</span></td><td>Min 12 chars</td></tr>
+        <tr><td><span class="fname">mfa_code</span><span class="opt">optional</span></td><td><span class="type">string</span></td><td>6-digit TOTP if MFA enabled</td></tr></table>
+        <div class="code-block" style="margin-top:8px"><div class="code-label">Response 200</div><pre>{ "access_token": "eyJhbGci...",
+  "refresh_token": "ref_abc123",
+  "expires_in": 86400,
+  "token_type": "Bearer",
+  "user": { "id": "usr_abc", "role": "creator", "tier": "pro" }
+}</pre></div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><span class="s200">200 OK</span><span class="s400">400 Invalid credentials</span><span class="s401">401 MFA required</span><span class="s429">429 Rate limited</span></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/auth/refresh</span><span class="ep-desc">Refresh access token</span><span class="ep-auth">Refresh token</span></div>
+      <div class="ep-body"><p>Pass <code>refresh_token</code> in body. Returns new access token envelope.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/auth/oauth/{provider}</span><span class="ep-desc">OAuth login — google | apple</span><span class="ep-auth">Public</span></div>
+      <div class="ep-body"><p>Pass OAuth <code>id_token</code>. Returns same token envelope as <code>/auth/token</code>.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">Creators</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/creators/me</span><span class="ep-desc">Get authenticated creator profile</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <div class="code-block"><div class="code-label">Response 200</div><pre>{ "id": "crt_abc123", "display_name": "Jessica Lee",
+  "niche": "fitness", "sub_niche": "strength_training",
+  "tier": "pro", "gravity_score": 78, "gravity_trend": "rising",
+  "connected_platforms": ["instagram","tiktok"],
+  "last_sync_at": "2026-03-18T08:45:00Z" }</pre></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method patch">PATCH</span><span class="ep-path">/creators/me</span><span class="ep-desc">Update creator profile</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><span class="fname">niche</span><span class="opt">optional</span></td><td><span class="type">enum</span></td><td>fitness | lifestyle | wellness | nutrition | beauty | travel</td></tr>
+        <tr><td><span class="fname">benchmark_opt_in</span><span class="opt">optional</span></td><td><span class="type">boolean</span></td><td>Consent to anonymized benchmarking pool. Default: false.</td></tr></table>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/creators/me/connections</span><span class="ep-desc">List connected platforms</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>Returns array of platform connection objects with sync status, follower count, and granted OAuth scopes.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/creators/me/connections/{platform}/sync</span><span class="ep-desc">Trigger manual sync</span><span class="ep-auth">Bearer · Pro+</span></div>
+      <div class="ep-body"><p>Rate limited to once per 15 minutes per platform. Returns <code>sync_job_id</code> to poll via <code>/jobs/{id}</code>.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">Analytics</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/analytics/overview</span><span class="ep-desc">Aggregate cross-platform performance</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Param</th><th>Type</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>period</code></td><td><span class="type">enum</span></td><td>28d</td><td>7d | 28d | 90d | custom</td></tr>
+        <tr><td><code>platforms</code></td><td><span class="type">string[]</span></td><td>all</td><td>Comma-separated: instagram,tiktok,youtube</td></tr>
+        <tr><td><code>compare</code></td><td><span class="type">boolean</span></td><td>true</td><td>Include prior period deltas</td></tr></table>
+        <div class="code-block" style="margin-top:8px"><div class="code-label">Response 200</div><pre>{ "period": { "start": "2026-02-18", "end": "2026-03-18" },
+  "totals": { "reach": 2400000, "engagement_rate": 0.068,
+               "follower_growth": 14200, "content_count": 34 },
+  "deltas": { "reach": 0.183, "engagement_rate": 0.012 },
+  "by_platform": {
+    "instagram": { "reach": 1600000, "engagement_rate": 0.082 },
+    "tiktok":    { "reach": 800000,  "engagement_rate": 0.067 }
+  }
+}</pre></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/analytics/timeseries</span><span class="ep-desc">Time-series metric data</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Param</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>metric</code><span class="req">required</span></td><td><span class="type">enum</span></td><td>engagement_rate | reach | follower_count | saves | shares</td></tr>
+        <tr><td><code>granularity</code></td><td><span class="type">enum</span></td><td>day | week | month. Default: day.</td></tr></table>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/analytics/content</span><span class="ep-desc">List content with performance metrics</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Param</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>sort</code></td><td><span class="type">enum</span></td><td>engagement_rate | reach | saves | posted_at desc</td></tr>
+        <tr><td><code>content_type</code></td><td><span class="type">enum</span></td><td>reel | post | story | video | short</td></tr>
+        <tr><td><code>limit</code></td><td><span class="type">integer</span></td><td>Max 100. Default 20.</td></tr></table>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/analytics/best-times</span><span class="ep-desc">Optimal posting windows</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>Recommended posting windows based on 90-day engagement history. Requires minimum 30 posts of history. Returns by platform and day-of-week.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">Gravity Score</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/gravity</span><span class="ep-desc">Current Gravity Score with breakdown</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <div class="code-block"><div class="code-label">Response 200</div><pre>{ "score": 78, "trend": "rising", "trend_delta": 4,
+  "components": {
+    "return_viewer_rate":  { "score": 82, "weight": 0.30 },
+    "save_share_depth":    { "score": 76, "weight": 0.25 },
+    "comment_quality":     { "score": 71, "weight": 0.20 },
+    "cross_platform_pull": { "score": 80, "weight": 0.15 },
+    "follower_velocity":   { "score": 74, "weight": 0.10 }
+  },
+  "peer_comparison": { "niche_median": 58, "percentile": 72 }
+}</pre></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/gravity/history</span><span class="ep-desc">90-day score history with annotations</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>Pass <code>?annotate=true</code> for AI-generated explanations of inflection points.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/gravity/scorecard</span><span class="ep-desc">Shareable scorecard PNG/PDF</span><span class="ep-auth">Bearer · Pro+</span></div>
+      <div class="ep-body"><p>Returns pre-signed URL valid 24 hours. Pass <code>?remove_branding=true</code> for Agency white-label.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">AI insights</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/insights/weekly</span><span class="ep-desc">Weekly strategy digest</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>Generated every Monday 6am UTC. Returns prioritized action list, performance summary, and top Dark Matter signal. Cached until next generation.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/insights/content/{content_id}</span><span class="ep-desc">Analyze content performance</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>AI diagnosis of a specific post — why it performed as it did, contributing factors, and recommendations. Cached per content ID.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/insights/ask</span><span class="ep-desc">Ask the AI coach</span><span class="ep-auth">Bearer · Pro+</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>question</code><span class="req">required</span></td><td><span class="type">string</span></td><td>Natural language question, max 500 chars</td></tr>
+        <tr><td><code>context_window</code></td><td><span class="type">enum</span></td><td>7d | 28d | 90d. Default: 28d.</td></tr>
+        <tr><td><code>stream</code></td><td><span class="type">boolean</span></td><td>SSE streaming response. Default: false.</td></tr></table>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/insights/feedback</span><span class="ep-desc">Submit insight rating</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>Fields: <code>insight_id</code>, <code>rating</code> (1=positive, -1=negative), optional <code>comment</code>. Feeds model improvement loop.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">Constellation</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/constellation/rank</span><span class="ep-desc">Niche rank and peer benchmarks</span><span class="ep-auth">Bearer · Creator+</span></div>
+      <div class="ep-body">
+        <div class="code-block"><div class="code-label">Response 200</div><pre>{ "niche": "fitness", "peer_pool_size": 840, "rank": 4,
+  "metrics": {
+    "engagement_rate": { "creator": 0.068, "peer_median": 0.042,
+                         "top_10_pct": 0.09, "percentile": 81 },
+    "gravity_score":   { "creator": 78, "peer_median": 58 }
+  }
+}</pre></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/constellation/gap-analysis</span><span class="ep-desc">Gaps vs top 10% performers</span><span class="ep-auth">Bearer · Creator+</span></div>
+      <div class="ep-body"><p>AI-generated analysis of behaviors differentiating top-10% creators from the authenticated creator. All peer data anonymized and aggregated.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">Escape Velocity</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/escape-velocity</span><span class="ep-desc">List escape velocity events</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body">
+        <div class="code-block"><div class="code-label">Event object</div><pre>{ "id": "ev_abc123", "content_id": "cnt_xyz789",
+  "baseline_multiple": 6.2, "status": "active",
+  "expires_at": "2026-03-14T07:14:00Z",
+  "analysis": { "summary": "6.2× above baseline",
+    "factors": [{ "factor": "audio", "detail": "Trending +280% in niche" }]
+  },
+  "playbook": { "action": "Post follow-up within 48 hours",
+    "timing": "Tomorrow 6:30–7:30am" }
+}</pre></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/escape-velocity/{id}/mark-actioned</span><span class="ep-desc">Mark event actioned</span><span class="ep-auth">Bearer</span></div>
+      <div class="ep-body"><p>Optional <code>follow_up_content_id</code> to link follow-up post for outcome tracking.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">Dark Matter</div>
+    <div class="div"></div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/dark-matter/signals</span><span class="ep-desc">Trending signals for creator's niche</span><span class="ep-auth">Bearer · Creator+</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Param</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>type</code></td><td><span class="type">enum</span></td><td>audio | hashtag | format | topic. Default: all.</td></tr>
+        <tr><td><code>min_momentum</code></td><td><span class="type">float</span></td><td>0–1. Default: 0.3.</td></tr></table>
+        <div class="code-block" style="margin-top:8px"><div class="code-label">Signal object</div><pre>{ "id": "sig_abc", "type": "audio",
+  "label": "Espresso — Sabrina Carpenter",
+  "momentum_score": 0.87, "usage_growth_7d": 2.8,
+  "estimated_peak_days": 12, "niche_relevance": 0.92 }</pre></div>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/dark-matter/signals/{id}/brief</span><span class="ep-desc">Generate content brief from signal</span><span class="ep-auth">Bearer · Pro+</span></div>
+      <div class="ep-body"><p>AI-powered content brief tailored to creator's voice. Generation takes 5–10 seconds. Returns format recommendation, caption angle, timing, and hashtags.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/dark-matter/briefing</span><span class="ep-desc">Current weekly briefing</span><span class="ep-auth">Bearer · Creator+</span></div>
+      <div class="ep-body"><p>Top 5 signals with recommendations. Generated Monday 5am UTC.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 10</div>
+    <div class="sec-title">Agency (Mission Control)</div>
+    <div class="div"></div>
+    <div class="info r"><div class="info-label">Access restriction</div>All /agency endpoints require Agency tier. Creator/Pro accounts receive 403.</div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/agency/roster</span><span class="ep-desc">Get managed creator roster</span><span class="ep-auth">Bearer · Agency</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Param</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>sort</code></td><td><span class="type">enum</span></td><td>gravity_score | trajectory | reach | alerts. Default: trajectory.</td></tr>
+        <tr><td><code>filter</code></td><td><span class="type">enum</span></td><td>all | declining | alerts | no_activity</td></tr></table>
+      </div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method get">GET</span><span class="ep-path">/agency/alerts</span><span class="ep-desc">Unified alert feed across roster</span><span class="ep-auth">Bearer · Agency</span></div>
+      <div class="ep-body"><p>All active alerts across managed creators. Types: <code>escape_velocity</code>, <code>trajectory_decline</code>, <code>dark_matter_opportunity</code>, <code>sync_error</code>.</p></div>
+    </div>
+    <div class="endpoint">
+      <div class="ep-head"><span class="method post">POST</span><span class="ep-path">/agency/reports/brand-deal</span><span class="ep-desc">Generate brand deal report</span><span class="ep-auth">Bearer · Agency</span></div>
+      <div class="ep-body">
+        <table class="tbl"><tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>creator_id</code><span class="req">required</span></td><td><span class="type">string</span></td><td>Target creator ID</td></tr>
+        <tr><td><code>format</code></td><td><span class="type">enum</span></td><td>pdf | json. Default: pdf.</td></tr>
+        <tr><td><code>white_label</code></td><td><span class="type">boolean</span></td><td>Remove Orbit branding. Agency tier only.</td></tr></table>
+        <p style="margin-top:8px">Async — returns <code>report_job_id</code>. Poll <code>/jobs/{id}</code> for completion. PDF URL valid 7 days.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 11</div>
+    <div class="sec-title">Webhooks</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Event</th><th>Trigger</th><th>Tiers</th></tr>
+      <tr><td><code>escape_velocity.detected</code></td><td>Content crosses EV threshold</td><td>All</td></tr>
+      <tr><td><code>gravity_score.changed</code></td><td>Score changes ±3+ points</td><td>Creator+</td></tr>
+      <tr><td><code>trajectory.declining</code></td><td>7-day declining momentum</td><td>Creator+</td></tr>
+      <tr><td><code>dark_matter.briefing_ready</code></td><td>Weekly briefing generated</td><td>Creator+</td></tr>
+      <tr><td><code>dark_matter.urgent_signal</code></td><td>Momentum score &gt;0.9</td><td>Pro+</td></tr>
+      <tr><td><code>sync.completed</code></td><td>Platform sync complete</td><td>All</td></tr>
+      <tr><td><code>sync.failed</code></td><td>Platform sync failed</td><td>All</td></tr>
+      <tr><td><code>report.ready</code></td><td>Async report complete</td><td>Agency</td></tr>
+    </table>
+    <div class="info" style="margin-top:10px"><div class="info-label">Signature verification</div>Verify with <code>HMAC-SHA256(payload_body, webhook_secret)</code> and compare to <code>X-Orbit-Signature</code> header.</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 12</div>
+    <div class="sec-title">Errors</div>
+    <div class="div"></div>
+    <div class="code-block"><div class="code-label">Error envelope</div><pre>{ "success": false,
+  "error": { "code": "INSUFFICIENT_TIER",
+    "message": "This endpoint requires Pro or Agency.",
+    "docs_url": "https://docs.orbitapp.io/errors/INSUFFICIENT_TIER",
+    "request_id": "req_abc123" }
+}</pre></div>
+    <table class="tbl" style="margin-top:10px">
+      <tr><th>Status</th><th>Code</th><th>Description</th></tr>
+      <tr><td>400</td><td><code>INVALID_REQUEST</code></td><td>Missing or malformed parameters</td></tr>
+      <tr><td>401</td><td><code>TOKEN_EXPIRED</code></td><td>Refresh using /auth/refresh</td></tr>
+      <tr><td>403</td><td><code>INSUFFICIENT_TIER</code></td><td>Endpoint requires higher subscription</td></tr>
+      <tr><td>404</td><td><code>NOT_FOUND</code></td><td>Resource does not exist</td></tr>
+      <tr><td>409</td><td><code>INSUFFICIENT_DATA</code></td><td>Feature requires more data (e.g. 30+ posts)</td></tr>
+      <tr><td>429</td><td><code>RATE_LIMITED</code></td><td>Retry after X-RateLimit-Reset</td></tr>
+      <tr><td>503</td><td><code>PLATFORM_UNAVAILABLE</code></td><td>Upstream API unavailable</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 2: DATA DICTIONARY
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="panel-dd">
+
+  <div class="sec">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">Conventions</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <h4>ID format</h4><p>Prefixed IDs: <code>prefix_xxxxxxxx</code>. Prefixes: <code>usr</code> users · <code>crt</code> creators · <code>cnt</code> content · <code>ev</code> escape velocity · <code>sig</code> signals · <code>ins</code> insights · <code>agc</code> agencies</p>
+        <h4>Timestamps</h4><p>All stored as <code>TIMESTAMPTZ</code> UTC. Returned ISO 8601: <code>2026-03-18T10:00:00Z</code></p>
+        <h4>Rates</h4><p>All rates stored as decimals 0–1. Displayed as percentages in UI. Example: 6.8% stored as <code>0.068</code>.</p>
+      </div>
+      <div>
+        <h4>Badge legend</h4>
+        <p><span class="pk">PK</span> Primary key &nbsp; <span class="fk">FK</span> Foreign key &nbsp; <span class="idx">IDX</span> Indexed &nbsp; <span class="nn">NN</span> Not null</p>
+        <h4>Database</h4>
+        <p>PostgreSQL 15 with TimescaleDB extension for time-series tables. All tables use row-level security (RLS) enforcing creator data isolation.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">users</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: usr_xxxxxxxx</td></tr>
+      <tr><td><span class="fname">email</span></td><td><span class="type">varchar(255)</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>Unique, lowercased on insert</td></tr>
+      <tr><td><span class="fname">password_hash</span></td><td><span class="type">varchar(255)</span></td><td></td><td>bcrypt. Null for OAuth accounts.</td></tr>
+      <tr><td><span class="fname">auth_provider</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span></td><td>email | google | apple</td></tr>
+      <tr><td><span class="fname">role</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span></td><td>creator | manager | admin</td></tr>
+      <tr><td><span class="fname">tier</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span></td><td>free | creator | pro | agency</td></tr>
+      <tr><td><span class="fname">mfa_enabled</span></td><td><span class="type">boolean</span></td><td><span class="nn">NN</span></td><td>TOTP-based. Default false.</td></tr>
+      <tr><td><span class="fname">timezone</span></td><td><span class="type">varchar(50)</span></td><td></td><td>IANA timezone. Default UTC.</td></tr>
+      <tr><td><span class="fname">notification_prefs</span></td><td><span class="type">jsonb</span></td><td></td><td>Per-event push/email preferences</td></tr>
+      <tr><td><span class="fname">created_at</span></td><td><span class="type">timestamptz</span></td><td><span class="nn">NN</span></td><td></td></tr>
+      <tr><td><span class="fname">deleted_at</span></td><td><span class="type">timestamptz</span></td><td></td><td>Soft delete. Null = active.</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">creators</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: crt_xxxxxxxx</td></tr>
+      <tr><td><span class="fname">user_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>References users.id. One-to-one.</td></tr>
+      <tr><td><span class="fname">niche</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>fitness | lifestyle | wellness | nutrition | beauty | travel</td></tr>
+      <tr><td><span class="fname">sub_niche</span></td><td><span class="type">varchar(100)</span></td><td></td><td>e.g. "strength_training", "yoga"</td></tr>
+      <tr><td><span class="fname">gravity_score</span></td><td><span class="type">integer</span></td><td></td><td>Denormalized current score 0–100. Source of truth: gravity_scores table.</td></tr>
+      <tr><td><span class="fname">gravity_trend</span></td><td><span class="type">enum</span></td><td></td><td>rising | stable | declining</td></tr>
+      <tr><td><span class="fname">benchmark_opt_in</span></td><td><span class="type">boolean</span></td><td><span class="nn">NN</span></td><td>Benchmarking consent. Default false. Explicit opt-in required.</td></tr>
+      <tr><td><span class="fname">benchmark_opt_in_at</span></td><td><span class="type">timestamptz</span></td><td></td><td>GDPR audit trail timestamp.</td></tr>
+      <tr><td><span class="fname">agency_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td><span class="idx">IDX</span></td><td>References agencies.id. Null if unmanaged.</td></tr>
+      <tr><td><span class="fname">total_followers</span></td><td><span class="type">integer</span></td><td></td><td>Sum across all platforms. Refreshed on sync.</td></tr>
+      <tr><td><span class="fname">primary_platform</span></td><td><span class="type">enum</span></td><td></td><td>Highest-follower platform.</td></tr>
+      <tr><td><span class="fname">last_sync_at</span></td><td><span class="type">timestamptz</span></td><td></td><td>Most recent successful sync.</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">platform_connections</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: plc_xxxxxxxx</td></tr>
+      <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>References creators.id</td></tr>
+      <tr><td><span class="fname">platform</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>instagram | tiktok | youtube | snapchat | twitch</td></tr>
+      <tr><td><span class="fname">access_token_enc</span></td><td><span class="type">text</span></td><td><span class="nn">NN</span></td><td>AES-256 encrypted. Never logged.</td></tr>
+      <tr><td><span class="fname">refresh_token_enc</span></td><td><span class="type">text</span></td><td></td><td>AES-256 encrypted refresh token.</td></tr>
+      <tr><td><span class="fname">status</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span></td><td>active | expired | revoked | error</td></tr>
+      <tr><td><span class="fname">follower_count</span></td><td><span class="type">integer</span></td><td></td><td>At last sync.</td></tr>
+      <tr><td><span class="fname">last_sync_at</span></td><td><span class="type">timestamptz</span></td><td></td><td>Last successful sync timestamp.</td></tr>
+      <tr><td><span class="fname">sync_cursor</span></td><td><span class="type">jsonb</span></td><td></td><td>Platform-specific state for incremental sync.</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">content</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+      <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: cnt_xxxxxxxx</td></tr>
+      <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>References creators.id</td></tr>
+      <tr><td><span class="fname">platform</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>instagram | tiktok | youtube | snapchat</td></tr>
+      <tr><td><span class="fname">platform_post_id</span></td><td><span class="type">varchar(100)</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>Platform's native post ID. Unique per platform.</td></tr>
+      <tr><td><span class="fname">content_type</span></td><td><span class="type">enum</span></td><td><span class="nn">NN</span></td><td>reel | post | story | video | short | live</td></tr>
+      <tr><td><span class="fname">caption</span></td><td><span class="type">text</span></td><td></td><td>Full caption at time of sync.</td></tr>
+      <tr><td><span class="fname">hashtags</span></td><td><span class="type">text[]</span></td><td></td><td>Array extracted from caption.</td></tr>
+      <tr><td><span class="fname">audio_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td></td><td>References audio_tracks.id. Null if none.</td></tr>
+      <tr><td><span class="fname">duration_seconds</span></td><td><span class="type">integer</span></td><td></td><td>Null for static posts.</td></tr>
+      <tr><td><span class="fname">posted_at</span></td><td><span class="type">timestamptz</span></td><td><span class="nn">NN</span><span class="idx">IDX</span></td><td>Published timestamp on platform.</td></tr>
+      <tr><td><span class="fname">day_of_week</span></td><td><span class="type">smallint</span></td><td></td><td>0=Sunday…6=Saturday. Denormalized for queries.</td></tr>
+      <tr><td><span class="fname">hour_of_day</span></td><td><span class="type">smallint</span></td><td></td><td>0–23 UTC. For posting window analysis.</td></tr>
+      <tr><td><span class="fname">is_escape_velocity</span></td><td><span class="type">boolean</span></td><td><span class="nn">NN</span></td><td>True if triggered EV event. Default false.</td></tr>
+      <tr><td><span class="fname">baseline_multiple</span></td><td><span class="type">decimal(6,2)</span></td><td></td><td>engagement_rate / creator 30-day median.</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">content_metrics</div>
+    <div class="div"></div>
+    <div class="info v"><div class="info-label">TimescaleDB hypertable</div>Partitioned by snapshot_at in 7-day chunks. Multiple rows per content — captured at 1h, 6h, 24h, 72h, 7d, 30d after posting.</div>
+    <table class="tbl" style="margin-top:10px">
+      <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      <tr><td><span class="fname">content_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td>References content.id</td></tr>
+      <tr><td><span class="fname">snapshot_at</span></td><td><span class="type">timestamptz</span></td><td>Partition key. When captured.</td></tr>
+      <tr><td><span class="fname">snapshot_type</span></td><td><span class="type">enum</span></td><td>1h | 6h | 24h | 72h | 7d | 30d | final</td></tr>
+      <tr><td><span class="fname">reach</span></td><td><span class="type">integer</span></td><td>Unique accounts reached.</td></tr>
+      <tr><td><span class="fname">impressions</span></td><td><span class="type">integer</span></td><td>Total views including repeats.</td></tr>
+      <tr><td><span class="fname">likes</span></td><td><span class="type">integer</span></td><td></td></tr>
+      <tr><td><span class="fname">comments</span></td><td><span class="type">integer</span></td><td></td></tr>
+      <tr><td><span class="fname">saves</span></td><td><span class="type">integer</span></td><td>Not available on all platforms.</td></tr>
+      <tr><td><span class="fname">shares</span></td><td><span class="type">integer</span></td><td></td></tr>
+      <tr><td><span class="fname">avg_watch_pct</span></td><td><span class="type">decimal(5,4)</span></td><td>0–1. Video only.</td></tr>
+      <tr><td><span class="fname">engagement_rate</span></td><td><span class="type">decimal(8,6)</span></td><td>Computed: (likes+comments+saves+shares)/reach. Stored for perf.</td></tr>
+      <tr><td><span class="fname">raw_platform_data</span></td><td><span class="type">jsonb</span></td><td>Full API response. Retained for reprocessing.</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">gravity_scores</div>
+    <div class="div"></div>
+    <div class="info v"><div class="info-label">TimescaleDB hypertable</div>Daily score per creator. Calculated nightly 2am UTC.</div>
+    <table class="tbl" style="margin-top:10px">
+      <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td>References creators.id</td></tr>
+      <tr><td><span class="fname">calculated_at</span></td><td><span class="type">timestamptz</span></td><td>Partition key.</td></tr>
+      <tr><td><span class="fname">score</span></td><td><span class="type">integer</span></td><td>Overall score 0–100</td></tr>
+      <tr><td><span class="fname">score_return_viewer</span></td><td><span class="type">integer</span></td><td>Return viewer rate sub-score (0–100)</td></tr>
+      <tr><td><span class="fname">score_save_share</span></td><td><span class="type">integer</span></td><td>Save/share depth sub-score</td></tr>
+      <tr><td><span class="fname">score_comment_quality</span></td><td><span class="type">integer</span></td><td>NLP comment quality sub-score</td></tr>
+      <tr><td><span class="fname">score_cross_platform</span></td><td><span class="type">integer</span></td><td>Cross-platform overlap sub-score</td></tr>
+      <tr><td><span class="fname">score_follower_velocity</span></td><td><span class="type">integer</span></td><td>Growth velocity sub-score</td></tr>
+      <tr><td><span class="fname">peer_percentile</span></td><td><span class="type">integer</span></td><td>Percentile rank within matched peer pool</td></tr>
+      <tr><td><span class="fname">raw_inputs</span></td><td><span class="type">jsonb</span></td><td>Raw values for auditability</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">escape_velocity_events</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="type">varchar(20)</span></td><td>Format: ev_xxxxxxxx</td></tr>
+      <tr><td><span class="fname">content_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td>Unique constraint — one event per post.</td></tr>
+      <tr><td><span class="fname">detected_at</span></td><td><span class="type">timestamptz</span></td><td>When threshold crossing detected</td></tr>
+      <tr><td><span class="fname">expires_at</span></td><td><span class="type">timestamptz</span></td><td>48 hours after content posted</td></tr>
+      <tr><td><span class="fname">status</span></td><td><span class="type">enum</span></td><td>active | expired | actioned</td></tr>
+      <tr><td><span class="fname">baseline_multiple</span></td><td><span class="type">decimal(6,2)</span></td><td>e.g. 6.2 = 6.2× above baseline</td></tr>
+      <tr><td><span class="fname">analysis</span></td><td><span class="type">jsonb</span></td><td>AI factor analysis {summary, factors[]}</td></tr>
+      <tr><td><span class="fname">playbook</span></td><td><span class="type">jsonb</span></td><td>Replication playbook {action, format, timing}</td></tr>
+      <tr><td><span class="fname">follow_up_content_id</span><span class="fk">FK</span></td><td><span class="type">varchar(20)</span></td><td>Linked follow-up post for outcome tracking</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">dark_matter_signals</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="type">varchar(20)</span></td><td>Format: sig_xxxxxxxx</td></tr>
+      <tr><td><span class="fname">signal_type</span></td><td><span class="type">enum</span></td><td>audio | hashtag | format | topic</td></tr>
+      <tr><td><span class="fname">platform</span></td><td><span class="type">enum</span></td><td>Null if cross-platform signal</td></tr>
+      <tr><td><span class="fname">niche</span></td><td><span class="type">enum</span></td><td>Niche this signal applies to</td></tr>
+      <tr><td><span class="fname">momentum_score</span></td><td><span class="type">decimal(4,3)</span></td><td>0–1. Recalculated daily.</td></tr>
+      <tr><td><span class="fname">usage_growth_7d</span></td><td><span class="type">decimal(6,2)</span></td><td>7-day growth multiplier e.g. 2.8 = 280%</td></tr>
+      <tr><td><span class="fname">niche_relevance</span></td><td><span class="type">decimal(4,3)</span></td><td>0–1 ML-scored relevance</td></tr>
+      <tr><td><span class="fname">estimated_peak_days</span></td><td><span class="type">integer</span></td><td>Days until signal peaks (model projection)</td></tr>
+      <tr><td><span class="fname">status</span></td><td><span class="type">enum</span></td><td>active | peaking | declining | expired</td></tr>
+      <tr><td><span class="fname">detected_at</span></td><td><span class="type">timestamptz</span></td><td>When first crossed detection threshold</td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 10</div>
+    <div class="sec-title">Metric definitions</div>
+    <div class="div"></div>
+    <div class="metric-def">
+      <div class="md-name">engagement_rate</div>
+      <code class="md-formula">engagement_rate = (likes + comments + saves + shares) / reach</code>
+      <div class="md-desc">Normalized against reach (unique accounts) not followers. Platform-agnostic. Where saves unavailable the formula excludes saves.</div>
+    </div>
+    <div class="metric-def">
+      <div class="md-name">gravity_score</div>
+      <code class="md-formula">score = round(
+  (return_viewer_rate_score × 0.30) +
+  (save_share_depth_score  × 0.25) +
+  (comment_quality_score   × 0.20) +
+  (cross_platform_score    × 0.15) +
+  (follower_velocity_score × 0.10)
+)</code>
+      <div class="md-desc">Composite 0–100. Each component normalized to 0–100 before weighting. Recalculated nightly.</div>
+    </div>
+    <div class="metric-def">
+      <div class="md-name">baseline_multiple</div>
+      <code class="md-formula">baseline_multiple = post_engagement_rate / creator_30d_median_engagement_rate</code>
+      <div class="md-desc">How much a post outperforms the creator's own 30-day median. Value of 2.5 = 2.5× typical performance. Escape velocity threshold is 2.5.</div>
+    </div>
+    <div class="metric-def">
+      <div class="md-name">follower_velocity</div>
+      <code class="md-formula">follower_velocity = (followers_now - followers_28d_ago) / followers_28d_ago</code>
+      <div class="md-desc">28-day growth rate as decimal. Measures acceleration, not absolute size.</div>
+    </div>
+    <div class="metric-def">
+      <div class="md-name">momentum_score (Dark Matter)</div>
+      <code class="md-formula">momentum_score = normalize(usage_growth_7d×0.50 + niche_relevance×0.30 + acceleration×0.20)</code>
+      <div class="md-desc">Trend signal strength 0–1. Usage growth is primary driver. Acceleration is second derivative of growth (is it speeding up?).</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 11</div>
+    <div class="sec-title">Enumerations</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <h4>niche</h4>
+        <table class="tbl"><tr><th>Value</th><th>Description</th></tr>
+        <tr><td><span class="fname">fitness</span></td><td>Exercise, training, sport performance</td></tr>
+        <tr><td><span class="fname">lifestyle</span></td><td>Daily life, aspirational living, routines</td></tr>
+        <tr><td><span class="fname">wellness</span></td><td>Mental health, mindfulness, self-care</td></tr>
+        <tr><td><span class="fname">nutrition</span></td><td>Food, recipes, diet, supplements</td></tr>
+        <tr><td><span class="fname">beauty</span></td><td>Skincare, makeup, hair</td></tr>
+        <tr><td><span class="fname">travel</span></td><td>Destinations, travel content</td></tr></table>
+        <h4 style="margin-top:12px">content_type</h4>
+        <table class="tbl"><tr><th>Value</th><th>Platform</th></tr>
+        <tr><td><span class="fname">reel</span></td><td>Instagram</td></tr>
+        <tr><td><span class="fname">post</span></td><td>Instagram (static/carousel)</td></tr>
+        <tr><td><span class="fname">story</span></td><td>Instagram, Snapchat</td></tr>
+        <tr><td><span class="fname">video</span></td><td>TikTok, YouTube</td></tr>
+        <tr><td><span class="fname">short</span></td><td>YouTube Shorts</td></tr>
+        <tr><td><span class="fname">live</span></td><td>Instagram, TikTok, YouTube</td></tr></table>
+      </div>
+      <div>
+        <h4>trajectory</h4>
+        <table class="tbl"><tr><th>Value</th><th>Definition</th></tr>
+        <tr><td><span class="fname">rising</span></td><td>Gravity Score +3pts in 7 days</td></tr>
+        <tr><td><span class="fname">stable</span></td><td>Change &lt;3pts in 7 days</td></tr>
+        <tr><td><span class="fname">declining</span></td><td>Score −3pts in 7 days</td></tr></table>
+        <h4 style="margin-top:12px">subscription_tier</h4>
+        <table class="tbl"><tr><th>Value</th><th>Price</th></tr>
+        <tr><td><span class="fname">free</span></td><td>$0/mo</td></tr>
+        <tr><td><span class="fname">creator</span></td><td>$29/mo</td></tr>
+        <tr><td><span class="fname">pro</span></td><td>$79/mo</td></tr>
+        <tr><td><span class="fname">agency</span></td><td>$499/mo</td></tr></table>
+        <h4 style="margin-top:12px">signal_type</h4>
+        <table class="tbl"><tr><th>Value</th><th>Description</th></tr>
+        <tr><td><span class="fname">audio</span></td><td>Sound or music gaining usage</td></tr>
+        <tr><td><span class="fname">hashtag</span></td><td>Tag growing in velocity</td></tr>
+        <tr><td><span class="fname">format</span></td><td>Content structure emerging</td></tr>
+        <tr><td><span class="fname">topic</span></td><td>Subject matter cluster</td></tr></table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PANEL 3: GO-TO-MARKET PLAN
+═══════════════════════════════════════════════════ -->
+<div class="panel" id="panel-gtm">
+
+  <div class="sec">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">GTM strategy</div>
+    <div class="div"></div>
+    <div class="callout v">
+      <div class="callout-label">Core thesis</div>
+      <div class="callout-text" style="font-family:Georgia,serif;font-size:13px;font-style:italic;color:#c4b5fd">"Don't build an audience and then prove the product works. Prove the product works with our existing audience, then let them build the next audience for us."</div>
+    </div>
+    <div class="g3" style="margin-top:14px">
+      <div class="card accent">
+        <div class="card-eye">Pillar 1</div>
+        <div class="card-title">Agency-led distribution</div>
+        <div class="card-body">50+ agency creators become the launch pad. Zero cold acquisition to reach meaningful scale.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 2</div>
+        <div class="card-title">Creator-led virality</div>
+        <div class="card-body">Creators sharing Gravity Scores in brand pitches and on Stories = free acquisition at scale.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 3</div>
+        <div class="card-title">Niche authority first</div>
+        <div class="card-body">Own lifestyle and fitness completely before expanding. Niche authority creates word-of-mouth density.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">Target segments</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div class="card accent">
+        <div class="card-eye">Segment A · Priority 1</div>
+        <div class="card-title">Agency-managed fitness creators</div>
+        <div style="margin-top:8px">
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Size:</strong> 50 immediately, ~5,000 reachable Year 1</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Following:</strong> 50K–2M across platforms</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pain:</strong> No intelligent benchmarking; can't quantify brand value</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Channel:</strong> Direct via agency → warm referral</div></div>
+        </div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Segment B · Priority 2</div>
+        <div class="card-title">Independent fitness creators</div>
+        <div style="margin-top:8px">
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Size:</strong> ~200,000 in US/UK/AU fitness creator space</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Following:</strong> 10K–500K</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pain:</strong> Posting consistently, not understanding what works</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Channel:</strong> Organic social, SEO, word-of-mouth</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">Messaging matrix</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Segment</th><th>Core message</th><th>Proof point</th><th>CTA</th></tr>
+      <tr><td><strong>Rising creator</strong></td><td>Stop guessing. Know exactly what's working and why.</td><td>Creators using Orbit post 34% less but grow 2.1× faster.</td><td>Get your free Gravity Score</td></tr>
+      <tr><td><strong>Established creator</strong></td><td>Your brand deal is worth more than you're charging.</td><td>Your Gravity Score puts you in the top 12% of your niche.</td><td>Generate your brand pitch report</td></tr>
+      <tr><td><strong>Talent manager</strong></td><td>Manage 12 creators like you manage 1.</td><td>Mission Control gives escape velocity alerts before your creators ask.</td><td>Start your agency trial</td></tr>
+      <tr><td><strong>Agency BD</strong></td><td>Your roster data is worth more than you think.</td><td>Agencies using Orbit report 40% faster brand deal close rates.</td><td>Book an agency demo</td></tr>
+    </table>
+    <div class="g2" style="margin-top:12px">
+      <div style="background:#0a1a10;border:1px solid #173404;border-radius:10px;padding:12px">
+        <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4ade80;margin-bottom:8px">Sound like this</div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext">Specific and grounded in data</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext">Direct — subject, verb, impact</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext">Uses "your" — possessive, personal</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext">Tells you what to do next</div></div>
+      </div>
+      <div style="background:#1a0a0a;border:1px solid #501313;border-radius:10px;padding:12px">
+        <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#f09595;margin-bottom:8px">Never say this</div>
+        <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"Post more consistently to grow"</div></div>
+        <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"AI-powered analytics platform leverages..."</div></div>
+        <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"Data-driven insights for creators"</div></div>
+        <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">Passive voice or corporate hedging</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">Launch phases</div>
+    <div class="div"></div>
+    <div style="margin-top:4px">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot" style="background:#6C63FF"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#6C63FF">Phase 0 · Jan–Mar 2026</div>
+          <div class="tl-title">Pre-launch — foundation</div>
+          <div class="tl-period">Brand identity · IG + TikTok pipelines · 5-creator alpha · waitlist launch</div>
+          <div><span class="tag g">200 waitlist signups</span><span class="tag g">5 alpha creators</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot" style="background:#a78bfa"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#a78bfa">Phase 1 · Apr–Jun 2026</div>
+          <div class="tl-title">Private beta — agency roster launch</div>
+          <div class="tl-period">Onboard 50+ agency creators · Gravity Score + Escape Velocity live · 3 case studies · "What's your Gravity Score?" social campaign</div>
+          <div><span class="tag g">50 beta users</span><span class="tag g">NPS 40+</span><span class="tag g">3 case studies</span></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot" style="background:#e8f0ff"></div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#e8f0ff">Phase 2 · Jul–Sep 2026</div>
+          <div class="tl-title">Public launch — freemium opens</div>
+          <div class="tl-period">Self-serve signup · Constellation benchmarking · Dark Matter briefing · Mission Control · PR push · Product Hunt · Paid social begins</div>
+          <div><span class="tag g">200 paying accounts</span><span class="tag g">$48K MRR</span><span class="tag g">1,000 free signups</span></div>
+        </div>
+      </div>
+      <div class="tl-item" style="margin-bottom:0">
+        <div class="tl-left"><div class="tl-dot" style="background:#4ade80"></div></div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#4ade80">Phase 3 · Oct 2026–Mar 2027</div>
+          <div class="tl-title">Scale — growth and expansion</div>
+          <div class="tl-period">YouTube integration · Orbit Path · Content brief generator · State of the Fitness Creator report · Agency partner program · Referral program</div>
+          <div><span class="tag g">500 paying accounts</span><span class="tag g">$312K ARR</span><span class="tag g">5 agency partners</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">Acquisition channels</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <h4>Owned channels</h4>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Orbit's own social presence</span><span class="ch-effort low-e">Low cost</span></div>
+          <div style="font-size:10px;color:#6b7ab5;line-height:1.55">IG + TikTok showing real Gravity Scores, Dark Matter signals, and Escape Velocity wins. Orbit becomes a creator itself. Target: 10K followers by month 6.</div>
+        </div>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">SEO & content marketing</span><span class="ch-effort med-e">Medium effort</span></div>
+          <div style="font-size:10px;color:#6b7ab5;line-height:1.55">Long-form guides targeting "how to grow on Instagram as a fitness creator", "best posting times for fitness content". Each article funnels to a free Gravity Score tool.</div>
+        </div>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Dark Matter email newsletter</span><span class="ch-effort low-e">Low cost</span></div>
+          <div style="font-size:10px;color:#6b7ab5;line-height:1.55">Free weekly email: top 3 trending signals for fitness niche. Builds owned audience and converts to platform. Target: 5,000 subscribers by month 9.</div>
+        </div>
+      </div>
+      <div>
+        <h4>Paid & partnership channels</h4>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Creator seeding</span><span class="ch-effort med-e">Medium cost</span></div>
+          <div style="font-size:10px;color:#6b7ab5;line-height:1.55">Free Pro access to 20–30 mid-tier fitness creators (100K–500K) for authentic organic content. Creator endorsement carries 10× the weight of paid ads.</div>
+        </div>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Podcast sponsorships</span><span class="ch-effort med-e">Medium cost</span></div>
+          <div style="font-size:10px;color:#6b7ab5;line-height:1.55">Creator Science, The Influencer Podcast, Earn Your Happy. Host-read ads with free Gravity Score offer. Exact ICP audience.</div>
+        </div>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Paid social — Meta</span><span class="ch-effort high-e">Higher cost</span></div>
+          <div style="font-size:10px;color:#6b7ab5;line-height:1.55">Begins month 4 after case studies ready. Lead with "Get your free Gravity Score." CPA target: &lt;$35 free signup, &lt;$120 paid conversion.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">Acquisition funnel</div>
+    <div class="div"></div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:500;color:#e8f0ff">Awareness</div><div style="font-size:9px;color:#4a5280;margin-top:1px">Social, SEO, podcast, creator word-of-mouth</div></div>
+      </div>
+      <div style="text-align:center;font-size:9px;color:#2d3260">↓ 35% to signup</div>
+      <div style="background:#0f1628;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:500;color:#e8f0ff">Free signup — connect platform, see Gravity Score instantly</div></div>
+        <span style="font-size:9px;color:#4a5280">Free tier</span>
+      </div>
+      <div style="text-align:center;font-size:9px;color:#2d3260">↓ 40% activate</div>
+      <div style="background:#0f1628;border:1px solid #2d3260;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:500;color:#e8f0ff">Activation — first AI insight or Escape Velocity alert</div></div>
+        <span style="font-size:9px;color:#a78bfa">Days 1–3</span>
+      </div>
+      <div style="text-align:center;font-size:9px;color:#2d3260">↓ 25% of actives convert</div>
+      <div style="background:#1a1035;border:1px solid #2d1a5e;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:500;color:#e8f0ff">Paid conversion — hit a feature gate</div></div>
+        <span style="font-size:9px;color:#a78bfa">Days 7–21</span>
+      </div>
+      <div style="text-align:center;font-size:9px;color:#2d3260">↓ expansion</div>
+      <div style="background:#0a1a10;border:1px solid #173404;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:500;color:#e8f0ff">Expansion & referral — share Gravity Score → invite peers</div></div>
+        <span style="font-size:9px;color:#4ade80">Month 2+</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">Content marketing strategy</div>
+    <div class="div"></div>
+    <div class="g3">
+      <div class="card accent">
+        <div class="card-eye">Pillar 1 — Signal</div>
+        <div class="card-title">Dark Matter weekly</div>
+        <div class="card-body">Free weekly email + social: top 3 trending signals in fitness/lifestyle. Makes Orbit indispensable even for non-paying users. Positions Orbit as the trend authority.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 2 — Education</div>
+        <div class="card-title">Creator intelligence guides</div>
+        <div class="card-body">SEO-optimized long-form guides: "How to calculate your true engagement rate", "What Gravity Score means for brand deals". Gated behind free signup.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 3 — Proof</div>
+        <div class="card-title">Creator case studies</div>
+        <div class="card-body">Monthly deep-dive: one creator's Orbit data story. Real numbers. Before and after. Most shared content category in the creator space.</div>
+      </div>
+    </div>
+    <h4 style="margin-top:16px">Anchor content — Year 1</h4>
+    <div class="g2">
+      <div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>State of the Fitness Creator 2026</strong> — Annual report using anonymized Orbit data. Industry-defining, PR-worthy.</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>The Gravity Score Explained</strong> — Definitive guide. Establishes the metric before competitors can copy it.</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Escape Velocity: 10 Creator Breakout Moments</strong> — Real data, real events. Product in action without being a demo.</div></div>
+      </div>
+      <div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>The Creator's Guide to Brand Deal Negotiation</strong> — Using Gravity Score to command higher rates.</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Dark Matter Report: Q3 2026 Fitness Trends</strong> — Quarterly trend forecast.</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>What Your Talent Manager Isn't Telling You</strong> — Drives both creator and agency signups.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">Budget — Year 1</div>
+    <div class="div"></div>
+    <table class="tbl">
+      <tr><th>Category</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Total</th></tr>
+      <tr><td><strong>Brand & design</strong></td><td>$12,000</td><td>$2,000</td><td>$1,500</td><td>$1,500</td><td>$17,000</td></tr>
+      <tr><td><strong>Content production</strong></td><td>$4,000</td><td>$6,000</td><td>$8,000</td><td>$10,000</td><td>$28,000</td></tr>
+      <tr><td><strong>Creator seeding</strong></td><td>$1,000</td><td>$5,000</td><td>$8,000</td><td>$6,000</td><td>$20,000</td></tr>
+      <tr><td><strong>Paid social</strong></td><td>$0</td><td>$0</td><td>$8,000</td><td>$15,000</td><td>$23,000</td></tr>
+      <tr><td><strong>Podcast sponsorships</strong></td><td>$0</td><td>$3,000</td><td>$6,000</td><td>$8,000</td><td>$17,000</td></tr>
+      <tr><td><strong>PR & press</strong></td><td>$1,000</td><td>$2,000</td><td>$5,000</td><td>$3,000</td><td>$11,000</td></tr>
+      <tr><td><strong>Events & conferences</strong></td><td>$0</td><td>$0</td><td>$3,000</td><td>$8,000</td><td>$11,000</td></tr>
+      <tr><td><strong>Tools & software</strong></td><td>$500</td><td>$800</td><td>$1,200</td><td>$1,500</td><td>$4,000</td></tr>
+      <tr style="border-top:1px solid #2d3260"><td><strong>Total</strong></td><td><strong>$18,500</strong></td><td><strong>$18,800</strong></td><td><strong>$40,700</strong></td><td><strong>$53,000</strong></td><td><strong>$131,000</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="sec">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">KPIs & success metrics</div>
+    <div class="div"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+      <div class="kpi"><div class="kpi-num">500</div><div class="kpi-label">Paying accounts · month 12</div></div>
+      <div class="kpi"><div class="kpi-num">$312K</div><div class="kpi-label">ARR · month 12</div></div>
+      <div class="kpi"><div class="kpi-num">50+</div><div class="kpi-label">NPS score sustained</div></div>
+      <div class="kpi"><div class="kpi-num">&lt;5%</div><div class="kpi-label">Monthly churn · creator tier</div></div>
+    </div>
+    <table class="tbl">
+      <tr><th>Metric</th><th>Month 3</th><th>Month 6</th><th>Month 9</th><th>Month 12</th></tr>
+      <tr><td><strong>Free signups</strong></td><td>150</td><td>800</td><td>2,500</td><td>5,000</td></tr>
+      <tr><td><strong>Paying accounts</strong></td><td>50 (beta)</td><td>200</td><td>350</td><td>500</td></tr>
+      <tr><td><strong>MRR</strong></td><td>$0</td><td>$14K</td><td>$22K</td><td>$26K</td></tr>
+      <tr><td><strong>Agency accounts</strong></td><td>1 (own)</td><td>2</td><td>4</td><td>8</td></tr>
+      <tr><td><strong>Free → paid conversion</strong></td><td>—</td><td>25%</td><td>22%</td><td>20%</td></tr>
+      <tr><td><strong>Email subscribers</strong></td><td>500</td><td>2,000</td><td>4,000</td><td>8,000</td></tr>
+      <tr><td><strong>CAC (blended)</strong></td><td>—</td><td>$80</td><td>$70</td><td>$60</td></tr>
+      <tr><td><strong>LTV:CAC ratio</strong></td><td>—</td><td>6:1</td><td>8:1</td><td>10:1</td></tr>
+    </table>
+    <div class="callout v" style="margin-top:12px">
+      <div class="callout-label">North star GTM metric</div>
+      <div class="callout-text"><strong>% of paying users who referred at least one other paying user within 90 days.</strong> Target: 30% of paying users by month 12.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">API Spec · Data Dictionary · GTM Plan · v1.0 · March 2026</span>
+    <span class="ftr-link">Confidential</span>
+    <span class="ftr-link">hello@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>

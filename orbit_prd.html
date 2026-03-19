@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Product Requirements Document</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact;line-height:1.6}
+
+  .wrap{max-width:960px;margin:0 auto;background:#080b14}
+
+  /* Header */
+  .hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .logo{display:flex;align-items:center;gap:8px}
+  .wm{font-family:Georgia,serif;font-size:15px;letter-spacing:4px;color:#e8f0ff}
+  .hdr-meta{display:flex;align-items:center;gap:16px}
+  .hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+  .hdr-ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+  /* TOC */
+  .toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 40px;display:flex;gap:6px;flex-wrap:wrap}
+  .toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;cursor:pointer;text-decoration:none;letter-spacing:.04em;transition:border-color .15s}
+  .toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+
+  /* Cover */
+  .cover{padding:56px 40px;border-bottom:1px solid #1a2150;position:relative;overflow:hidden}
+  .cover-bg{position:absolute;right:-80px;top:-80px;opacity:0.03;pointer-events:none}
+  .cover-eye{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:10px}
+  .cover-title{font-family:Georgia,serif;font-size:44px;font-weight:400;color:#e8f0ff;line-height:1.1;margin-bottom:8px}
+  .cover-title span{color:#a78bfa}
+  .cover-sub{font-size:14px;color:#6b7ab5;line-height:1.7;max-width:560px;margin-bottom:28px}
+  .cover-meta{display:flex;gap:32px}
+  .cmeta-item{display:flex;flex-direction:column;gap:3px}
+  .cmeta-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E}
+  .cmeta-val{font-size:12px;color:#a0aec0}
+
+  /* Sections */
+  .sec{padding:36px 40px;border-bottom:1px solid #1a2150}
+  .sec:last-child{border-bottom:none}
+  .sec-num{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+  .sec-title{font-family:Georgia,serif;font-size:22px;color:#e8f0ff;margin-bottom:6px}
+  .sec-desc{font-size:12px;color:#6b7ab5;line-height:1.7;max-width:640px;margin-bottom:20px}
+  .div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:20px}
+
+  /* Typography */
+  h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+  h3:first-child{margin-top:0}
+  h4{font-size:11px;font-weight:500;color:#a78bfa;letter-spacing:.06em;text-transform:uppercase;margin:14px 0 6px}
+  p{font-size:12px;color:#8892b0;line-height:1.75;margin-bottom:10px}
+  p:last-child{margin-bottom:0}
+  strong{color:#c4b5fd;font-weight:500}
+
+  /* Grids */
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+
+  /* Cards */
+  .card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px}
+  .card.accent{border-color:#2d3260}
+  .card.highlight{border-color:#3D3A9E;border-left:3px solid #6C63FF}
+  .card-eye{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E;margin-bottom:5px}
+  .card-title{font-size:13px;font-weight:500;color:#e8f0ff;margin-bottom:5px}
+  .card-body{font-size:11px;color:#6b7ab5;line-height:1.65}
+
+  /* Requirements table */
+  .req-table{width:100%;border-collapse:collapse;margin-top:4px}
+  .req-table th{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:8px 12px;border-bottom:1px solid #1a2150;background:#0a0e1e}
+  .req-table td{font-size:11px;color:#8892b0;padding:9px 12px;border-bottom:1px solid #0d1228;vertical-align:top;line-height:1.55}
+  .req-table tr:last-child td{border-bottom:none}
+  .req-table tr:hover td{background:#0d1228}
+  .req-table td strong{color:#c4b5fd}
+  .pri{display:inline-block;border-radius:20px;padding:1px 8px;font-size:9px;font-weight:500;letter-spacing:.04em}
+  .p1{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+  .p2{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+  .p3{background:#0d1228;color:#4a5280;border:1px solid #1a2150}
+  .status{display:inline-block;border-radius:20px;padding:1px 8px;font-size:9px}
+  .s-todo{background:#1a1f35;color:#6b7ab5;border:1px solid #2d3260}
+  .s-progress{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+  .s-done{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+
+  /* Bullets */
+  .bullet{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start}
+  .bullet:last-child{margin-bottom:0}
+  .bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:6px;flex-shrink:0}
+  .bdot.v{background:#a78bfa}
+  .bdot.g{background:#4ade80}
+  .bdot.r{background:#f09595}
+  .btext{font-size:11px;color:#8892b0;line-height:1.55}
+  .btext strong{color:#c4b5fd;font-weight:500}
+
+  /* Callouts */
+  .callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0}
+  .callout.violet{border-left-color:#a78bfa}
+  .callout.green{border-left-color:#4ade80}
+  .callout.red{border-left-color:#f09595}
+  .callout-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#6C63FF;margin-bottom:4px}
+  .callout.violet .callout-label{color:#a78bfa}
+  .callout.green .callout-label{color:#4ade80}
+  .callout.red .callout-label{color:#f09595}
+  .callout-text{font-size:11px;color:#8892b0;line-height:1.6}
+  .callout-text strong{color:#e8f0ff;font-weight:500}
+
+  /* Phases */
+  .phase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #1a2150;border-radius:10px;overflow:hidden}
+  .phase{padding:16px;border-right:1px solid #1a2150}
+  .phase:last-child{border-right:none}
+  .phase-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+  .phase-title{font-size:13px;font-weight:500;color:#e8f0ff;margin-bottom:10px}
+  .phase-item{font-size:10px;color:#6b7ab5;margin-bottom:4px;padding-left:10px;position:relative;line-height:1.5}
+  .phase-item::before{content:'';position:absolute;left:0;top:6px;width:3px;height:3px;border-radius:50%;background:#2d3260}
+
+  /* Metrics */
+  .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .metric{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+  .metric-num{font-family:Georgia,serif;font-size:24px;color:#e8f0ff;margin-bottom:2px}
+  .metric-label{font-size:10px;color:#4a5280;line-height:1.4}
+
+  /* User story */
+  .story{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;margin-bottom:8px}
+  .story:last-child{margin-bottom:0}
+  .story-persona{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:4px}
+  .story-text{font-size:12px;color:#a0aec0;line-height:1.6;font-style:italic}
+  .story-ac{margin-top:8px;padding-top:8px;border-top:1px solid #1a2150}
+  .story-ac-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+
+  /* Flow */
+  .flow-row{display:flex;align-items:center;gap:0;margin:12px 0}
+  .flow-step{flex:1;background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 12px;text-align:center}
+  .flow-step-num{font-family:Georgia,serif;font-size:16px;color:#1a2150}
+  .flow-step-title{font-size:10px;font-weight:500;color:#e8f0ff}
+  .flow-step-sub{font-size:9px;color:#4a5280;margin-top:2px;line-height:1.4}
+  .flow-arrow{font-size:12px;color:#2d3260;padding:0 4px;flex-shrink:0}
+
+  /* Tag */
+  .tag{display:inline-block;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 9px;font-size:9px;color:#8892b0;margin-right:4px;margin-top:3px}
+  .tag.v{background:#1a1035;border-color:#2d1a5e;color:#a78bfa}
+  .tag.g{background:#0a1a10;border-color:#173404;color:#4ade80}
+
+  /* Mbadge */
+  .mbadge{display:inline-flex;align-items:center;gap:5px;background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:3px 10px;margin-bottom:10px}
+  .mbadge-dot{width:5px;height:5px;border-radius:50%;background:#a78bfa}
+  .mbadge-text{font-size:9px;color:#a78bfa;letter-spacing:.06em}
+
+  /* Footer */
+  .ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:14px 40px;display:flex;align-items:center;justify-content:space-between}
+  .ftr-brand{font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#2d3260}
+  .ftr-links{display:flex;gap:20px}
+  .ftr-link{font-size:9px;color:#3D3A9E;letter-spacing:.04em}
+
+  @media print{
+    .hdr{position:static}
+    body{background:#080b14}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="wm">ORBIT</span>
+    </div>
+    <div class="hdr-meta">
+      <span class="hdr-tag">Product Requirements Document</span>
+      <span class="hdr-ver">v1.0 · March 2026</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <a class="toc-item" href="#overview">1. Overview</a>
+    <a class="toc-item" href="#vision">2. Vision & goals</a>
+    <a class="toc-item" href="#users">3. Users & personas</a>
+    <a class="toc-item" href="#features">4. Feature requirements</a>
+    <a class="toc-item" href="#ai">5. AI & data layer</a>
+    <a class="toc-item" href="#integrations">6. Integrations</a>
+    <a class="toc-item" href="#architecture">7. Technical architecture</a>
+    <a class="toc-item" href="#ux">8. UX requirements</a>
+    <a class="toc-item" href="#security">9. Security & privacy</a>
+    <a class="toc-item" href="#roadmap">10. Roadmap</a>
+    <a class="toc-item" href="#success">11. Success metrics</a>
+    <a class="toc-item" href="#risks">12. Risks & mitigations</a>
+  </div>
+
+  <!-- Cover -->
+  <div class="cover">
+    <svg class="cover-bg" width="500" height="500" viewBox="0 0 500 500">
+      <circle cx="250" cy="250" r="220" fill="none" stroke="#6C63FF" stroke-width="1"/>
+      <circle cx="250" cy="250" r="170" fill="none" stroke="#6C63FF" stroke-width="0.7"/>
+      <circle cx="250" cy="250" r="120" fill="none" stroke="#6C63FF" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="70" fill="none" stroke="#6C63FF" stroke-width="0.4"/>
+    </svg>
+    <div class="cover-eye">Confidential · Internal document</div>
+    <div class="cover-title">Orbit<br/><span>Product Requirements</span></div>
+    <p class="cover-sub">This document defines the full product requirements for Orbit — an AI-powered creator analytics and intelligence platform built for lifestyle and fitness influencers and their talent managers. It covers vision, user personas, feature requirements, technical architecture, integrations, and go-to-market phasing.</p>
+    <div class="cover-meta">
+      <div class="cmeta-item"><span class="cmeta-label">Version</span><span class="cmeta-val">1.0 — Initial release</span></div>
+      <div class="cmeta-item"><span class="cmeta-label">Status</span><span class="cmeta-val">In review</span></div>
+      <div class="cmeta-item"><span class="cmeta-label">Date</span><span class="cmeta-val">March 2026</span></div>
+      <div class="cmeta-item"><span class="cmeta-label">Audience</span><span class="cmeta-val">Product, Engineering, Design</span></div>
+    </div>
+  </div>
+
+  <!-- 1. Overview -->
+  <div class="sec" id="overview">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">Product overview</div>
+    <div class="div"></div>
+    <p>Orbit is a creator intelligence platform that unifies cross-platform social analytics, AI-powered coaching, niche benchmarking, and trend intelligence into a single product. It is built specifically for lifestyle and fitness creators and the talent agencies that manage them — a vertical focus that enables depth of insight impossible in general-purpose analytics tools.</p>
+    <p>Unlike existing tools (Later, Sprout Social, Metricool, Hype Auditor), Orbit is not a scheduling or publishing tool repurposed for analytics. It is analytics and intelligence first — built around the question every creator actually cares about: <strong>"What should I do next to grow?"</strong></p>
+
+    <h3>Problem statement</h3>
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <div class="callout red">
+          <div class="callout-label">For creators</div>
+          <div class="callout-text">Creators track their numbers obsessively but have no framework to interpret them. They don't know if their engagement rate is good or bad, what's driving their best content, or how they compare to true peers in their niche. They're making creative and strategic decisions with incomplete intelligence.</div>
+        </div>
+      </div>
+      <div>
+        <div class="callout red">
+          <div class="callout-label">For talent managers</div>
+          <div class="callout-text">Talent managers juggle 10–50 creators across multiple platforms with no unified tool. They spend hours manually pulling data for brand deal pitches, have no early warning system for creator trajectory changes, and can't easily demonstrate the quantitative value of their roster to brand partners.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Solution summary</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card"><div class="card-eye">Intelligence</div><div class="card-title">AI coaching engine</div><div class="card-body">Personalized recommendations grounded in each creator's actual performance patterns — not generic best practices.</div></div>
+      <div class="card"><div class="card-eye">Benchmarking</div><div class="card-title">Constellation View</div><div class="card-body">True niche peer benchmarking against creators with similar following size, platform mix, and content category.</div></div>
+      <div class="card"><div class="card-eye">Trends</div><div class="card-title">Dark Matter</div><div class="card-body">Pre-viral trend intelligence filtered to the creator's niche — surfaces emerging audio, formats, and hashtags before they peak.</div></div>
+      <div class="card"><div class="card-eye">Measurement</div><div class="card-title">Gravity Score™</div><div class="card-body">A proprietary composite metric that captures true audience pull — return rate, save depth, comment quality, cross-platform following.</div></div>
+      <div class="card"><div class="card-eye">Detection</div><div class="card-title">Escape Velocity</div><div class="card-body">Real-time breakout content detection with a 48-hour replication playbook. Capitalizes on the most valuable creative window.</div></div>
+      <div class="card"><div class="card-eye">Agency</div><div class="card-title">Mission Control</div><div class="card-body">Multi-creator roster management, alert triage, and auto-generated brand deal performance reports for talent managers.</div></div>
+    </div>
+  </div>
+
+  <!-- 2. Vision & Goals -->
+  <div class="sec" id="vision">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">Vision & strategic goals</div>
+    <div class="div"></div>
+
+    <h3>Product vision</h3>
+    <div class="callout violet">
+      <div class="callout-label">Vision statement</div>
+      <div class="callout-text" style="font-size:14px;font-family:Georgia,serif;font-style:italic;color:#c4b5fd">"To become the definitive intelligence layer for the creator economy — starting with lifestyle and fitness, and expanding to every vertical where creators and their teams need to make smarter decisions faster."</div>
+    </div>
+
+    <h3>Strategic goals</h3>
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <h4>Year 1 goals</h4>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Launch MVP with IG + TikTok integrations and core AI coaching engine</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Onboard full agency roster as beta users (50+ creators)</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Reach 500 paying creator accounts by month 12</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Achieve $312K ARR at blended ARPU</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Establish Gravity Score™ as a recognized metric in the lifestyle/fitness creator community</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">NPS of 50+ among active users</div></div>
+      </div>
+      <div>
+        <h4>Year 2–3 goals</h4>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Expand to YouTube, Snapchat, Twitch, and Pinterest integrations</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Launch Dark Matter trend intelligence as standalone feature</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Reach 5,000 creator accounts across multiple niches</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Launch brand partnership marketplace powered by Gravity Score data</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">White-label agency product for external talent firms</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Series A fundraise based on data network effects and ARR trajectory</div></div>
+      </div>
+    </div>
+
+    <h3>Non-goals (out of scope for v1)</h3>
+    <div class="callout">
+      <div class="callout-label">Explicitly excluded from v1</div>
+      <div class="callout-text">Content scheduling and publishing · Paid media analytics · Brand-side access portal · Direct messaging integrations · Creator marketplace / brand matching · Video editing tools · Automated posting</div>
+    </div>
+  </div>
+
+  <!-- 3. Users & Personas -->
+  <div class="sec" id="users">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">Users & personas</div>
+    <div class="div"></div>
+    <p>Orbit serves two distinct user types with different needs, access levels, and use patterns. Both share the same underlying data but interact with it through role-specific interfaces.</p>
+
+    <h3>Persona 1 — The creator</h3>
+    <div class="g2" style="margin-top:8px">
+      <div class="card accent">
+        <div class="card-eye">Primary user</div>
+        <div class="card-title">Lifestyle & fitness influencer</div>
+        <div class="card-body" style="margin-top:4px">
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Following:</strong> 10K–5M across one or more platforms</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Platforms:</strong> Instagram primary, TikTok secondary, YouTube tertiary</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Tech comfort:</strong> High — native mobile-first user</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Posts per week:</strong> 3–14 across platforms</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Primary goal:</strong> Grow audience, increase brand deal value, understand what content works</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pain point:</strong> Knows their numbers but not what they mean or what to do</div></div>
+        </div>
+      </div>
+      <div>
+        <h4>Jobs to be done</h4>
+        <div class="story">
+          <div class="story-persona">Creator — growth</div>
+          <div class="story-text">"As a fitness creator, I want to understand why my last post underperformed so I can avoid making the same mistake next time."</div>
+        </div>
+        <div class="story">
+          <div class="story-persona">Creator — brand deals</div>
+          <div class="story-text">"As a lifestyle influencer, I want a shareable performance report I can send to brands that shows my true engagement value — not just follower count."</div>
+        </div>
+        <div class="story">
+          <div class="story-persona">Creator — trends</div>
+          <div class="story-text">"As a fitness creator, I want to know which audio and formats are gaining momentum in my niche before they become oversaturated."</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Persona 2 — The talent manager</h3>
+    <div class="g2" style="margin-top:8px">
+      <div class="card accent">
+        <div class="card-eye">Agency user</div>
+        <div class="card-title">Talent manager / agency operator</div>
+        <div class="card-body" style="margin-top:4px">
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Roster size:</strong> 5–50 creators under active management</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Primary concern:</strong> Roster performance, brand deal negotiation, creator development</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Tech comfort:</strong> Medium — prefers structured dashboards over raw data</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Session frequency:</strong> Daily overview, weekly deep dives</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Primary goal:</strong> Identify opportunities and risks across entire roster quickly</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pain point:</strong> Spends too much time manually pulling and formatting data</div></div>
+        </div>
+      </div>
+      <div>
+        <h4>Jobs to be done</h4>
+        <div class="story">
+          <div class="story-persona">Manager — oversight</div>
+          <div class="story-text">"As a talent manager, I want a single daily view of all my creators' performance trajectories so I can prioritize who needs my attention today."</div>
+        </div>
+        <div class="story">
+          <div class="story-persona">Manager — brand deals</div>
+          <div class="story-text">"As an agency operator, I want to auto-generate a polished, data-rich performance deck for any creator on my roster in under 2 minutes."</div>
+        </div>
+        <div class="story">
+          <div class="story-persona">Manager — strategy</div>
+          <div class="story-text">"As a talent manager, I want to see which of my creators are on a growth trajectory and which are plateauing so I can have proactive strategy conversations."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Feature Requirements -->
+  <div class="sec" id="features">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">Feature requirements</div>
+    <div class="div"></div>
+
+    <!-- F1: Gravity Score -->
+    <h3>F1 — Gravity Score™</h3>
+    <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic: gravity = audience pull</span></div>
+    <p>A proprietary composite metric representing a creator's true audience influence. Displayed prominently on every creator profile and updated daily. Becomes the primary KPI creators and managers use to track health and negotiate brand deals.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Composite score calculation</strong> — weighted algorithm combining return viewer rate (30%), save/share rate (25%), comment quality NLP score (20%), cross-platform follower overlap (15%), follower velocity (10%)</td><td><span class="pri p1">P1</span></td><td>Algorithm weights configurable by product team</td></tr>
+      <tr><td><strong>Score display</strong> — prominent numerical display (0–100 scale) on creator dashboard with 7-day trend indicator</td><td><span class="pri p1">P1</span></td><td>Visual treatment: large, hero position</td></tr>
+      <tr><td><strong>Score history</strong> — 90-day score trend chart with annotated inflection points</td><td><span class="pri p1">P1</span></td><td>Allows creators to correlate score changes with content decisions</td></tr>
+      <tr><td><strong>Score breakdown</strong> — drill-down showing contribution of each component metric</td><td><span class="pri p2">P2</span></td><td>Helps creators understand what's driving the score</td></tr>
+      <tr><td><strong>Shareable score card</strong> — exportable graphic showing Gravity Score, trend, and top-line stats for brand pitches</td><td><span class="pri p2">P2</span></td><td>Branded with Orbit watermark on free tier, removable on Pro+</td></tr>
+      <tr><td><strong>Benchmark comparison</strong> — show score vs niche peer average and top 10% threshold</td><td><span class="pri p2">P2</span></td><td>Requires Constellation data (F4)</td></tr>
+    </table>
+
+    <!-- F2: Unified Dashboard -->
+    <h3 style="margin-top:24px">F2 — Unified performance dashboard</h3>
+    <p>A single cross-platform view normalizing metrics from all connected platforms into a consistent schema. The primary landing screen for all users.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Cross-platform metric normalization</strong> — map each platform's metric schema into unified concepts: reach, engagement rate, follower growth, content performance</td><td><span class="pri p1">P1</span></td><td>Custom normalization rules per platform required</td></tr>
+      <tr><td><strong>Date range selector</strong> — 7d, 28d, 90d, custom range</td><td><span class="pri p1">P1</span></td><td>Default to 28 days</td></tr>
+      <tr><td><strong>Platform toggle</strong> — filter view to one or multiple platforms</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Top-line stat cards</strong> — Total reach, avg engagement rate, follower growth, content count, with period-over-period delta</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Engagement trend chart</strong> — time series chart of engagement rate with platform breakdown</td><td><span class="pri p1">P1</span></td><td>Chart.js or D3 implementation</td></tr>
+      <tr><td><strong>Platform breakdown</strong> — per-platform engagement rate with visual comparison bars</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Best performing content</strong> — top 5 posts by engagement in selected period with thumbnail and stats</td><td><span class="pri p1">P1</span></td><td>Requires media thumbnail access from platform APIs</td></tr>
+      <tr><td><strong>Posting consistency heatmap</strong> — calendar view showing post frequency vs engagement outcome</td><td><span class="pri p2">P2</span></td><td></td></tr>
+      <tr><td><strong>Audience demographics</strong> — age, gender, location breakdown where available from platform APIs</td><td><span class="pri p2">P2</span></td><td>Instagram and YouTube provide this; TikTok limited</td></tr>
+    </table>
+
+    <!-- F3: Orbit Path -->
+    <h3 style="margin-top:24px">F3 — Orbit Path (trajectory intelligence)</h3>
+    <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic: orbital path = content trajectory</span></div>
+    <p>Predictive growth modeling that shows where a creator is headed, not just where they've been. Uses current momentum signals to project 30/60/90-day trajectory.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Growth projection model</strong> — ML model trained on creator growth patterns to project follower trajectory at 30/60/90 days with confidence range</td><td><span class="pri p1">P1</span></td><td>Initial model trained on agency roster data</td></tr>
+      <tr><td><strong>Trajectory visualization</strong> — curved path chart showing historical and projected trajectory with confidence band</td><td><span class="pri p1">P1</span></td><td>Key brand visual — should be visually distinctive</td></tr>
+      <tr><td><strong>Momentum score</strong> — current trajectory strength indicator (accelerating / steady / decelerating)</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Inflection point detection</strong> — automatically identify and annotate events that caused trajectory changes</td><td><span class="pri p2">P2</span></td><td>Correlates with posting events, content type changes</td></tr>
+      <tr><td><strong>Platform decay alerts</strong> — flag when a specific platform's performance is declining relative to others</td><td><span class="pri p2">P2</span></td><td>Push notification + in-app alert</td></tr>
+      <tr><td><strong>Trajectory comparison</strong> — compare current trajectory to same creator 90 days ago</td><td><span class="pri p3">P3</span></td><td>V2 feature</td></tr>
+    </table>
+
+    <!-- F4: Constellation -->
+    <h3 style="margin-top:24px">F4 — Constellation View (peer benchmarking)</h3>
+    <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic: constellation = your niche network</span></div>
+    <p>True niche benchmarking against a curated set of peer creators. Peers are matched on niche category, following tier, platform mix, and posting frequency.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Peer matching algorithm</strong> — match creators on: niche (lifestyle/fitness sub-category), following tier (±50%), primary platform, posting frequency (±30%)</td><td><span class="pri p1">P1</span></td><td>Minimum 20 matched peers required for meaningful benchmarks</td></tr>
+      <tr><td><strong>Niche rank display</strong> — show creator's rank among matched peers for key metrics, updated weekly</td><td><span class="pri p1">P1</span></td><td>e.g. "#4 of 840 similar creators"</td></tr>
+      <tr><td><strong>Benchmark comparisons</strong> — show creator's engagement rate, growth rate, and Gravity Score vs peer median and top 10%</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Constellation map visualization</strong> — spatial map showing creator's position relative to peers</td><td><span class="pri p2">P2</span></td><td>Key brand visual — orbit/constellation metaphor</td></tr>
+      <tr><td><strong>Gap analysis</strong> — identify specific metrics where creator is below peer median with AI-generated explanation</td><td><span class="pri p2">P2</span></td><td>Powered by AI layer (Section 05)</td></tr>
+      <tr><td><strong>White space mapping</strong> — identify content topics/formats underserved in the creator's constellation</td><td><span class="pri p3">P3</span></td><td>V2 feature — requires content topic classification</td></tr>
+      <tr><td><strong>Anonymized peer data</strong> — all peer data shown in aggregate only; no individual creator identities exposed without consent</td><td><span class="pri p1">P1</span></td><td>Critical privacy requirement</td></tr>
+    </table>
+
+    <!-- F5: Escape Velocity -->
+    <h3 style="margin-top:24px">F5 — Escape Velocity (breakout detection)</h3>
+    <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic: escape velocity = breakthrough content</span></div>
+    <p>Real-time detection of content that significantly outperforms a creator's baseline. Triggers an immediate AI analysis and 48-hour replication playbook.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Breakout threshold detection</strong> — flag posts performing >2.5× the creator's 30-day baseline engagement rate within 6 hours of posting</td><td><span class="pri p1">P1</span></td><td>Threshold configurable per creator based on their variance</td></tr>
+      <tr><td><strong>Real-time alert</strong> — push notification + in-app alert within 15 minutes of threshold crossing</td><td><span class="pri p1">P1</span></td><td>Time-sensitive — delay reduces playbook effectiveness</td></tr>
+      <tr><td><strong>Breakout analysis</strong> — AI-generated breakdown of contributing factors: format, length, timing, audio used, hashtags, posting context</td><td><span class="pri p1">P1</span></td><td>Powered by AI layer</td></tr>
+      <tr><td><strong>Replication playbook</strong> — specific, actionable content brief for a follow-up post within 48 hours</td><td><span class="pri p1">P1</span></td><td>Must be concrete, not generic</td></tr>
+      <tr><td><strong>Escape Velocity history</strong> — log of all breakout events with outcome tracking (did creator capitalize?)</td><td><span class="pri p2">P2</span></td><td></td></tr>
+      <tr><td><strong>Pattern recognition</strong> — identify recurring elements across multiple escape velocity events for a creator</td><td><span class="pri p2">P2</span></td><td>e.g. "Your last 4 breakout posts all used voiceover format"</td></tr>
+    </table>
+
+    <!-- F6: Dark Matter -->
+    <h3 style="margin-top:24px">F6 — Dark Matter (trend intelligence)</h3>
+    <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic: dark matter = hidden opportunity</span></div>
+    <p>Pre-viral trend intelligence filtered to the creator's specific niche. Surfaces emerging audio, formats, hashtags, and topics before they reach mainstream trending pages.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Pre-viral audio detection</strong> — identify sounds gaining usage velocity in the creator's niche before they chart on platform trending pages</td><td><span class="pri p1">P1</span></td><td>Requires TikTok + Instagram audio usage data</td></tr>
+      <tr><td><strong>Format emergence tracking</strong> — detect new content structures being adopted by top performers in the niche</td><td><span class="pri p1">P1</span></td><td>Computer vision / content classification required</td></tr>
+      <tr><td><strong>Hashtag momentum scoring</strong> — rank hashtags by growth rate relative to baseline, niche-filtered</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Weekly Dark Matter briefing</strong> — digest email + in-app notification summarizing top signals for the week</td><td><span class="pri p1">P1</span></td><td>Sent Monday morning for planning week ahead</td></tr>
+      <tr><td><strong>Content brief generator</strong> — convert any Dark Matter signal into an executable content brief</td><td><span class="pri p2">P2</span></td><td>AI-powered, uses creator's voice and past content as context</td></tr>
+      <tr><td><strong>Brand interest signals</strong> — surface categories where brand spend is increasing, indicating upcoming partnership demand</td><td><span class="pri p3">P3</span></td><td>Requires brand spend data partnership or inference model</td></tr>
+    </table>
+
+    <!-- F7: Mission Control -->
+    <h3 style="margin-top:24px">F7 — Mission Control (agency dashboard)</h3>
+    <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic: mission control = agency oversight</span></div>
+    <p>A dedicated agency-tier view giving talent managers a unified interface across their entire creator roster. Separate from individual creator views but powered by the same underlying data.</p>
+    <table class="req-table">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Roster overview grid</strong> — sortable table of all managed creators showing: Gravity Score, trajectory indicator, 28-day reach, engagement rate, last alert</td><td><span class="pri p1">P1</span></td><td>Default sort: trajectory status (declining first)</td></tr>
+      <tr><td><strong>Alert triage feed</strong> — unified feed of all alerts across roster: escape velocity events, trajectory dips, trend opportunities</td><td><span class="pri p1">P1</span></td><td>Filterable by alert type and creator</td></tr>
+      <tr><td><strong>One-click creator drill-down</strong> — tap any creator in roster to open their full individual dashboard</td><td><span class="pri p1">P1</span></td><td></td></tr>
+      <tr><td><strong>Brand deal report generator</strong> — auto-generate a formatted, data-rich PDF performance report for any creator in under 60 seconds</td><td><span class="pri p1">P1</span></td><td>Template: cover, Gravity Score, top-line stats, best content, audience demo, benchmark position</td></tr>
+      <tr><td><strong>Creator-manager notes</strong> — managers can add strategy notes visible to the creator in their dashboard</td><td><span class="pri p2">P2</span></td><td>Closes the collaboration loop</td></tr>
+      <tr><td><strong>Roster trend comparison</strong> — chart comparing Gravity Score trajectory across multiple creators</td><td><span class="pri p2">P2</span></td><td></td></tr>
+      <tr><td><strong>White-label report export</strong> — remove Orbit branding from reports for agency-branded delivery to brand partners</td><td><span class="pri p2">P2</span></td><td>Agency tier only</td></tr>
+      <tr><td><strong>Role-based access</strong> — managers can grant/revoke creator access to their own data</td><td><span class="pri p1">P1</span></td><td>Privacy and trust requirement</td></tr>
+    </table>
+  </div>
+
+  <!-- 5. AI & Data Layer -->
+  <div class="sec" id="ai">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">AI & data layer</div>
+    <div class="div"></div>
+    <p>The AI layer is Orbit's core differentiator. It is not a chatbot or a generic AI assistant — it is a purpose-built intelligence engine trained on creator performance data and calibrated for the lifestyle and fitness niche. Every AI output must be specific, actionable, and grounded in the creator's actual data.</p>
+
+    <h3>AI coaching engine — requirements</h3>
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <h4>Input signals</h4>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Creator's full post history (content type, length, timing, hashtags, audio)</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Performance time series (reach, engagement, saves, shares, comments per post)</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Audience demographic data from connected platforms</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Constellation peer benchmark data (anonymized)</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Dark Matter trend signals for creator's niche</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext">Platform algorithm change signals</div></div>
+      </div>
+      <div>
+        <h4>Output types</h4>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Diagnostic insights</strong> — "Here's why this post underperformed"</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Strategic recommendations</strong> — "Based on your data, here's what to do this week"</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Escape Velocity playbooks</strong> — "Here's how to capitalize on this breakout"</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Content briefs</strong> — Ready-to-execute post concepts from Dark Matter signals</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Trajectory explanations</strong> — "Here's what's driving your current path"</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Weekly strategy digest</strong> — Prioritized action list for the week ahead</div></div>
+      </div>
+    </div>
+
+    <div class="callout violet" style="margin-top:16px">
+      <div class="callout-label">AI quality standard</div>
+      <div class="callout-text">Every AI output must pass a specificity test: <strong>could this insight apply to any creator, or is it specific to this creator's data?</strong> Generic outputs ("Post more consistently") are a product failure. Every recommendation must reference specific data points from the creator's own performance history.</div>
+    </div>
+
+    <h3>Data pipeline requirements</h3>
+    <table class="req-table" style="margin-top:8px">
+      <tr><th>Requirement</th><th>Priority</th><th>Notes</th></tr>
+      <tr><td><strong>Real-time data sync</strong> — new posts and performance updates ingested within 15 minutes of platform availability</td><td><span class="pri p1">P1</span></td><td>Webhook-based where platform supports, polling fallback</td></tr>
+      <tr><td><strong>Historical data backfill</strong> — import up to 24 months of historical post performance on account connect</td><td><span class="pri p1">P1</span></td><td>Required for meaningful trajectory modeling</td></tr>
+      <tr><td><strong>Metric normalization engine</strong> — canonical data model mapping all platform metrics to unified schema</td><td><span class="pri p1">P1</span></td><td>Schema must be extensible for new platforms</td></tr>
+      <tr><td><strong>Anonymized benchmarking pool</strong> — aggregate and anonymize data from opted-in creators for Constellation benchmarks</td><td><span class="pri p1">P1</span></td><td>Explicit opt-in consent required. Data used in aggregate only.</td></tr>
+      <tr><td><strong>Data freshness indicators</strong> — show users when data was last synced, flag stale connections</td><td><span class="pri p2">P2</span></td><td></td></tr>
+    </table>
+  </div>
+
+  <!-- 6. Integrations -->
+  <div class="sec" id="integrations">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">Platform integrations</div>
+    <div class="div"></div>
+
+    <div class="phase-row" style="margin-bottom:16px">
+      <div class="phase">
+        <div class="phase-label" style="color:#6C63FF">Phase 1 — Launch</div>
+        <div class="phase-title" style="color:#e8f0ff">Core platforms</div>
+        <div class="phase-item">Instagram (Meta Graph API)</div>
+        <div class="phase-item">TikTok (TikTok for Developers)</div>
+      </div>
+      <div class="phase">
+        <div class="phase-label" style="color:#a78bfa">Phase 2 — Month 6</div>
+        <div class="phase-title" style="color:#e8f0ff">Growth platforms</div>
+        <div class="phase-item">YouTube (YouTube Data API v3)</div>
+        <div class="phase-item">Snapchat (Marketing API)</div>
+      </div>
+      <div class="phase">
+        <div class="phase-label" style="color:#4a5280">Phase 3 — Month 12</div>
+        <div class="phase-title" style="color:#e8f0ff">Expansion platforms</div>
+        <div class="phase-item">Twitch (Helix API)</div>
+        <div class="phase-item">Pinterest (Analytics API)</div>
+        <div class="phase-item">LinkedIn (future)</div>
+      </div>
+    </div>
+
+    <table class="req-table">
+      <tr><th>Platform</th><th>Auth method</th><th>Key data available</th><th>Key limitations</th></tr>
+      <tr><td><strong>Instagram</strong></td><td>OAuth 2.0 via Meta Graph API</td><td>Post reach, impressions, engagement, saves, shares, story views, follower demographics, audience insights</td><td>Requires Business/Creator account. Reach data has 2-day delay. Stories expire after 24hrs.</td></tr>
+      <tr><td><strong>TikTok</strong></td><td>OAuth 2.0 via TikTok for Developers</td><td>Video views, likes, comments, shares, follower count, profile views, video analytics</td><td>Most restrictive API. No audience demographics without special approval. Data access requires TikTok partner review.</td></tr>
+      <tr><td><strong>YouTube</strong></td><td>OAuth 2.0 via YouTube Data API v3</td><td>Views, watch time, subscribers, engagement, audience demographics, traffic sources, revenue (if monetized)</td><td>Analytics data has 48hr delay. 10,000 units/day quota requires management.</td></tr>
+      <tr><td><strong>Snapchat</strong></td><td>OAuth 2.0 via Snapchat Marketing API</td><td>Story views, reach, engagement, audience insights</td><td>Limited public API. Primarily built for advertisers. Creator analytics limited.</td></tr>
+    </table>
+
+    <div class="callout" style="margin-top:12px">
+      <div class="callout-label">API risk management</div>
+      <div class="callout-text">Platform APIs are subject to change without notice. All integrations must be built with an abstraction layer so platform-specific changes can be patched without affecting the core data model. Rate limiting, quota management, and graceful degradation are required for all integrations.</div>
+    </div>
+  </div>
+
+  <!-- 7. Technical Architecture -->
+  <div class="sec" id="architecture">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">Technical architecture</div>
+    <div class="div"></div>
+
+    <h3>System overview</h3>
+    <div class="flow-row">
+      <div class="flow-step"><div class="flow-step-num">01</div><div class="flow-step-title">Platform APIs</div><div class="flow-step-sub">IG, TT, YT, Snap</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">02</div><div class="flow-step-title">Ingestion layer</div><div class="flow-step-sub">Webhooks + polling</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">03</div><div class="flow-step-title">Normalization</div><div class="flow-step-sub">Canonical data model</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">04</div><div class="flow-step-title">Data warehouse</div><div class="flow-step-sub">Time-series + events</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step"><div class="flow-step-num">05</div><div class="flow-step-title">AI engine</div><div class="flow-step-sub">Scoring + insights</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:#2d3260"><div class="flow-step-num" style="color:#2d3260">06</div><div class="flow-step-title" style="color:#a78bfa">Product API</div><div class="flow-step-sub">REST + WebSocket</div></div>
+    </div>
+
+    <h3>Stack recommendations</h3>
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <h4>Backend</h4>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Language:</strong> Node.js or Python (FastAPI) — Python preferred for AI/ML components</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Database:</strong> PostgreSQL (relational) + TimescaleDB extension for time-series performance data</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Cache:</strong> Redis for real-time dashboard data and session management</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Queue:</strong> Bull (Redis-backed) for async data ingestion and AI processing jobs</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Search:</strong> Elasticsearch for content classification and trend signal detection</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>AI/ML:</strong> Anthropic Claude API for coaching insights + custom ML models for scoring</div></div>
+      </div>
+      <div>
+        <h4>Frontend & infrastructure</h4>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Web:</strong> Next.js (React) — SSR for dashboard performance</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Mobile:</strong> React Native — iOS first, Android parity within 3 months</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Charts:</strong> Recharts or Nivo for data visualization</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Hosting:</strong> AWS (ECS for services, RDS for databases, S3 for assets)</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>CDN:</strong> CloudFront for static assets and media thumbnails</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Auth:</strong> Auth0 or Supabase Auth with OAuth provider support</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Monitoring:</strong> Datadog for infrastructure, Sentry for error tracking</div></div>
+      </div>
+    </div>
+
+    <h3>Performance requirements</h3>
+    <table class="req-table" style="margin-top:8px">
+      <tr><th>Metric</th><th>Target</th><th>Notes</th></tr>
+      <tr><td>Dashboard initial load time</td><td>&lt; 2 seconds (P95)</td><td>Pre-computed aggregates required</td></tr>
+      <tr><td>Data sync latency (new post → dashboard)</td><td>&lt; 15 minutes</td><td>Webhook-preferred, polling fallback</td></tr>
+      <tr><td>AI insight generation time</td><td>&lt; 8 seconds</td><td>Show skeleton/loading state; async delivery acceptable</td></tr>
+      <tr><td>Escape Velocity alert delivery</td><td>&lt; 15 minutes of threshold crossing</td><td>Push + in-app</td></tr>
+      <tr><td>Brand deal report generation</td><td>&lt; 60 seconds</td><td>PDF generation via Puppeteer or similar</td></tr>
+      <tr><td>API uptime SLA</td><td>99.9% monthly</td><td>Excludes planned maintenance windows</td></tr>
+    </table>
+  </div>
+
+  <!-- 8. UX Requirements -->
+  <div class="sec" id="ux">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">UX & design requirements</div>
+    <div class="div"></div>
+
+    <h3>Design principles</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card accent">
+        <div class="card-title">Intelligence over data</div>
+        <div class="card-body">Every screen should answer "so what?" not just "what." Raw numbers must always be accompanied by context — benchmark comparison, trend direction, or AI interpretation.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-title">Action over observation</div>
+        <div class="card-body">Every insight must lead to an action. The product fails if a creator learns something from Orbit and doesn't know what to do with it.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-title">Coach, not dashboard</div>
+        <div class="card-body">The tone, language, and UX framing should feel like a brilliant strategist giving advice — not a spreadsheet delivering numbers.</div>
+      </div>
+    </div>
+
+    <h3>Brand system in UI</h3>
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <h4>Color usage</h4>
+        <div class="bullet"><div class="bdot" style="background:#080b14;border:1px solid #3D3A9E"></div><div class="btext"><strong>#080B14 Deep Void</strong> — primary app background</div></div>
+        <div class="bullet"><div class="bdot" style="background:#0f1628;border:1px solid #3D3A9E"></div><div class="btext"><strong>#0F1628 Space Black</strong> — sidebar, nav backgrounds</div></div>
+        <div class="bullet"><div class="bdot" style="background:#1a2150;border:1px solid #3D3A9E"></div><div class="btext"><strong>#1A2150 Nebula Navy</strong> — card backgrounds, surfaces</div></div>
+        <div class="bullet"><div class="bdot" style="background:#6C63FF"></div><div class="btext"><strong>#6C63FF Orbit Blue</strong> — primary CTAs, active states, highlights</div></div>
+        <div class="bullet"><div class="bdot" style="background:#a78bfa"></div><div class="btext"><strong>#A78BFA Nova Violet</strong> — AI-powered features exclusively</div></div>
+        <div class="bullet"><div class="bdot" style="background:#e8f0ff;border:1px solid #3D3A9E"></div><div class="btext"><strong>#E8F0FF Starlight</strong> — primary text on dark backgrounds</div></div>
+      </div>
+      <div>
+        <h4>Typography</h4>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Display / brand:</strong> Georgia serif — headlines, wordmark, large numbers</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>UI / body:</strong> Inter or system-ui — all interface text</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Data / mono:</strong> JetBrains Mono — metric values, code, IDs</div></div>
+        <h4 style="margin-top:12px">Visual language</h4>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Orbital arc motif in logo mark and decorative elements</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Constellation scatter plots for benchmark visualization</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Curved trajectory lines for Orbit Path feature</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext">Violet glow treatment for all AI-powered interface elements</div></div>
+      </div>
+    </div>
+
+    <h3>Mobile requirements</h3>
+    <div class="callout violet">
+      <div class="callout-label">Mobile-first for creators</div>
+      <div class="callout-text">Creators are mobile-native. The creator-facing product must be designed mobile-first with web as secondary. Talent managers skew toward web/desktop — the agency Mission Control can be web-first with mobile parity. <strong>Escape Velocity alerts must work as push notifications on mobile.</strong></div>
+    </div>
+  </div>
+
+  <!-- 9. Security & Privacy -->
+  <div class="sec" id="security">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">Security & privacy</div>
+    <div class="div"></div>
+    <p>Creator data is sensitive and personal. Privacy and security are non-negotiable requirements, not afterthoughts. Orbit's data practices must be transparent, defensible, and creator-controlled.</p>
+
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <h4>Data handling requirements</h4>
+        <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>Data minimization</strong> — only collect data explicitly needed for product functionality</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>Explicit consent</strong> — creators must actively opt in to benchmarking data pool; opt-in cannot be default</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>Data portability</strong> — creators can export all their data in CSV/JSON at any time</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>Right to deletion</strong> — complete data deletion within 30 days of account closure</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>No third-party data sale</strong> — Orbit will never sell individual creator data to third parties</div></div>
+        <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>Aggregate only</strong> — benchmarking pool data used only in aggregate; no individual peer data exposed</div></div>
+      </div>
+      <div>
+        <h4>Security requirements</h4>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Encryption at rest</strong> — AES-256 encryption for all stored data</div></div>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Encryption in transit</strong> — TLS 1.3 for all API communications</div></div>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>OAuth token security</strong> — platform tokens stored encrypted, never logged, rotated on schedule</div></div>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Role-based access</strong> — strict separation between creator and manager data access</div></div>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>SOC 2 Type II</strong> — target compliance within 18 months of launch</div></div>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>GDPR compliance</strong> — required for EU creator base</div></div>
+        <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Penetration testing</strong> — annual third-party security audit</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Roadmap -->
+  <div class="sec" id="roadmap">
+    <div class="sec-num">Section 10</div>
+    <div class="sec-title">Product roadmap</div>
+    <div class="div"></div>
+
+    <div class="phase-row">
+      <div class="phase">
+        <div class="phase-label" style="color:#6C63FF">Phase 1 · 0–3 months</div>
+        <div class="phase-title" style="color:#6C63FF">Foundation</div>
+        <div class="phase-item">Brand identity & design system</div>
+        <div class="phase-item">Instagram OAuth integration</div>
+        <div class="phase-item">TikTok OAuth integration</div>
+        <div class="phase-item">Unified data model + normalization</div>
+        <div class="phase-item">Core dashboard (F2)</div>
+        <div class="phase-item">Gravity Score v1 (F1)</div>
+        <div class="phase-item">Agency roster beta onboarding</div>
+        <div class="phase-item">Authentication + account management</div>
+      </div>
+      <div class="phase">
+        <div class="phase-label" style="color:#a78bfa">Phase 2 · 3–8 months</div>
+        <div class="phase-title" style="color:#a78bfa">Intelligence</div>
+        <div class="phase-item">AI coaching engine (F5 outputs)</div>
+        <div class="phase-item">Escape Velocity detection (F5)</div>
+        <div class="phase-item">Orbit Path trajectory (F3)</div>
+        <div class="phase-item">Constellation benchmarking v1 (F4)</div>
+        <div class="phase-item">Dark Matter trend briefing (F6)</div>
+        <div class="phase-item">Mission Control agency view (F7)</div>
+        <div class="phase-item">Mobile app — iOS</div>
+        <div class="phase-item">Freemium public launch</div>
+      </div>
+      <div class="phase">
+        <div class="phase-label" style="color:#4a5280">Phase 3 · 8–16 months</div>
+        <div class="phase-title" style="color:#e8f0ff">Scale</div>
+        <div class="phase-item">YouTube integration</div>
+        <div class="phase-item">Snapchat integration</div>
+        <div class="phase-item">Dark Matter content briefs (F6)</div>
+        <div class="phase-item">Constellation white space mapping</div>
+        <div class="phase-item">Brand deal report generator</div>
+        <div class="phase-item">Android mobile app</div>
+        <div class="phase-item">White-label agency reports</div>
+        <div class="phase-item">Brand partnership signals</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:20px">Pricing tiers</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card">
+        <div class="card-eye" style="color:#6b7ab5">Free tier</div>
+        <div class="card-title">$0 / month</div>
+        <div class="card-body">1 platform, 30-day history, basic dashboard, Gravity Score, limited AI insights (3/month). No benchmarking. Freemium acquisition funnel.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye" style="color:#6C63FF">Creator tier</div>
+        <div class="card-title">$29 / month</div>
+        <div class="card-body">All platforms, 12-month history, full dashboard, unlimited AI insights, Escape Velocity alerts, Constellation benchmarking, Dark Matter briefing.</div>
+      </div>
+      <div class="card" style="border-color:#2d3260">
+        <div class="card-eye" style="color:#a78bfa">Pro / Agency tier</div>
+        <div class="card-title">$79 / mo · $499 / mo</div>
+        <div class="card-body">Pro: full Orbit Path, content briefs, white-label scorecard. Agency ($499): Mission Control, roster management, brand deal report generator, up to 50 creators.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. Success Metrics -->
+  <div class="sec" id="success">
+    <div class="sec-num">Section 11</div>
+    <div class="sec-title">Success metrics</div>
+    <div class="div"></div>
+
+    <div class="metric-grid">
+      <div class="metric"><div class="metric-num">500</div><div class="metric-label">Paying creator accounts by month 12</div></div>
+      <div class="metric"><div class="metric-num">$312K</div><div class="metric-label">ARR target at month 12</div></div>
+      <div class="metric"><div class="metric-num">50+</div><div class="metric-label">Target NPS score from active users</div></div>
+      <div class="metric"><div class="metric-num">&lt;5%</div><div class="metric-label">Monthly churn target (creator tier)</div></div>
+    </div>
+
+    <h3 style="margin-top:20px">North star metric</h3>
+    <div class="callout violet">
+      <div class="callout-label">North star</div>
+      <div class="callout-text" style="font-size:14px"><strong>Weekly active creators who acted on an Orbit recommendation.</strong> Not just logged in — took a specific action (changed posting time, used a recommended audio, followed up on an escape velocity event) that can be traced to an Orbit insight. This is the metric that proves Orbit is genuinely changing creator behavior, not just being observed.</div>
+    </div>
+
+    <h3>Feature-level success metrics</h3>
+    <table class="req-table" style="margin-top:8px">
+      <tr><th>Feature</th><th>Success metric</th><th>Target</th></tr>
+      <tr><td>Gravity Score™</td><td>% of creators who reference Gravity Score in brand deal communications</td><td>40% of Pro users by month 9</td></tr>
+      <tr><td>Escape Velocity</td><td>% of EV alerts where creator posts follow-up within 48 hours</td><td>35% capitalization rate</td></tr>
+      <tr><td>Dark Matter</td><td>% of weekly briefing recipients who open and click through</td><td>55% open rate, 30% click-through</td></tr>
+      <tr><td>Constellation</td><td>% of creators who check benchmark position weekly</td><td>60% of Creator+ tier</td></tr>
+      <tr><td>Mission Control</td><td>Time to generate a brand deal report</td><td>&lt;60 seconds for 90% of reports</td></tr>
+      <tr><td>AI coaching</td><td>Thumbs up / thumbs down rating on AI insights</td><td>80%+ positive rating</td></tr>
+    </table>
+  </div>
+
+  <!-- 12. Risks -->
+  <div class="sec" id="risks">
+    <div class="sec-num">Section 12</div>
+    <div class="sec-title">Risks & mitigations</div>
+    <div class="div"></div>
+
+    <table class="req-table">
+      <tr><th>Risk</th><th>Severity</th><th>Likelihood</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>Platform API restrictions</strong> — TikTok or Instagram restricts data access or changes API terms</td>
+        <td><span class="pri p1">High</span></td>
+        <td><span class="pri p2">Medium</span></td>
+        <td>Abstraction layer isolates platform changes. Maintain relationships with platform developer programs. TikTok partnership application from day 1. Always have 2+ platforms live so no single API failure breaks the product.</td>
+      </tr>
+      <tr>
+        <td><strong>Benchmarking cold start</strong> — insufficient peer data to make Constellation benchmarks meaningful at launch</td>
+        <td><span class="pri p2">Medium</span></td>
+        <td><span class="pri p1">High</span></td>
+        <td>Agency roster (50+ creators) seeds the benchmark pool. Supplement with third-party data provider (Modash, HypeAuditor API) for early-stage gaps. Set clear minimum peer count thresholds before showing benchmarks.</td>
+      </tr>
+      <tr>
+        <td><strong>AI insight quality</strong> — AI recommendations are generic or inaccurate, eroding creator trust</td>
+        <td><span class="pri p1">High</span></td>
+        <td><span class="pri p2">Medium</span></td>
+        <td>Specificity testing protocol for all AI outputs. Human review of first 1,000 AI insights. Thumbs up/down feedback loop built into UI from day 1. Continuous model refinement based on feedback data.</td>
+      </tr>
+      <tr>
+        <td><strong>Creator churn</strong> — creators don't see tangible growth results and cancel</td>
+        <td><span class="pri p1">High</span></td>
+        <td><span class="pri p2">Medium</span></td>
+        <td>Onboarding flow sets clear expectations. Weekly digest keeps creators engaged even in slow weeks. Escape Velocity alerts create "wow moments" that drive retention. Track time-to-first-value carefully.</td>
+      </tr>
+      <tr>
+        <td><strong>Data privacy incident</strong> — creator data breach or unauthorized access</td>
+        <td><span class="pri p1">Critical</span></td>
+        <td><span class="pri p3">Low</span></td>
+        <td>SOC 2 compliance roadmap from day 1. Third-party pen testing before public launch. Incident response plan documented and rehearsed. Cyber liability insurance. Transparent privacy policy with clear data practices.</td>
+      </tr>
+      <tr>
+        <td><strong>Competitor response</strong> — Later, Sprout Social, or a well-funded startup copies core features</td>
+        <td><span class="pri p2">Medium</span></td>
+        <td><span class="pri p2">Medium</span></td>
+        <td>Data moat from agency-seeded benchmarking is the primary defense — it takes years to replicate. Speed of iteration matters. Gravity Score™ trademark filing. Brand and community are defensible assets beyond features.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div class="ftr">
+    <span class="ftr-brand">ORBIT</span>
+    <div class="ftr-links">
+      <span class="ftr-link">PRD v1.0 · March 2026</span>
+      <span class="ftr-link">Confidential</span>
+      <span class="ftr-link">hello@orbitapp.io</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

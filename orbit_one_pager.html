@@ -1,0 +1,374 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  .page{background:#080b14;border-radius:16px;overflow:hidden;font-family:var(--font-sans)}
+
+  /* Header */
+  .header{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:28px 40px;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:10px}
+  .wordmark{font-family:Georgia,serif;font-size:18px;letter-spacing:4px;color:#e8f0ff}
+  .header-tag{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:4px 14px;font-size:10px;color:#a78bfa;letter-spacing:.08em}
+
+  /* Hero band */
+  .hero{padding:40px;border-bottom:1px solid #1a2150;position:relative;overflow:hidden}
+  .hero-bg{position:absolute;right:-60px;top:-60px;opacity:0.04;pointer-events:none}
+  .hero-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E;margin-bottom:12px}
+  .hero-title{font-family:Georgia,serif;font-size:38px;font-weight:400;color:#e8f0ff;line-height:1.15;max-width:520px}
+  .hero-title span{color:#a78bfa}
+  .hero-body{font-size:13px;color:#6b7ab5;line-height:1.7;max-width:500px;margin-top:12px}
+  .hero-stats{display:flex;gap:32px;margin-top:24px}
+  .hstat-num{font-family:Georgia,serif;font-size:26px;color:#e8f0ff}
+  .hstat-label{font-size:10px;color:#3D3A9E;margin-top:2px;line-height:1.4}
+
+  /* Section */
+  .section{padding:32px 40px;border-bottom:1px solid #1a2150}
+  .section:last-child{border-bottom:none}
+  .section-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+  .section-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:16px}
+  .divider{width:32px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:18px}
+
+  /* Concept */
+  .concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .concept-card{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:18px}
+  .cc-icon{width:28px;height:28px;background:#1a1f35;border:1px solid #2d3260;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+  .cc-title{font-size:12px;font-weight:500;color:#c4b5fd;margin-bottom:6px}
+  .cc-body{font-size:11px;color:#6b7ab5;line-height:1.6}
+
+  /* Ideation */
+  .idea-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .idea-card{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:16px}
+  .idea-num{font-family:Georgia,serif;font-size:28px;color:#1a2150;margin-bottom:4px}
+  .idea-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:6px}
+  .idea-body{font-size:11px;color:#6b7ab5;line-height:1.6}
+  .idea-tag{display:inline-block;margin-top:8px;background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:2px 8px;font-size:9px;color:#a78bfa}
+
+  /* Use cases */
+  .uc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .uc-card{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:16px;display:flex;gap:12px}
+  .uc-dot{width:8px;height:8px;border-radius:50%;background:#6C63FF;margin-top:5px;flex-shrink:0}
+  .uc-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:4px}
+  .uc-body{font-size:11px;color:#6b7ab5;line-height:1.6}
+  .uc-persona{font-size:9px;color:#3D3A9E;margin-top:6px;letter-spacing:.06em;text-transform:uppercase}
+
+  /* Positioning */
+  .pos-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  .pos-statement{background:#0d1228;border:1px solid #2d3260;border-radius:12px;padding:20px}
+  .pos-quote{font-family:Georgia,serif;font-size:16px;color:#e8f0ff;line-height:1.6;font-style:italic}
+  .pos-quote span{color:#a78bfa}
+  .pos-vs{display:flex;flex-direction:column;gap:8px}
+  .vs-row{display:grid;grid-template-columns:1fr 24px 1fr;gap:0;align-items:center}
+  .vs-them{background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px 12px;font-size:11px;color:#4a5280}
+  .vs-us{background:#1a1f35;border:1px solid #2d3260;border-radius:8px;padding:8px 12px;font-size:11px;color:#c4b5fd}
+  .vs-mid{font-size:9px;color:#2d3260;text-align:center}
+
+  /* Market */
+  .market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .mstat{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:16px}
+  .mstat-num{font-family:Georgia,serif;font-size:24px;color:#e8f0ff;margin-bottom:2px}
+  .mstat-label{font-size:10px;color:#4a5280;line-height:1.5}
+  .tier-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .tier{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+  .tier.featured{border-color:#3D3A9E}
+  .tier-name{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#6C63FF;margin-bottom:4px}
+  .tier-name.violet{color:#a78bfa}
+  .tier-price{font-family:Georgia,serif;font-size:22px;color:#e8f0ff;margin-bottom:4px}
+  .tier-price span{font-size:11px;color:#4a5280}
+  .tier-desc{font-size:10px;color:#6b7ab5;line-height:1.5}
+
+  /* Footer */
+  .footer{background:#0a0e1e;border-top:1px solid #1a2150;padding:18px 40px;display:flex;align-items:center;justify-content:space-between}
+  .footer-brand{font-family:Georgia,serif;font-size:12px;letter-spacing:3px;color:#2d3260}
+  .footer-links{display:flex;gap:20px}
+  .footer-link{font-size:10px;color:#3D3A9E;letter-spacing:.04em}
+</style>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <svg width="24" height="24" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="wordmark">ORBIT</span>
+    </div>
+    <span class="header-tag">Creator Intelligence Platform</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <svg class="hero-bg" width="400" height="400" viewBox="0 0 400 400">
+      <circle cx="200" cy="200" r="180" fill="none" stroke="#6C63FF" stroke-width="1"/>
+      <circle cx="200" cy="200" r="130" fill="none" stroke="#6C63FF" stroke-width="0.7"/>
+      <circle cx="200" cy="200" r="80" fill="none" stroke="#6C63FF" stroke-width="0.5"/>
+      <circle cx="200" cy="200" r="30" fill="none" stroke="#6C63FF" stroke-width="0.4"/>
+    </svg>
+    <div class="hero-eyebrow">Product overview · 2026</div>
+    <div class="hero-title">Every creator has a<br/>gravitational pull.<br/><span>We measure it.</span></div>
+    <p class="hero-body">Orbit is an AI-powered creator analytics platform built for lifestyle and fitness influencers. It unifies cross-platform performance data, delivers intelligent coaching, and benchmarks creators against their true peers — giving talent and their managers the clarity to grow with intention.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hstat-num">$500B</div>
+        <div class="hstat-label">Creator economy<br/>by 2027</div>
+      </div>
+      <div>
+        <div class="hstat-num">200M+</div>
+        <div class="hstat-label">Full-time<br/>creators globally</div>
+      </div>
+      <div>
+        <div class="hstat-num">86%</div>
+        <div class="hstat-label">Say existing tools<br/>don't meet their needs</div>
+      </div>
+      <div>
+        <div class="hstat-num">$4.2B</div>
+        <div class="hstat-label">Creator tools market<br/>growing 26% YoY</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Concept -->
+  <div class="section">
+    <div class="section-label">Concept</div>
+    <div class="section-title">What Orbit is built on</div>
+    <div class="divider"></div>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="cc-icon">
+          <svg width="14" height="14" viewBox="0 0 96 96" fill="none">
+            <path d="M18,48 A30,30 0 0,1 48,18" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="18" cy="48" r="9" fill="#a78bfa"/>
+          </svg>
+        </div>
+        <div class="cc-title">The intelligence layer</div>
+        <div class="cc-body">Most analytics tools give creators numbers. Orbit gives them meaning. Every metric is contextualized, benchmarked, and translated into a clear next action — powered by an AI coaching engine trained on niche-specific creator data.</div>
+      </div>
+      <div class="concept-card">
+        <div class="cc-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="5" stroke="#6C63FF" stroke-width="1.5"/>
+            <circle cx="8" cy="8" r="1.5" fill="#6C63FF"/>
+          </svg>
+        </div>
+        <div class="cc-title">Gravitational model</div>
+        <div class="cc-body">Orbit sits at the center of a creator's universe — all platforms, all data, all trends in one gravitational field. Managers and creators see the same truth from different vantage points, enabling faster, smarter decisions together.</div>
+      </div>
+      <div class="concept-card">
+        <div class="cc-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="2" width="5" height="5" rx="1.5" fill="#a78bfa"/>
+            <rect x="9" y="2" width="5" height="5" rx="1.5" fill="#3D3A9E"/>
+            <rect x="2" y="9" width="5" height="5" rx="1.5" fill="#3D3A9E"/>
+            <rect x="9" y="9" width="5" height="5" rx="1.5" fill="#1a2150"/>
+          </svg>
+        </div>
+        <div class="cc-title">Niche-first benchmarking</div>
+        <div class="cc-body">Comparing a fitness creator to a tech creator is meaningless. Orbit benchmarks against true peers — same niche, similar following size, same platform mix — surfacing insights that generic tools simply cannot produce.</div>
+      </div>
+      <div class="concept-card">
+        <div class="cc-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <polyline points="2,12 5,7 8,10 11,5 14,7" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="cc-title">First-party data moat</div>
+        <div class="cc-body">Built from within a talent agency managing 50+ lifestyle and fitness creators. We launched with real benchmarking data, pre-built creator trust, and a live feedback loop — structural advantages that compound over time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ideation -->
+  <div class="section">
+    <div class="section-label">Ideation</div>
+    <div class="section-title">Six core capabilities</div>
+    <div class="divider"></div>
+    <div class="idea-row">
+      <div class="idea-card">
+        <div class="idea-num">01</div>
+        <div class="idea-title">Unified dashboard</div>
+        <div class="idea-body">Instagram, TikTok, YouTube, Snapchat, Twitch — all normalized into one performance view. No tab-switching, no manual exports.</div>
+        <div class="idea-tag">Cross-platform</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">02</div>
+        <div class="idea-title">AI coaching engine</div>
+        <div class="idea-body">Personalized recommendations grounded in each creator's actual patterns. Diagnoses what's working, why, and what to do next.</div>
+        <div class="idea-tag">Orbit AI</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">03</div>
+        <div class="idea-title">Peer benchmarking</div>
+        <div class="idea-body">Engagement, growth velocity, content cadence — all measured against 800+ creators in the same niche and tier.</div>
+        <div class="idea-tag">Intelligence</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">04</div>
+        <div class="idea-title">Trend intelligence</div>
+        <div class="idea-body">Trending audio, hashtags, and formats filtered to your niche — surfaced before they peak, not after.</div>
+        <div class="idea-tag">Real-time</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">05</div>
+        <div class="idea-title">Content diagnostics</div>
+        <div class="idea-body">Decay curves, best posting windows, format performance, caption analysis — the full picture of why each post performed as it did.</div>
+        <div class="idea-tag">Deep analytics</div>
+      </div>
+      <div class="idea-card">
+        <div class="idea-num">06</div>
+        <div class="idea-title">Agency view</div>
+        <div class="idea-body">Multi-creator roster management, rollup reporting, and brand deal performance tracking for talent managers and agencies.</div>
+        <div class="idea-tag">Agency tier</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Use Cases -->
+  <div class="section">
+    <div class="section-label">Use cases</div>
+    <div class="section-title">Who Orbit is built for</div>
+    <div class="divider"></div>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-dot"></div>
+        <div>
+          <div class="uc-title">The rising creator</div>
+          <div class="uc-body">A fitness creator with 50K followers who posts consistently but can't figure out why growth has plateaued. Orbit surfaces that her Reels under 15s outperform longer content 3.4× — and that she's posting 2 days after her optimal window.</div>
+          <div class="uc-persona">Micro creator · 10K–250K followers</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-dot" style="background:#a78bfa"></div>
+        <div>
+          <div class="uc-title">The established influencer</div>
+          <div class="uc-body">A lifestyle creator with 800K followers preparing for a brand deal negotiation. Orbit generates a benchmarked performance report showing her engagement rate is top 8% in her niche — quantifiable proof of her value.</div>
+          <div class="uc-persona">Mid-tier creator · 250K–2M followers</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-dot" style="background:#6C63FF"></div>
+        <div>
+          <div class="uc-title">The talent manager</div>
+          <div class="uc-body">An agency manager overseeing 12 creators needs a weekly overview without opening 12 separate dashboards. Orbit's roster view gives a single-screen pulse on every creator's trajectory, alerts, and upcoming opportunities.</div>
+          <div class="uc-persona">Agency · 5–50 creators under management</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-dot" style="background:#3D3A9E"></div>
+        <div>
+          <div class="uc-title">The strategic creator</div>
+          <div class="uc-body">A creator planning their next content quarter uses Orbit's trend intelligence to identify rising audio and formats in the fitness niche before they saturate — building a 90-day content calendar grounded in real signal.</div>
+          <div class="uc-persona">Power user · strategy-led creation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Positioning -->
+  <div class="section">
+    <div class="section-label">Market positioning</div>
+    <div class="section-title">Where Orbit sits</div>
+    <div class="divider"></div>
+    <div class="pos-wrap">
+      <div>
+        <div class="pos-statement" style="margin-bottom:12px">
+          <div class="pos-quote">Orbit is the <span>first AI-native analytics platform</span> built exclusively for lifestyle and fitness creators — combining the depth of enterprise analytics with the strategic intelligence of a personal coach.</div>
+        </div>
+        <div class="pos-statement">
+          <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:10px">Positioning statement</div>
+          <div style="font-size:11px;color:#6b7ab5;line-height:1.7">For lifestyle and fitness creators who want to grow with intention, Orbit is the creator intelligence platform that transforms raw performance data into clear strategic direction — unlike generic analytics tools that leave interpretation to the creator.</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:12px">Orbit vs the market</div>
+        <div class="pos-vs">
+          <div class="vs-row">
+            <div class="vs-them">Brand-focused dashboards</div>
+            <div class="vs-mid">→</div>
+            <div class="vs-us">Creator-native intelligence</div>
+          </div>
+          <div class="vs-row">
+            <div class="vs-them">Generic benchmarking</div>
+            <div class="vs-mid">→</div>
+            <div class="vs-us">True niche peer comparison</div>
+          </div>
+          <div class="vs-row">
+            <div class="vs-them">Raw data, no context</div>
+            <div class="vs-mid">→</div>
+            <div class="vs-us">AI coaching with direction</div>
+          </div>
+          <div class="vs-row">
+            <div class="vs-them">Trend alerts</div>
+            <div class="vs-mid">→</div>
+            <div class="vs-us">Niche-filtered trend signal</div>
+          </div>
+          <div class="vs-row">
+            <div class="vs-them">Single-creator view</div>
+            <div class="vs-mid">→</div>
+            <div class="vs-us">Creator + agency layer</div>
+          </div>
+          <div class="vs-row">
+            <div class="vs-them">No data moat</div>
+            <div class="vs-mid">→</div>
+            <div class="vs-us">First-party roster data</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Market & Pricing -->
+  <div class="section">
+    <div class="section-label">Market & pricing</div>
+    <div class="section-title">Opportunity and tiers</div>
+    <div class="divider"></div>
+    <div class="market-grid">
+      <div class="mstat">
+        <div class="mstat-num">$500B</div>
+        <div class="mstat-label">Creator economy size by 2027</div>
+      </div>
+      <div class="mstat">
+        <div class="mstat-num">$60B</div>
+        <div class="mstat-label">Lifestyle & fitness sub-market</div>
+      </div>
+      <div class="mstat">
+        <div class="mstat-num">26%</div>
+        <div class="mstat-label">Annual growth in creator tools</div>
+      </div>
+      <div class="mstat">
+        <div class="mstat-num">$312K</div>
+        <div class="mstat-label">Target ARR at month 12</div>
+      </div>
+    </div>
+    <div class="tier-row">
+      <div class="tier">
+        <div class="tier-name">Creator</div>
+        <div class="tier-price">$29<span>/mo</span></div>
+        <div class="tier-desc">Individual creators. Unified dashboard, AI insights, trend alerts. Freemium entry drives top-of-funnel growth.</div>
+      </div>
+      <div class="tier featured">
+        <div class="tier-name violet">Pro</div>
+        <div class="tier-price">$79<span>/mo</span></div>
+        <div class="tier-desc">Power creators. Full benchmarking, competitor tracking, brand deal analytics, and advanced content diagnostics.</div>
+      </div>
+      <div class="tier">
+        <div class="tier-name">Agency</div>
+        <div class="tier-price">$499<span>/mo</span></div>
+        <div class="tier-desc">Talent managers. Multi-creator roster view, rollup reporting, and white-label option for brand partners.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span class="footer-brand">ORBIT</span>
+    <div class="footer-links">
+      <span class="footer-link">hello@orbitapp.io</span>
+      <span class="footer-link">orbitapp.io</span>
+      <span class="footer-link">Creator Intelligence Platform · 2026</span>
+    </div>
+  </div>
+
+</div>

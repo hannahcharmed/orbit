@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Data Dictionary</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:960px;margin:0 auto;background:#080b14}
+  .hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .logo{display:flex;align-items:center;gap:8px}
+  .wm{font-family:Georgia,serif;font-size:15px;letter-spacing:4px;color:#e8f0ff}
+  .hdr-meta{display:flex;align-items:center;gap:12px}
+  .hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+  .ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+  .toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:12px 32px;display:flex;gap:6px;flex-wrap:wrap}
+  .toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;text-decoration:none;letter-spacing:.04em}
+  .toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+  .sec{padding:32px;border-bottom:1px solid #1a2150}
+  .sec:last-child{border-bottom:none}
+  .sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+  .sec-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+  .sec-desc{font-size:12px;color:#6b7ab5;line-height:1.7;max-width:640px;margin-bottom:16px}
+  .div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+  h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+  h3:first-child{margin-top:0}
+  h4{font-size:10px;font-weight:500;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase;margin:14px 0 6px}
+  p{font-size:12px;color:#8892b0;line-height:1.75;margin-bottom:10px}
+  strong{color:#c4b5fd;font-weight:500}
+  code{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;background:#0d1228;border:1px solid #1a2150;border-radius:4px;padding:1px 6px;color:#a78bfa}
+
+  /* Entity header */
+  .entity{background:#0d1228;border:1px solid #1a2150;border-radius:12px;margin-bottom:20px;overflow:hidden}
+  .entity-head{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:14px 18px;display:flex;align-items:center;gap:12px}
+  .entity-name{font-family:Georgia,serif;font-size:16px;color:#e8f0ff}
+  .entity-table-name{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;color:#6C63FF}
+  .entity-desc{font-size:11px;color:#6b7ab5;padding:12px 18px;border-bottom:1px solid #1a2150}
+
+  /* Field table */
+  .field-table{width:100%;border-collapse:collapse}
+  .field-table th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:8px 12px;border-bottom:1px solid #1a2150;background:#090d1c}
+  .field-table td{font-size:11px;color:#8892b0;padding:8px 12px;border-bottom:1px solid #090d1c;vertical-align:top;line-height:1.5}
+  .field-table tr:last-child td{border-bottom:none}
+  .field-table tr:hover td{background:#0a0e1e}
+  .fname{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;color:#e8f0ff}
+  .ftype{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:#6C63FF}
+  .pk{display:inline-block;font-size:8px;padding:1px 5px;background:#1a1200;color:#fbbf24;border:1px solid #412402;border-radius:3px;margin-left:4px}
+  .fk{display:inline-block;font-size:8px;padding:1px 5px;background:#0a1228;color:#6C63FF;border:1px solid #1a2150;border-radius:3px;margin-left:4px}
+  .idx{display:inline-block;font-size:8px;padding:1px 5px;background:#0a1a10;color:#4ade80;border:1px solid #173404;border-radius:3px;margin-left:4px}
+  .nn{display:inline-block;font-size:8px;padding:1px 5px;background:#1a0a0a;color:#f09595;border:1px solid #501313;border-radius:3px;margin-left:4px}
+  .field-note{font-size:10px;color:#4a5280;margin-top:2px}
+
+  /* Metric definitions */
+  .metric-def{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px 16px;margin-bottom:10px}
+  .metric-def:last-child{margin-bottom:0}
+  .md-name{font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;color:#a78bfa;margin-bottom:4px}
+  .md-formula{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:#6C63FF;background:#090d1c;border:1px solid #1a2150;border-radius:4px;padding:6px 10px;margin:6px 0;display:block}
+  .md-desc{font-size:11px;color:#8892b0;line-height:1.6}
+  .md-source{font-size:9px;color:#3D3A9E;margin-top:4px}
+
+  /* Enum table */
+  .enum-table{width:100%;border-collapse:collapse;margin-top:8px}
+  .enum-table th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:6px 10px;border-bottom:1px solid #1a2150;background:#090d1c}
+  .enum-table td{font-size:11px;color:#8892b0;padding:6px 10px;border-bottom:1px solid #090d1c;vertical-align:top}
+  .enum-table tr:last-child td{border-bottom:none}
+  .eval{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;color:#e8f0ff}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .info{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:11px;color:#8892b0;line-height:1.6}
+  .info.v{border-left-color:#a78bfa}
+  .info-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+  .info.v .info-label{color:#a78bfa}
+
+  .ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+  .ftr-brand{font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#2d3260}
+  .ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="wm">ORBIT</span>
+    </div>
+    <div class="hdr-meta">
+      <span class="hdr-tag">Data Dictionary</span>
+      <span class="ver">v1.0 · Schema Reference</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <a class="toc-item" href="#conventions">Conventions</a>
+    <a class="toc-item" href="#users">users</a>
+    <a class="toc-item" href="#creators">creators</a>
+    <a class="toc-item" href="#platforms">platform_connections</a>
+    <a class="toc-item" href="#content">content</a>
+    <a class="toc-item" href="#metrics">content_metrics</a>
+    <a class="toc-item" href="#gravity">gravity_scores</a>
+    <a class="toc-item" href="#escvel">escape_velocity_events</a>
+    <a class="toc-item" href="#constellation">constellation_peers</a>
+    <a class="toc-item" href="#signals">dark_matter_signals</a>
+    <a class="toc-item" href="#insights">ai_insights</a>
+    <a class="toc-item" href="#agencies">agencies</a>
+    <a class="toc-item" href="#metric-defs">Metric definitions</a>
+    <a class="toc-item" href="#enums">Enumerations</a>
+  </div>
+
+  <!-- Conventions -->
+  <div class="sec" id="conventions">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">Conventions & standards</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <h4>Naming conventions</h4>
+        <div class="metric-def">
+          <div class="md-name">ID format</div>
+          <div class="md-desc">All entity IDs use a prefixed format: <code>prefix_[random 8-char alphanumeric]</code>. Example: <code>crt_abc12345</code>. Prefix list: <code>usr</code> users, <code>crt</code> creators, <code>cnt</code> content, <code>ev</code> escape velocity, <code>sig</code> signals, <code>ins</code> insights, <code>agc</code> agencies, <code>rep</code> reports.</div>
+        </div>
+        <div class="metric-def">
+          <div class="md-name">Timestamps</div>
+          <div class="md-desc">All timestamps stored as <code>TIMESTAMPTZ</code> in UTC. Returned in ISO 8601 format: <code>2026-03-18T10:00:00Z</code>. Display timezone conversion handled client-side.</div>
+        </div>
+        <div class="metric-def">
+          <div class="md-name">Rates & ratios</div>
+          <div class="md-desc">All rates stored as decimals (0–1). Displayed as percentages in the UI. Example: engagement rate of 6.8% stored as <code>0.068</code>.</div>
+        </div>
+      </div>
+      <div>
+        <h4>Badge legend</h4>
+        <div class="metric-def">
+          <span class="pk">PK</span> <span style="font-size:11px;color:#8892b0;margin-left:6px">Primary key</span><br/><br/>
+          <span class="fk">FK</span> <span style="font-size:11px;color:#8892b0;margin-left:6px">Foreign key reference</span><br/><br/>
+          <span class="idx">IDX</span> <span style="font-size:11px;color:#8892b0;margin-left:6px">Indexed column</span><br/><br/>
+          <span class="nn">NN</span> <span style="font-size:11px;color:#8892b0;margin-left:6px">Not null constraint</span>
+        </div>
+        <h4>Database</h4>
+        <div class="metric-def">
+          <div class="md-desc">PostgreSQL 15 with TimescaleDB extension for time-series tables (<code>content_metrics</code>, <code>gravity_scores</code>, <code>follower_snapshots</code>). All tables use row-level security (RLS) policies enforcing creator data isolation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- users -->
+  <div class="sec" id="users">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">users</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">User account</span>
+        <span class="entity-table-name">users</span>
+      </div>
+      <div class="entity-desc">Authentication and account record. Every person who logs into Orbit has a user record. A user may be linked to one creator profile, one agency, or both.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Prefixed ID. Format: <code>usr_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">email</span></td><td><span class="ftype">varchar(255)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>Unique email address. Lowercased on insert.</td></tr>
+        <tr><td><span class="fname">password_hash</span></td><td><span class="ftype">varchar(255)</span></td><td></td><td>bcrypt hash. Null for OAuth-only accounts.</td></tr>
+        <tr><td><span class="fname">auth_provider</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>email | google | apple</td></tr>
+        <tr><td><span class="fname">provider_id</span></td><td><span class="ftype">varchar(255)</span></td><td></td><td>OAuth provider's user ID. Null for email auth.</td></tr>
+        <tr><td><span class="fname">role</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>creator | manager | admin</td></tr>
+        <tr><td><span class="fname">tier</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>free | creator | pro | agency</td></tr>
+        <tr><td><span class="fname">tier_expires_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Subscription expiry. Null = active subscription.</td></tr>
+        <tr><td><span class="fname">mfa_enabled</span></td><td><span class="ftype">boolean</span></td><td><span class="nn">NN</span></td><td>Default false. TOTP-based MFA.</td></tr>
+        <tr><td><span class="fname">mfa_secret</span></td><td><span class="ftype">text</span></td><td></td><td>Encrypted TOTP secret. Null if MFA not enabled.</td></tr>
+        <tr><td><span class="fname">timezone</span></td><td><span class="ftype">varchar(50)</span></td><td></td><td>IANA timezone string. Default: UTC.</td></tr>
+        <tr><td><span class="fname">notification_prefs</span></td><td><span class="ftype">jsonb</span></td><td></td><td>Per-event push/email notification preferences.</td></tr>
+        <tr><td><span class="fname">last_login_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Last successful authentication timestamp.</td></tr>
+        <tr><td><span class="fname">created_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>Account creation timestamp.</td></tr>
+        <tr><td><span class="fname">deleted_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Soft delete timestamp. Null = active account.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- creators -->
+  <div class="sec" id="creators">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">creators</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Creator profile</span>
+        <span class="entity-table-name">creators</span>
+      </div>
+      <div class="entity-desc">The core creator entity. One-to-one with a user record for creator-role users. Stores niche classification, benchmarking consent, and current Gravity Score snapshot.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>crt_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">user_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>users.id</code>. One-to-one.</td></tr>
+        <tr><td><span class="fname">display_name</span></td><td><span class="ftype">varchar(100)</span></td><td><span class="nn">NN</span></td><td>Public display name.</td></tr>
+        <tr><td><span class="fname">handle</span></td><td><span class="ftype">varchar(50)</span></td><td><span class="idx">IDX</span></td><td>Primary handle (without @). Used for display only.</td></tr>
+        <tr><td><span class="fname">niche</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>fitness | lifestyle | wellness | nutrition | beauty | travel</td></tr>
+        <tr><td><span class="fname">sub_niche</span></td><td><span class="ftype">varchar(100)</span></td><td></td><td>Free-text sub-category. e.g. "strength_training", "yoga", "meal_prep"</td></tr>
+        <tr><td><span class="fname">gravity_score</span></td><td><span class="ftype">integer</span></td><td></td><td>Denormalized current score (0–100). Source of truth is <code>gravity_scores</code> table.</td></tr>
+        <tr><td><span class="fname">gravity_trend</span></td><td><span class="ftype">enum</span></td><td></td><td>rising | stable | declining. Based on 7-day delta.</td></tr>
+        <tr><td><span class="fname">benchmark_opt_in</span></td><td><span class="ftype">boolean</span></td><td><span class="nn">NN</span></td><td>Consent to anonymized benchmarking pool. Default: false. Explicit opt-in required.</td></tr>
+        <tr><td><span class="fname">benchmark_opt_in_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Timestamp of opt-in consent. Required for GDPR audit trail.</td></tr>
+        <tr><td><span class="fname">agency_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="idx">IDX</span></td><td>References <code>agencies.id</code>. Null if unmanaged.</td></tr>
+        <tr><td><span class="fname">total_followers</span></td><td><span class="ftype">integer</span></td><td></td><td>Denormalized sum of followers across all connected platforms. Refreshed on sync.</td></tr>
+        <tr><td><span class="fname">primary_platform</span></td><td><span class="ftype">enum</span></td><td></td><td>instagram | tiktok | youtube | snapchat. Highest-follower platform.</td></tr>
+        <tr><td><span class="fname">last_sync_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Most recent successful data sync across any platform.</td></tr>
+        <tr><td><span class="fname">created_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- platform_connections -->
+  <div class="sec" id="platforms">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">platform_connections</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Platform connection</span>
+        <span class="entity-table-name">platform_connections</span>
+      </div>
+      <div class="entity-desc">OAuth connection to a social platform for a specific creator. Stores encrypted tokens, sync state, and platform-specific metadata. One creator may have many connections (one per platform).</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>plc_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>creators.id</code>.</td></tr>
+        <tr><td><span class="fname">platform</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>instagram | tiktok | youtube | snapchat | twitch</td></tr>
+        <tr><td><span class="fname">platform_user_id</span></td><td><span class="ftype">varchar(100)</span></td><td><span class="nn">NN</span></td><td>Platform's internal user/account ID.</td></tr>
+        <tr><td><span class="fname">platform_username</span></td><td><span class="ftype">varchar(100)</span></td><td></td><td>Platform handle/username at time of connection.</td></tr>
+        <tr><td><span class="fname">access_token_enc</span></td><td><span class="ftype">text</span></td><td><span class="nn">NN</span></td><td>AES-256 encrypted OAuth access token. Never logged.</td></tr>
+        <tr><td><span class="fname">refresh_token_enc</span></td><td><span class="ftype">text</span></td><td></td><td>AES-256 encrypted OAuth refresh token.</td></tr>
+        <tr><td><span class="fname">token_expires_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Access token expiry. Null if non-expiring.</td></tr>
+        <tr><td><span class="fname">scopes</span></td><td><span class="ftype">text[]</span></td><td></td><td>Array of granted OAuth scopes.</td></tr>
+        <tr><td><span class="fname">status</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>active | expired | revoked | error</td></tr>
+        <tr><td><span class="fname">follower_count</span></td><td><span class="ftype">integer</span></td><td></td><td>Follower count at last sync.</td></tr>
+        <tr><td><span class="fname">last_sync_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>Last successful sync timestamp.</td></tr>
+        <tr><td><span class="fname">last_sync_error</span></td><td><span class="ftype">text</span></td><td></td><td>Error message from most recent failed sync attempt.</td></tr>
+        <tr><td><span class="fname">sync_cursor</span></td><td><span class="ftype">jsonb</span></td><td></td><td>Platform-specific cursor/state for incremental sync.</td></tr>
+        <tr><td><span class="fname">connected_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- content -->
+  <div class="sec" id="content">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">content</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Content post</span>
+        <span class="entity-table-name">content</span>
+      </div>
+      <div class="entity-desc">Individual piece of content posted by a creator on any platform. Stores normalized metadata and classification. Performance metrics stored separately in <code>content_metrics</code>.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>cnt_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>creators.id</code>.</td></tr>
+        <tr><td><span class="fname">platform</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>instagram | tiktok | youtube | snapchat</td></tr>
+        <tr><td><span class="fname">platform_post_id</span></td><td><span class="ftype">varchar(100)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>Platform's native post ID. Unique per platform.</td></tr>
+        <tr><td><span class="fname">content_type</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>reel | post | story | video | short | live</td></tr>
+        <tr><td><span class="fname">caption</span></td><td><span class="ftype">text</span></td><td></td><td>Full caption text at time of sync.</td></tr>
+        <tr><td><span class="fname">caption_preview</span></td><td><span class="ftype">varchar(150)</span></td><td></td><td>First 150 chars of caption for display.</td></tr>
+        <tr><td><span class="fname">thumbnail_url</span></td><td><span class="ftype">text</span></td><td></td><td>CDN URL to cached thumbnail image.</td></tr>
+        <tr><td><span class="fname">duration_seconds</span></td><td><span class="ftype">integer</span></td><td></td><td>Video duration. Null for static posts.</td></tr>
+        <tr><td><span class="fname">hashtags</span></td><td><span class="ftype">text[]</span></td><td></td><td>Array of hashtags extracted from caption.</td></tr>
+        <tr><td><span class="fname">mentions</span></td><td><span class="ftype">text[]</span></td><td></td><td>Array of @mentions extracted from caption.</td></tr>
+        <tr><td><span class="fname">audio_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="idx">IDX</span></td><td>References <code>audio_tracks.id</code>. Null if no audio or audio unidentified.</td></tr>
+        <tr><td><span class="fname">audio_name</span></td><td><span class="ftype">varchar(255)</span></td><td></td><td>Audio track name as returned by platform API.</td></tr>
+        <tr><td><span class="fname">posted_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>Timestamp when content was published on the platform.</td></tr>
+        <tr><td><span class="fname">day_of_week</span></td><td><span class="ftype">smallint</span></td><td></td><td>Computed: 0=Sunday, 6=Saturday. Denormalized for query performance.</td></tr>
+        <tr><td><span class="fname">hour_of_day</span></td><td><span class="ftype">smallint</span></td><td></td><td>Computed: 0–23 UTC hour. Denormalized for posting window analysis.</td></tr>
+        <tr><td><span class="fname">is_escape_velocity</span></td><td><span class="ftype">boolean</span></td><td><span class="nn">NN</span></td><td>True if this post triggered an escape velocity event. Default: false.</td></tr>
+        <tr><td><span class="fname">baseline_multiple</span></td><td><span class="ftype">decimal(6,2)</span></td><td></td><td>Engagement rate / creator's 30-day baseline. Calculated on final metric snapshot.</td></tr>
+        <tr><td><span class="fname">synced_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>Timestamp when this record was last updated from the platform API.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- content_metrics -->
+  <div class="sec" id="metrics">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">content_metrics</div>
+    <div class="div"></div>
+    <div class="info v"><div class="info-label">TimescaleDB hypertable</div>This table is a TimescaleDB hypertable partitioned by <code>snapshot_at</code> in 7-day chunks. Each row is a point-in-time snapshot of a content post's metrics, enabling time-series queries on performance decay curves.</div>
+    <div class="entity" style="margin-top:12px">
+      <div class="entity-head">
+        <span class="entity-name">Content metrics snapshot</span>
+        <span class="entity-table-name">content_metrics</span>
+      </div>
+      <div class="entity-desc">Point-in-time performance snapshot for a piece of content. Multiple rows per content item — captured at 1h, 6h, 24h, 72h, 7d, and 30d after posting. Enables decay curve analysis.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">bigserial</span></td><td><span class="nn">NN</span></td><td>Auto-increment integer PK.</td></tr>
+        <tr><td><span class="fname">content_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>content.id</code>.</td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>Denormalized from content for query performance.</td></tr>
+        <tr><td><span class="fname">snapshot_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>When this snapshot was captured. TimescaleDB partition key.</td></tr>
+        <tr><td><span class="fname">snapshot_type</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>1h | 6h | 24h | 72h | 7d | 30d | final</td></tr>
+        <tr><td><span class="fname">reach</span></td><td><span class="ftype">integer</span></td><td></td><td>Unique accounts reached. Platform: reach (IG), unique views (TT).</td></tr>
+        <tr><td><span class="fname">impressions</span></td><td><span class="ftype">integer</span></td><td></td><td>Total views including repeats.</td></tr>
+        <tr><td><span class="fname">likes</span></td><td><span class="ftype">integer</span></td><td></td><td>Like/heart count.</td></tr>
+        <tr><td><span class="fname">comments</span></td><td><span class="ftype">integer</span></td><td></td><td>Comment count.</td></tr>
+        <tr><td><span class="fname">saves</span></td><td><span class="ftype">integer</span></td><td></td><td>Save/bookmark count. Not available on all platforms.</td></tr>
+        <tr><td><span class="fname">shares</span></td><td><span class="ftype">integer</span></td><td></td><td>Share/repost count.</td></tr>
+        <tr><td><span class="fname">plays</span></td><td><span class="ftype">integer</span></td><td></td><td>Video play count. Null for static posts.</td></tr>
+        <tr><td><span class="fname">avg_watch_pct</span></td><td><span class="ftype">decimal(5,4)</span></td><td></td><td>Average watch completion (0–1). Video only.</td></tr>
+        <tr><td><span class="fname">profile_visits</span></td><td><span class="ftype">integer</span></td><td></td><td>Profile visits from this post. IG only.</td></tr>
+        <tr><td><span class="fname">follows</span></td><td><span class="ftype">integer</span></td><td></td><td>New follows attributed to this post. IG/TT only.</td></tr>
+        <tr><td><span class="fname">engagement_rate</span></td><td><span class="ftype">decimal(8,6)</span></td><td><span class="idx">IDX</span></td><td>Computed: (likes + comments + saves + shares) / reach. Stored for query performance.</td></tr>
+        <tr><td><span class="fname">raw_platform_data</span></td><td><span class="ftype">jsonb</span></td><td></td><td>Full platform API response. Retained for reprocessing if metric definitions change.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- gravity_scores -->
+  <div class="sec" id="gravity">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">gravity_scores</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Gravity Score history</span>
+        <span class="entity-table-name">gravity_scores</span>
+      </div>
+      <div class="entity-desc">Daily Gravity Score record for each creator. TimescaleDB hypertable for efficient time-series queries. Calculated nightly at 2am UTC per creator. Component scores stored for breakdown views.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">bigserial</span></td><td><span class="nn">NN</span></td><td></td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>creators.id</code>.</td></tr>
+        <tr><td><span class="fname">calculated_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>Calculation timestamp. TimescaleDB partition key.</td></tr>
+        <tr><td><span class="fname">score</span></td><td><span class="ftype">integer</span></td><td><span class="nn">NN</span></td><td>Overall Gravity Score 0–100.</td></tr>
+        <tr><td><span class="fname">score_return_viewer</span></td><td><span class="ftype">integer</span></td><td></td><td>Component: return viewer rate sub-score (0–100).</td></tr>
+        <tr><td><span class="fname">score_save_share</span></td><td><span class="ftype">integer</span></td><td></td><td>Component: save/share depth sub-score.</td></tr>
+        <tr><td><span class="fname">score_comment_quality</span></td><td><span class="ftype">integer</span></td><td></td><td>Component: NLP comment quality sub-score.</td></tr>
+        <tr><td><span class="fname">score_cross_platform</span></td><td><span class="ftype">integer</span></td><td></td><td>Component: cross-platform audience overlap sub-score.</td></tr>
+        <tr><td><span class="fname">score_follower_velocity</span></td><td><span class="ftype">integer</span></td><td></td><td>Component: follower growth velocity sub-score.</td></tr>
+        <tr><td><span class="fname">raw_inputs</span></td><td><span class="ftype">jsonb</span></td><td></td><td>Raw input values used in calculation for auditability.</td></tr>
+        <tr><td><span class="fname">peer_percentile</span></td><td><span class="ftype">integer</span></td><td></td><td>Creator's percentile rank within matched peer pool at time of calculation.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- escape_velocity_events -->
+  <div class="sec" id="escvel">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">escape_velocity_events</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Escape Velocity event</span>
+        <span class="entity-table-name">escape_velocity_events</span>
+      </div>
+      <div class="entity-desc">Records when a piece of content crosses the escape velocity threshold. Stores AI-generated analysis and replication playbook. One event per content item (no duplicates).</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>ev_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>creators.id</code>.</td></tr>
+        <tr><td><span class="fname">content_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>References <code>content.id</code>. Unique constraint — one event per post.</td></tr>
+        <tr><td><span class="fname">detected_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>When threshold crossing was detected.</td></tr>
+        <tr><td><span class="fname">expires_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>48 hours after content was posted. After this, playbook is no longer surfaced.</td></tr>
+        <tr><td><span class="fname">status</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>active | expired | actioned</td></tr>
+        <tr><td><span class="fname">baseline_multiple</span></td><td><span class="ftype">decimal(6,2)</span></td><td><span class="nn">NN</span></td><td>Content engagement rate / creator's 30-day baseline. e.g. 6.2 = performing 6.2× above baseline.</td></tr>
+        <tr><td><span class="fname">threshold_used</span></td><td><span class="ftype">decimal(4,2)</span></td><td></td><td>The multiple threshold that was applied for this creator (default 2.5).</td></tr>
+        <tr><td><span class="fname">analysis</span></td><td><span class="ftype">jsonb</span></td><td></td><td>AI-generated factor analysis. Structure: {summary, factors: [{factor, detail}]}</td></tr>
+        <tr><td><span class="fname">playbook</span></td><td><span class="ftype">jsonb</span></td><td></td><td>AI-generated replication playbook. Structure: {action, format, timing, audio_rec, caption_angle}</td></tr>
+        <tr><td><span class="fname">actioned_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>When creator marked this event as actioned.</td></tr>
+        <tr><td><span class="fname">follow_up_content_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td></td><td>References <code>content.id</code>. Linked follow-up post if creator actioned the playbook.</td></tr>
+        <tr><td><span class="fname">notification_sent_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>When push notification was delivered.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- constellation_peers -->
+  <div class="sec" id="constellation">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">constellation_peers</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Constellation peer match</span>
+        <span class="entity-table-name">constellation_peers</span>
+      </div>
+      <div class="entity-desc">Stores the matched peer pool for each creator. Recalculated weekly. Contains only anonymized, aggregated benchmark data — no individual peer identifiers exposed at the API layer.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">bigserial</span></td><td><span class="nn">NN</span></td><td></td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>The creator this benchmark snapshot belongs to.</td></tr>
+        <tr><td><span class="fname">calculated_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>When this benchmark snapshot was computed.</td></tr>
+        <tr><td><span class="fname">peer_pool_size</span></td><td><span class="ftype">integer</span></td><td><span class="nn">NN</span></td><td>Number of creators in matched peer pool. Minimum 20 to show benchmarks.</td></tr>
+        <tr><td><span class="fname">niche_rank</span></td><td><span class="ftype">integer</span></td><td></td><td>Creator's rank within peer pool (1 = top).</td></tr>
+        <tr><td><span class="fname">engagement_rate_median</span></td><td><span class="ftype">decimal(8,6)</span></td><td></td><td>Peer pool median engagement rate.</td></tr>
+        <tr><td><span class="fname">engagement_rate_p90</span></td><td><span class="ftype">decimal(8,6)</span></td><td></td><td>Peer pool 90th percentile engagement rate.</td></tr>
+        <tr><td><span class="fname">gravity_score_median</span></td><td><span class="ftype">integer</span></td><td></td><td>Peer pool median Gravity Score.</td></tr>
+        <tr><td><span class="fname">gravity_score_p90</span></td><td><span class="ftype">integer</span></td><td></td><td>Peer pool 90th percentile Gravity Score.</td></tr>
+        <tr><td><span class="fname">follower_growth_median</span></td><td><span class="ftype">decimal(8,6)</span></td><td></td><td>Peer pool median 28-day follower growth rate.</td></tr>
+        <tr><td><span class="fname">creator_percentile</span></td><td><span class="ftype">integer</span></td><td></td><td>Creator's overall percentile rank within pool (0–100).</td></tr>
+        <tr><td><span class="fname">benchmark_data</span></td><td><span class="ftype">jsonb</span></td><td></td><td>Full benchmark data payload including all metric comparisons.</td></tr>
+      </table>
+    </div>
+    <div class="info" style="margin-top:10px"><div class="info-label">Privacy note</div>The <code>peer_creator_ids</code> array is stored in a separate access-restricted table and is never exposed via the API. The API only returns aggregated benchmark statistics from this table.</div>
+  </div>
+
+  <!-- dark_matter_signals -->
+  <div class="sec" id="signals">
+    <div class="sec-num">Section 10</div>
+    <div class="sec-title">dark_matter_signals</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Dark Matter signal</span>
+        <span class="entity-table-name">dark_matter_signals</span>
+      </div>
+      <div class="entity-desc">Trending signal detected by Orbit's trend intelligence engine. Signals are niche-specific and represent early momentum in audio, formats, hashtags, or topics.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>sig_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">signal_type</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>audio | hashtag | format | topic</td></tr>
+        <tr><td><span class="fname">label</span></td><td><span class="ftype">varchar(255)</span></td><td><span class="nn">NN</span></td><td>Human-readable signal name. e.g. "Espresso — Sabrina Carpenter" or "#BodyRecomp"</td></tr>
+        <tr><td><span class="fname">platform</span></td><td><span class="ftype">enum</span></td><td><span class="idx">IDX</span></td><td>Platform where signal was detected. Null if cross-platform.</td></tr>
+        <tr><td><span class="fname">niche</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>Niche this signal is relevant to.</td></tr>
+        <tr><td><span class="fname">momentum_score</span></td><td><span class="ftype">decimal(4,3)</span></td><td><span class="nn">NN</span></td><td>0–1 score indicating signal strength. Calculated daily.</td></tr>
+        <tr><td><span class="fname">usage_growth_7d</span></td><td><span class="ftype">decimal(6,2)</span></td><td></td><td>7-day usage growth multiplier. e.g. 2.8 = 280% growth.</td></tr>
+        <tr><td><span class="fname">usage_count_7d</span></td><td><span class="ftype">integer</span></td><td></td><td>Absolute usage count in last 7 days across tracked platform.</td></tr>
+        <tr><td><span class="fname">niche_relevance</span></td><td><span class="ftype">decimal(4,3)</span></td><td></td><td>0–1 relevance score to the specified niche.</td></tr>
+        <tr><td><span class="fname">estimated_peak_days</span></td><td><span class="ftype">integer</span></td><td></td><td>Estimated days until signal peaks. AI model projection.</td></tr>
+        <tr><td><span class="fname">status</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>active | peaking | declining | expired</td></tr>
+        <tr><td><span class="fname">detected_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>When signal first crossed detection threshold.</td></tr>
+        <tr><td><span class="fname">peaked_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>When signal reached maximum usage. Null until peak confirmed.</td></tr>
+        <tr><td><span class="fname">external_id</span></td><td><span class="ftype">varchar(255)</span></td><td></td><td>Platform-native ID for the signal (e.g. TikTok audio ID, IG hashtag ID).</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ai_insights -->
+  <div class="sec" id="insights">
+    <div class="sec-num">Section 11</div>
+    <div class="sec-title">ai_insights</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">AI insight</span>
+        <span class="entity-table-name">ai_insights</span>
+      </div>
+      <div class="entity-desc">Records every AI-generated insight or recommendation shown to a creator. Stores the full prompt context, response, and creator feedback for model improvement.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>ins_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">creator_id</span><span class="fk">FK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>References <code>creators.id</code>.</td></tr>
+        <tr><td><span class="fname">insight_type</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>weekly_digest | content_analysis | escape_velocity | ask_coach | gap_analysis | dark_matter_brief</td></tr>
+        <tr><td><span class="fname">context_window</span></td><td><span class="ftype">enum</span></td><td></td><td>7d | 28d | 90d. Data window used for generation.</td></tr>
+        <tr><td><span class="fname">prompt_hash</span></td><td><span class="ftype">varchar(64)</span></td><td></td><td>SHA-256 hash of the prompt sent to the AI. For deduplication and audit.</td></tr>
+        <tr><td><span class="fname">response_text</span></td><td><span class="ftype">text</span></td><td></td><td>Full AI response text.</td></tr>
+        <tr><td><span class="fname">structured_output</span></td><td><span class="ftype">jsonb</span></td><td></td><td>Parsed structured data extracted from response (actions, factors, etc).</td></tr>
+        <tr><td><span class="fname">model_version</span></td><td><span class="ftype">varchar(50)</span></td><td></td><td>AI model version used for generation. For reproducibility.</td></tr>
+        <tr><td><span class="fname">latency_ms</span></td><td><span class="ftype">integer</span></td><td></td><td>Generation latency in milliseconds. For performance monitoring.</td></tr>
+        <tr><td><span class="fname">feedback_rating</span></td><td><span class="ftype">smallint</span></td><td></td><td>Creator feedback: 1 = positive, -1 = negative, null = no feedback.</td></tr>
+        <tr><td><span class="fname">feedback_comment</span></td><td><span class="ftype">text</span></td><td></td><td>Optional free-text feedback from creator.</td></tr>
+        <tr><td><span class="fname">feedback_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>When feedback was submitted.</td></tr>
+        <tr><td><span class="fname">generated_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td>When insight was generated.</td></tr>
+        <tr><td><span class="fname">shown_at</span></td><td><span class="ftype">timestamptz</span></td><td></td><td>When insight was first displayed to the creator.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- agencies -->
+  <div class="sec" id="agencies">
+    <div class="sec-num">Section 12</div>
+    <div class="sec-title">agencies</div>
+    <div class="div"></div>
+    <div class="entity">
+      <div class="entity-head">
+        <span class="entity-name">Agency</span>
+        <span class="entity-table-name">agencies</span>
+      </div>
+      <div class="entity-desc">Talent agency or management company account. An agency has one or more manager users and manages a roster of creators. Creators are linked to an agency via <code>creators.agency_id</code>.</div>
+      <table class="field-table">
+        <tr><th>Column</th><th>Type</th><th>Constraints</th><th>Description</th></tr>
+        <tr><td><span class="fname">id</span><span class="pk">PK</span></td><td><span class="ftype">varchar(20)</span></td><td><span class="nn">NN</span></td><td>Format: <code>agc_xxxxxxxx</code></td></tr>
+        <tr><td><span class="fname">name</span></td><td><span class="ftype">varchar(150)</span></td><td><span class="nn">NN</span></td><td>Agency display name.</td></tr>
+        <tr><td><span class="fname">slug</span></td><td><span class="ftype">varchar(50)</span></td><td><span class="nn">NN</span> <span class="idx">IDX</span></td><td>URL-safe unique identifier. e.g. "orbit-talent"</td></tr>
+        <tr><td><span class="fname">logo_url</span></td><td><span class="ftype">text</span></td><td></td><td>CDN URL to agency logo. Used for white-label reports.</td></tr>
+        <tr><td><span class="fname">tier</span></td><td><span class="ftype">enum</span></td><td><span class="nn">NN</span></td><td>agency_basic | agency_pro. Pro unlocks white-label and API access.</td></tr>
+        <tr><td><span class="fname">max_creators</span></td><td><span class="ftype">integer</span></td><td><span class="nn">NN</span></td><td>Maximum creators allowed on roster per subscription plan.</td></tr>
+        <tr><td><span class="fname">billing_email</span></td><td><span class="ftype">varchar(255)</span></td><td><span class="nn">NN</span></td><td>Primary billing contact email.</td></tr>
+        <tr><td><span class="fname">stripe_customer_id</span></td><td><span class="ftype">varchar(50)</span></td><td></td><td>Stripe customer ID for subscription management.</td></tr>
+        <tr><td><span class="fname">white_label_enabled</span></td><td><span class="ftype">boolean</span></td><td><span class="nn">NN</span></td><td>Can remove Orbit branding from exported reports. Default: false.</td></tr>
+        <tr><td><span class="fname">created_at</span></td><td><span class="ftype">timestamptz</span></td><td><span class="nn">NN</span></td><td></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Metric definitions -->
+  <div class="sec" id="metric-defs">
+    <div class="sec-num">Section 13</div>
+    <div class="sec-title">Metric definitions</div>
+    <div class="div"></div>
+    <p>Canonical definitions for all computed metrics used across Orbit. These definitions are authoritative — UI labels, API documentation, and AI prompt context must all align to these formulas.</p>
+
+    <div class="metric-def">
+      <div class="md-name">engagement_rate</div>
+      <code class="md-formula">engagement_rate = (likes + comments + saves + shares) / reach</code>
+      <div class="md-desc">The primary engagement metric. Normalized against reach (unique accounts) rather than followers, making it platform-agnostic. Saves and shares are weighted equally to likes and comments. Where saves are not available (some platforms), the formula excludes saves.</div>
+      <div class="md-source">Source tables: content_metrics. Available platforms: Instagram (full), TikTok (no saves), YouTube (no saves/shares in same form)</div>
+    </div>
+
+    <div class="metric-def">
+      <div class="md-name">gravity_score</div>
+      <code class="md-formula">gravity_score = round(
+  (return_viewer_rate_score × 0.30) +
+  (save_share_depth_score  × 0.25) +
+  (comment_quality_score   × 0.20) +
+  (cross_platform_score    × 0.15) +
+  (follower_velocity_score × 0.10)
+)</code>
+      <div class="md-desc">Composite score 0–100 representing a creator's true audience gravitational pull. Each component is normalized to 0–100 before weighting. Recalculated nightly. Component scores are defined separately below.</div>
+    </div>
+
+    <div class="metric-def">
+      <div class="md-name">return_viewer_rate</div>
+      <code class="md-formula">return_viewer_rate = unique_returning_viewers_7d / total_unique_viewers_7d</code>
+      <div class="md-desc">Percentage of viewers who watched content in the past 7 days who have also watched content in the prior 7-day period. Indicates audience loyalty and habit formation. Available from Instagram and YouTube analytics; estimated for TikTok.</div>
+    </div>
+
+    <div class="metric-def">
+      <div class="md-name">save_share_depth</div>
+      <code class="md-formula">save_share_depth = (saves + (shares × 1.5)) / reach</code>
+      <div class="md-desc">Weighted rate of high-intent engagement actions. Shares weighted 1.5× saves as they represent both retention (save intent) and amplification. Higher values indicate content worth returning to and spreading.</div>
+    </div>
+
+    <div class="metric-def">
+      <div class="md-name">follower_velocity</div>
+      <code class="md-formula">follower_velocity = (followers_now - followers_28d_ago) / followers_28d_ago</code>
+      <div class="md-desc">28-day follower growth rate expressed as a decimal. Measures acceleration of growth, not absolute size. A creator at 100K growing 5% per month has higher velocity than one at 2M growing 0.5%.</div>
+    </div>
+
+    <div class="metric-def">
+      <div class="md-name">baseline_multiple</div>
+      <code class="md-formula">baseline_multiple = post_engagement_rate / creator_30d_median_engagement_rate</code>
+      <div class="md-desc">How much a specific post outperforms or underperforms the creator's own 30-day median engagement rate. A baseline_multiple of 2.5 means the post performed 2.5× the creator's typical performance. Used to detect escape velocity events.</div>
+    </div>
+
+    <div class="metric-def">
+      <div class="md-name">momentum_score (Dark Matter)</div>
+      <code class="md-formula">momentum_score = normalize(
+  usage_growth_7d × 0.50 +
+  niche_relevance  × 0.30 +
+  acceleration     × 0.20
+)</code>
+      <div class="md-desc">Composite trend signal strength score (0–1). Usage growth is the primary driver (7-day growth rate). Niche relevance is ML-scored based on creator niche matching. Acceleration is the second derivative of usage growth (is it speeding up?). Normalized to 0–1 range.</div>
+    </div>
+  </div>
+
+  <!-- Enumerations -->
+  <div class="sec" id="enums">
+    <div class="sec-num">Section 14</div>
+    <div class="sec-title">Enumerations</div>
+    <div class="div"></div>
+    <p>All enum types used across Orbit's data model. Values are lowercase_snake_case throughout.</p>
+
+    <div class="g2">
+      <div>
+        <h4>niche</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>Description</th></tr>
+          <tr><td><span class="eval">fitness</span></td><td>Exercise, training, sport performance</td></tr>
+          <tr><td><span class="eval">lifestyle</span></td><td>Daily life, aspirational living, routines</td></tr>
+          <tr><td><span class="eval">wellness</span></td><td>Mental health, mindfulness, self-care</td></tr>
+          <tr><td><span class="eval">nutrition</span></td><td>Food, recipes, diet, supplements</td></tr>
+          <tr><td><span class="eval">beauty</span></td><td>Skincare, makeup, hair</td></tr>
+          <tr><td><span class="eval">travel</span></td><td>Destinations, travel content</td></tr>
+        </table>
+
+        <h4 style="margin-top:16px">content_type</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>Platform(s)</th></tr>
+          <tr><td><span class="eval">reel</span></td><td>Instagram</td></tr>
+          <tr><td><span class="eval">post</span></td><td>Instagram (static image/carousel)</td></tr>
+          <tr><td><span class="eval">story</span></td><td>Instagram, Snapchat</td></tr>
+          <tr><td><span class="eval">video</span></td><td>TikTok, YouTube</td></tr>
+          <tr><td><span class="eval">short</span></td><td>YouTube Shorts</td></tr>
+          <tr><td><span class="eval">live</span></td><td>Instagram, TikTok, YouTube</td></tr>
+        </table>
+
+        <h4 style="margin-top:16px">trajectory</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>Definition</th></tr>
+          <tr><td><span class="eval">rising</span></td><td>Gravity Score increased ≥3 pts in 7 days</td></tr>
+          <tr><td><span class="eval">stable</span></td><td>Gravity Score change &lt;3 pts in 7 days</td></tr>
+          <tr><td><span class="eval">declining</span></td><td>Gravity Score decreased ≥3 pts in 7 days</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>platform</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>API Source</th></tr>
+          <tr><td><span class="eval">instagram</span></td><td>Meta Graph API</td></tr>
+          <tr><td><span class="eval">tiktok</span></td><td>TikTok for Developers</td></tr>
+          <tr><td><span class="eval">youtube</span></td><td>YouTube Data API v3</td></tr>
+          <tr><td><span class="eval">snapchat</span></td><td>Snapchat Marketing API</td></tr>
+          <tr><td><span class="eval">twitch</span></td><td>Twitch Helix API (Phase 3)</td></tr>
+        </table>
+
+        <h4 style="margin-top:16px">signal_type</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>Description</th></tr>
+          <tr><td><span class="eval">audio</span></td><td>Sound or music track gaining usage</td></tr>
+          <tr><td><span class="eval">hashtag</span></td><td>Hashtag growing in usage velocity</td></tr>
+          <tr><td><span class="eval">format</span></td><td>Content structure or style emerging</td></tr>
+          <tr><td><span class="eval">topic</span></td><td>Subject matter conversation cluster</td></tr>
+        </table>
+
+        <h4 style="margin-top:16px">user_role</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>Access level</th></tr>
+          <tr><td><span class="eval">creator</span></td><td>Own data only. No roster access.</td></tr>
+          <tr><td><span class="eval">manager</span></td><td>Own agency roster. No cross-agency access.</td></tr>
+          <tr><td><span class="eval">admin</span></td><td>Full platform access. Internal only.</td></tr>
+        </table>
+
+        <h4 style="margin-top:16px">subscription_tier</h4>
+        <table class="enum-table">
+          <tr><th>Value</th><th>Monthly price</th></tr>
+          <tr><td><span class="eval">free</span></td><td>$0</td></tr>
+          <tr><td><span class="eval">creator</span></td><td>$29</td></tr>
+          <tr><td><span class="eval">pro</span></td><td>$79</td></tr>
+          <tr><td><span class="eval">agency</span></td><td>$499</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ftr">
+    <span class="ftr-brand">ORBIT</span>
+    <div style="display:flex;gap:16px">
+      <span class="ftr-link">Data Dictionary v1.0 · March 2026</span>
+      <span class="ftr-link">Confidential</span>
+      <span class="ftr-link">engineering@orbitapp.io</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

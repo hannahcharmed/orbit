@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Go-to-Market Plan</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;background:#080b14}
+  .hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .logo{display:flex;align-items:center;gap:8px}
+  .wm{font-family:Georgia,serif;font-size:15px;letter-spacing:4px;color:#e8f0ff}
+  .hdr-meta{display:flex;align-items:center;gap:12px}
+  .hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+  .ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+  .toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:12px 32px;display:flex;gap:6px;flex-wrap:wrap}
+  .toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;text-decoration:none;letter-spacing:.04em}
+  .toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+  .sec{padding:32px;border-bottom:1px solid #1a2150}
+  .sec:last-child{border-bottom:none}
+  .sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+  .sec-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+  .div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+  h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+  h3:first-child{margin-top:0}
+  h4{font-size:10px;font-weight:500;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase;margin:14px 0 6px}
+  p{font-size:12px;color:#8892b0;line-height:1.75;margin-bottom:10px}
+  p:last-child{margin-bottom:0}
+  strong{color:#c4b5fd;font-weight:500}
+  code{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;background:#0d1228;border:1px solid #1a2150;border-radius:4px;padding:1px 6px;color:#a78bfa}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+
+  .card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+  .card.accent{border-color:#2d3260}
+  .card-eye{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+  .card-title{font-size:13px;font-weight:500;color:#e8f0ff;margin-bottom:5px}
+  .card-body{font-size:11px;color:#6b7ab5;line-height:1.6}
+
+  .bullet{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start}
+  .bullet:last-child{margin-bottom:0}
+  .bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:6px;flex-shrink:0}
+  .bdot.v{background:#a78bfa}
+  .bdot.g{background:#4ade80}
+  .btext{font-size:11px;color:#8892b0;line-height:1.55}
+  .btext strong{color:#c4b5fd;font-weight:500}
+
+  .callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0}
+  .callout.v{border-left-color:#a78bfa}
+  .callout.g{border-left-color:#4ade80}
+  .callout.r{border-left-color:#f09595}
+  .callout-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+  .callout.v .callout-label{color:#a78bfa}
+  .callout.g .callout-label{color:#4ade80}
+  .callout.r .callout-label{color:#f09595}
+  .callout-text{font-size:11px;color:#8892b0;line-height:1.6}
+  .callout-text strong{color:#e8f0ff;font-weight:500}
+
+  /* Phase timeline */
+  .timeline{display:flex;flex-direction:column;gap:0;margin-top:4px}
+  .tl-item{display:flex;gap:16px}
+  .tl-left{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+  .tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:2px}
+  .tl-line{width:2px;flex:1;margin:4px 0;min-height:20px}
+  .tl-content{flex:1;padding-bottom:20px}
+  .tl-phase{font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+  .tl-title{font-size:14px;font-weight:500;color:#e8f0ff;margin-bottom:4px;font-family:Georgia,serif}
+  .tl-period{font-size:10px;color:#4a5280;margin-bottom:8px}
+  .tl-body{font-size:11px;color:#8892b0;line-height:1.6}
+
+  /* Channel cards */
+  .channel{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;margin-bottom:10px}
+  .channel:last-child{margin-bottom:0}
+  .ch-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .ch-name{font-size:12px;font-weight:500;color:#e8f0ff}
+  .ch-effort{font-size:9px;padding:2px 8px;border-radius:20px}
+  .high-effort{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+  .med-effort{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+  .low-effort{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+  .ch-body{font-size:11px;color:#6b7ab5;line-height:1.6}
+  .ch-metric{font-size:10px;color:#3D3A9E;margin-top:6px}
+
+  /* Messaging matrix */
+  .msg-table{width:100%;border-collapse:collapse}
+  .msg-table th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:8px 12px;border-bottom:1px solid #1a2150;background:#0a0e1e}
+  .msg-table td{font-size:11px;color:#8892b0;padding:9px 12px;border-bottom:1px solid #090d1c;vertical-align:top;line-height:1.55}
+  .msg-table tr:last-child td{border-bottom:none}
+  .msg-table tr:hover td{background:#0a0e1e}
+  .msg-table td strong{color:#c4b5fd}
+
+  /* Funnel */
+  .funnel{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+  .funnel-step{border-radius:8px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+  .fs-label{font-size:11px;font-weight:500;color:#e8f0ff}
+  .fs-sub{font-size:10px;color:#6b7ab5;margin-top:2px}
+  .fs-metric{font-size:12px;font-weight:500;color:#a78bfa}
+
+  /* Budget table */
+  .budget-table{width:100%;border-collapse:collapse}
+  .budget-table th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:8px 12px;border-bottom:1px solid #1a2150;background:#0a0e1e}
+  .budget-table td{font-size:11px;color:#8892b0;padding:9px 12px;border-bottom:1px solid #090d1c;vertical-align:top}
+  .budget-table tr:last-child td{border-bottom:none}
+  .budget-table .total td{border-top:1px solid #2d3260;color:#e8f0ff;font-weight:500}
+
+  /* KPI cards */
+  .kpi{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;text-align:center}
+  .kpi-num{font-family:Georgia,serif;font-size:26px;color:#e8f0ff;margin-bottom:3px}
+  .kpi-label{font-size:9px;color:#4a5280;line-height:1.4;text-transform:uppercase;letter-spacing:.06em}
+  .kpi-period{font-size:9px;color:#3D3A9E;margin-top:3px}
+
+  .tag{display:inline-block;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 9px;font-size:9px;color:#8892b0;margin-right:4px;margin-top:3px}
+  .tag.v{background:#1a1035;border-color:#2d1a5e;color:#a78bfa}
+  .tag.g{background:#0a1a10;border-color:#173404;color:#4ade80}
+
+  .ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+  .ftr-brand{font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#2d3260}
+  .ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="wm">ORBIT</span>
+    </div>
+    <div class="hdr-meta">
+      <span class="hdr-tag">Go-to-Market Plan</span>
+      <span class="ver">v1.0 · March 2026</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <a class="toc-item" href="#strategy">GTM strategy</a>
+    <a class="toc-item" href="#segments">Target segments</a>
+    <a class="toc-item" href="#messaging">Messaging</a>
+    <a class="toc-item" href="#phases">Launch phases</a>
+    <a class="toc-item" href="#channels">Channels</a>
+    <a class="toc-item" href="#funnel">Acquisition funnel</a>
+    <a class="toc-item" href="#partnerships">Partnerships</a>
+    <a class="toc-item" href="#content-mktg">Content marketing</a>
+    <a class="toc-item" href="#community">Community</a>
+    <a class="toc-item" href="#budget">Budget</a>
+    <a class="toc-item" href="#kpis">KPIs</a>
+  </div>
+
+  <!-- GTM Strategy -->
+  <div class="sec" id="strategy">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">GTM strategy overview</div>
+    <div class="div"></div>
+    <p>Orbit's go-to-market strategy is built around a single structural advantage most competitors can't replicate: <strong>we already have the creators, the data, and the trust.</strong> The GTM plan is not about acquiring users from scratch — it's about converting an existing agency roster into an evangelized user base, then using that momentum to expand outward.</p>
+
+    <div class="callout v">
+      <div class="callout-label">Core GTM thesis</div>
+      <div class="callout-text" style="font-size:13px;font-family:Georgia,serif;font-style:italic;color:#c4b5fd">"Don't build an audience and then prove the product works. Prove the product works with our existing audience, then let them build the next audience for us."</div>
+    </div>
+
+    <h3>Strategic pillars</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card accent">
+        <div class="card-eye">Pillar 1</div>
+        <div class="card-title">Agency-led distribution</div>
+        <div class="card-body">The agency roster is the launch pad. 50+ creators who already trust us become the first users, case study subjects, and word-of-mouth engine. Zero cold acquisition required to reach meaningful scale.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 2</div>
+        <div class="card-title">Creator-led virality</div>
+        <div class="card-body">Creators talk to creators. When a fitness creator shares their Gravity Score in a brand pitch or posts about their Orbit Path trajectory on Stories, that's free acquisition. Every Orbit touchpoint is a potential share moment.</div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 3</div>
+        <div class="card-title">Niche authority first</div>
+        <div class="card-body">Own lifestyle and fitness completely before expanding. Being the definitive tool for one vertical is more defensible than being average for all verticals. Niche authority creates word-of-mouth density.</div>
+      </div>
+    </div>
+
+    <h3>GTM motion type</h3>
+    <div class="g2" style="margin-top:8px">
+      <div class="callout">
+        <div class="callout-label">Product-led growth (PLG)</div>
+        <div class="callout-text">Freemium entry point drives self-serve adoption. The product itself demonstrates value — creators see their Gravity Score, get their first AI insight, and convert without a sales call. Viral mechanics built into the product (shareable scorecards, public rankings).</div>
+      </div>
+      <div class="callout v">
+        <div class="callout-label">Agency-led sales (ALS)</div>
+        <div class="callout-text">The Agency tier ($499/mo) is a direct sales motion. Target: talent agencies managing 10+ creators. High-touch onboarding, white-glove setup of roster data. One agency sale = instant 10–50 creator accounts on the platform.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Target Segments -->
+  <div class="sec" id="segments">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">Target segments</div>
+    <div class="div"></div>
+
+    <h3>Primary segments — Year 1</h3>
+    <div class="g2" style="margin-top:8px">
+      <div class="card accent">
+        <div class="card-eye">Segment A · Priority 1</div>
+        <div class="card-title">Agency-managed fitness creators</div>
+        <div class="card-body" style="margin-top:4px">
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Who:</strong> Fitness and lifestyle creators with 50K–2M followers managed by talent agencies</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Size:</strong> ~50 immediately (agency roster), ~5,000 reachable in Year 1</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pain:</strong> No intelligent benchmarking; can't quantify their value to brands</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Channel:</strong> Direct via agency relationship → warm referral</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Conversion path:</strong> Agency onboards creator → creator activates free → converts to Creator/Pro</div></div>
+        </div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Segment B · Priority 2</div>
+        <div class="card-title">Independent fitness creators</div>
+        <div class="card-body" style="margin-top:4px">
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Who:</strong> Unmanaged fitness/lifestyle creators 10K–500K followers actively seeking growth</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Size:</strong> ~200,000 in US/UK/AU fitness creator space</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pain:</strong> Posting consistently but not understanding what's working</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Channel:</strong> Organic social, SEO, creator community word-of-mouth</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Conversion path:</strong> Freemium → AI insight wow moment → Creator tier upgrade</div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Secondary segments — Year 2+</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card">
+        <div class="card-eye">Segment C</div>
+        <div class="card-title">Talent agencies</div>
+        <div class="card-body">Independent talent management companies managing 10–100 creators. High-value Agency tier customers. Direct outreach + conference presence. One conversion = large MRR impact.</div>
+      </div>
+      <div class="card">
+        <div class="card-eye">Segment D</div>
+        <div class="card-title">Wellness & lifestyle creators</div>
+        <div class="card-body">Adjacent niche expansion. Mindfulness, mental health, self-care creators who share the lifestyle audience. Natural extension once fitness niche is saturated.</div>
+      </div>
+      <div class="card">
+        <div class="card-eye">Segment E</div>
+        <div class="card-title">Brand partnerships teams</div>
+        <div class="card-body">Future segment: brand-side teams who want to use Gravity Score data in creator selection. Opens B2B data licensing revenue stream without building a full marketplace.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messaging -->
+  <div class="sec" id="messaging">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">Messaging matrix</div>
+    <div class="div"></div>
+    <p>Different segments need different messages grounded in the same core brand truth. All messaging should ladder up to Orbit's master brand line.</p>
+
+    <div class="callout v" style="margin-bottom:16px">
+      <div class="callout-label">Master brand line</div>
+      <div class="callout-text" style="font-size:14px;font-family:Georgia,serif;font-style:italic;color:#c4b5fd">"Your audience doesn't follow you. They orbit you."</div>
+    </div>
+
+    <table class="msg-table">
+      <tr><th>Segment</th><th>Core message</th><th>Proof point</th><th>CTA</th></tr>
+      <tr>
+        <td><strong>Rising creator (10K–250K)</strong></td>
+        <td>Stop guessing. Know exactly what's working and why — before your next post.</td>
+        <td>Creators using Orbit post 34% less but grow 2.1× faster — because every post is intentional.</td>
+        <td>Get your free Gravity Score</td>
+      </tr>
+      <tr>
+        <td><strong>Established creator (250K+)</strong></td>
+        <td>Your brand deal is worth more than you're charging. Here's the number to prove it.</td>
+        <td>Your Gravity Score of 78 puts you in the top 12% of fitness creators at your tier.</td>
+        <td>Generate your brand pitch report</td>
+      </tr>
+      <tr>
+        <td><strong>Talent manager</strong></td>
+        <td>Manage 12 creators like you manage 1. One screen. No spreadsheets.</td>
+        <td>Mission Control gives you escape velocity alerts, trajectory changes, and brand deal reports — before your creators even ask.</td>
+        <td>Start your agency trial</td>
+      </tr>
+      <tr>
+        <td><strong>Agency business development</strong></td>
+        <td>Your roster data is worth more than you think. We help you prove it to brands.</td>
+        <td>Agencies using Orbit report 40% faster brand deal close rates and 28% higher average deal values.</td>
+        <td>Book an agency demo</td>
+      </tr>
+    </table>
+
+    <h3>Messaging do's and don'ts</h3>
+    <div class="g2" style="margin-top:8px">
+      <div class="card" style="border-color:#173404">
+        <div class="card-eye" style="color:#4ade80">Do say</div>
+        <div class="card-body" style="margin-top:4px">
+          <div class="bullet"><div class="bdot g"></div><div class="btext">"See your content from a higher altitude"</div></div>
+          <div class="bullet"><div class="bdot g"></div><div class="btext">"Intelligence that moves at the speed of culture"</div></div>
+          <div class="bullet"><div class="bdot g"></div><div class="btext">"Your Gravity Score" — make it personal and possessive</div></div>
+          <div class="bullet"><div class="bdot g"></div><div class="btext">Specific numbers from real creator data</div></div>
+          <div class="bullet"><div class="bdot g"></div><div class="btext">Verbs that imply action: orbit, rise, accelerate, break through</div></div>
+        </div>
+      </div>
+      <div class="card" style="border-color:#501313">
+        <div class="card-eye" style="color:#f09595">Don't say</div>
+        <div class="card-body" style="margin-top:4px">
+          <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"AI-powered analytics platform" — too generic</div></div>
+          <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"Dashboard" — implies passive observation, not action</div></div>
+          <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"Post more consistently" — generic advice is product failure</div></div>
+          <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">Competitor comparisons by name in paid media</div></div>
+          <div class="bullet"><div class="bdot" style="background:#f09595"></div><div class="btext">"Data-driven" — overused, meaningless to creators</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Launch Phases -->
+  <div class="sec" id="phases">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">Launch phases</div>
+    <div class="div"></div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:#6C63FF"></div>
+          <div class="tl-line" style="background:#1a2150"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#6C63FF">Phase 0 · Months -2 to 0</div>
+          <div class="tl-title">Pre-launch: building the foundation</div>
+          <div class="tl-period">January – March 2026</div>
+          <div class="g2">
+            <div>
+              <h4>Product</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot"></div><div class="btext">Complete brand identity — logo, palette, typography, tone of voice</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Build IG + TikTok data pipelines</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Internal alpha with 5 agency creators — white-glove feedback</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Nail the first-use experience — time-to-first-insight under 3 minutes</div></div>
+              </div>
+            </div>
+            <div>
+              <h4>Marketing</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Launch orbitapp.io with waitlist capture</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Build Orbit's own Instagram and TikTok presence</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Produce first 10 pieces of anchor content (see Content Marketing section)</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">File Gravity Score™ trademark application</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px"><span class="tag g">Goal: 200 waitlist signups</span><span class="tag g">5 alpha creators onboarded</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:#a78bfa"></div>
+          <div class="tl-line" style="background:#1a2150"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#a78bfa">Phase 1 · Months 0–3</div>
+          <div class="tl-title">Private beta: agency roster launch</div>
+          <div class="tl-period">April – June 2026</div>
+          <div class="g2">
+            <div>
+              <h4>Product</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot"></div><div class="btext">Onboard full agency roster (50+ creators) — all free Pro access</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Weekly feedback sessions with agency team</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Iterate on AI insight quality based on thumbs up/down data</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Launch Gravity Score and Escape Velocity features</div></div>
+              </div>
+            </div>
+            <div>
+              <h4>Marketing</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Capture 3 detailed creator case studies from beta users</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Begin influencer seeding — 10 micro-creators in fitness niche posting about Orbit</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Launch "What's your Gravity Score?" social campaign</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Open waitlist to broader fitness creator community</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px"><span class="tag" style="background:#1a1035;border-color:#2d1a5e;color:#a78bfa">Goal: 50 beta users</span><span class="tag" style="background:#1a1035;border-color:#2d1a5e;color:#a78bfa">NPS 40+</span><span class="tag" style="background:#1a1035;border-color:#2d1a5e;color:#a78bfa">3 publishable case studies</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:#e8f0ff"></div>
+          <div class="tl-line" style="background:#1a2150"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#e8f0ff">Phase 2 · Months 3–6</div>
+          <div class="tl-title">Public launch: freemium opens</div>
+          <div class="tl-period">July – September 2026</div>
+          <div class="g2">
+            <div>
+              <h4>Product</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot"></div><div class="btext">Launch freemium tier publicly — self-serve sign-up live</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Constellation benchmarking goes live (sufficient peer pool now)</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Dark Matter weekly briefing launches</div></div>
+                <div class="bullet"><div class="bdot"></div><div class="btext">Mission Control available for Agency tier</div></div>
+              </div>
+            </div>
+            <div>
+              <h4>Marketing</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot v"></div><div class="btext">PR push — fitness and creator industry press (Creator Economy Newsletter, Business Insider)</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Product Hunt launch — coordinated upvote campaign with beta users</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Paid social begins — Meta ads targeting fitness creators</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">First podcast sponsorships — creator economy podcasts</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px"><span class="tag g">Goal: 200 paying accounts</span><span class="tag g">$48K MRR</span><span class="tag g">1,000 free signups</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot" style="background:#4ade80"></div>
+          <div class="tl-line" style="background:transparent"></div>
+        </div>
+        <div class="tl-content">
+          <div class="tl-phase" style="color:#4ade80">Phase 3 · Months 6–12</div>
+          <div class="tl-title">Scale: growth and expansion</div>
+          <div class="tl-period">October 2026 – March 2027</div>
+          <div class="g2">
+            <div>
+              <h4>Product</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot g"></div><div class="btext">YouTube integration live — opens new audience segment</div></div>
+                <div class="bullet"><div class="bdot g"></div><div class="btext">Orbit Path trajectory feature launches</div></div>
+                <div class="bullet"><div class="bdot g"></div><div class="btext">Content brief generator from Dark Matter signals</div></div>
+                <div class="bullet"><div class="bdot g"></div><div class="btext">Brand deal report generator for Agency tier</div></div>
+              </div>
+            </div>
+            <div>
+              <h4>Marketing</h4>
+              <div class="tl-body">
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Annual "State of the Fitness Creator" report — owned media anchor</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Conference presence — VidSummit, Creator Economy Live</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Agency partner program launch — rev-share for referring agencies</div></div>
+                <div class="bullet"><div class="bdot v"></div><div class="btext">Referral program — creator invites creator</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:10px"><span class="tag g">Goal: 500 paying accounts</span><span class="tag g">$312K ARR</span><span class="tag g">5 agency partners</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Channels -->
+  <div class="sec" id="channels">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">Acquisition channels</div>
+    <div class="div"></div>
+
+    <div class="g2">
+      <div>
+        <h4>Owned channels</h4>
+
+        <div class="channel">
+          <div class="ch-head">
+            <span class="ch-name">Orbit's own social presence</span>
+            <span class="ch-effort low-effort">Low cost</span>
+          </div>
+          <div class="ch-body">Instagram and TikTok accounts showing real creator analytics, Gravity Score callouts, and Dark Matter signals. Orbit itself becomes a creator — modeling the behavior it teaches. Target: 10K followers by month 6.</div>
+          <div class="ch-metric">Metric: followers, profile link clicks → free signups</div>
+        </div>
+
+        <div class="channel">
+          <div class="ch-head">
+            <span class="ch-name">SEO & content marketing</span>
+            <span class="ch-effort med-effort">Medium effort</span>
+          </div>
+          <div class="ch-body">Long-form content targeting "how to grow on Instagram as a fitness creator", "best posting times for fitness content", "how to increase engagement rate". Each article links to a free Gravity Score tool.</div>
+          <div class="ch-metric">Metric: organic search traffic → free trial signups</div>
+        </div>
+
+        <div class="channel">
+          <div class="ch-head">
+            <span class="ch-name">Email marketing</span>
+            <span class="ch-effort low-effort">Low cost</span>
+          </div>
+          <div class="ch-body">Weekly Dark Matter briefing available as a free email newsletter — subscribers get top 3 trending signals for fitness niche. Builds owned audience and converts to full platform. Target: 5,000 subscribers by month 9.</div>
+          <div class="ch-metric">Metric: email subscribers → free signups → paid conversion</div>
+        </div>
+      </div>
+
+      <div>
+        <h4>Paid & partnership channels</h4>
+
+        <div class="channel">
+          <div class="ch-head">
+            <span class="ch-name">Creator seeding</span>
+            <span class="ch-effort med-effort">Medium cost</span>
+          </div>
+          <div class="ch-body">Provide free Pro access to 20–30 mid-tier fitness creators (100K–500K) in exchange for authentic organic content. These creators talk to creators — their endorsement carries 10× the weight of paid ads in this community.</div>
+          <div class="ch-metric">Metric: referred signups, coupon code attribution</div>
+        </div>
+
+        <div class="channel">
+          <div class="ch-head">
+            <span class="ch-name">Podcast sponsorships</span>
+            <span class="ch-effort med-effort">Medium cost</span>
+          </div>
+          <div class="ch-body">Sponsor 3–5 creator-focused podcasts: Creator Science, The Influencer Podcast, Earn Your Happy. Host-read ads with a free Gravity Score offer. These audiences are Orbit's exact ICP.</div>
+          <div class="ch-metric">Metric: promo code redemptions → signups</div>
+        </div>
+
+        <div class="channel">
+          <div class="ch-head">
+            <span class="ch-name">Paid social (Meta)</span>
+            <span class="ch-effort high-effort">Higher cost</span>
+          </div>
+          <div class="ch-body">Meta ads targeting: fitness creator interest segments, Instagram/TikTok creator tools audience, lookalikes from converted users. Lead with "Get your free Gravity Score" — not "try our platform". Begin month 4 once case studies are ready.</div>
+          <div class="ch-metric">Metric: CPA target &lt;$35 for free signup, &lt;$120 for paid conversion</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acquisition Funnel -->
+  <div class="sec" id="funnel">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">Acquisition funnel</div>
+    <div class="div"></div>
+    <p>Orbit's funnel is designed around a single hook: the free Gravity Score. This creates an immediate, personal, shareable value moment that converts awareness into activation before asking for a credit card.</p>
+
+    <div class="funnel">
+      <div class="funnel-step" style="background:#0d1228;border:1px solid #1a2150">
+        <div><div class="fs-label">Awareness</div><div class="fs-sub">Social, SEO, podcast, creator word-of-mouth</div></div>
+        <div class="fs-metric">—</div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#2d3260;padding:3px 0">↓ 100%</div>
+      <div class="funnel-step" style="background:#0d1228;border:1px solid #1a2150">
+        <div><div class="fs-label">Landing page visit</div><div class="fs-sub">orbitapp.io — "Get your free Gravity Score" CTA</div></div>
+        <div class="fs-metric">—</div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#2d3260;padding:3px 0">↓ ~35% conversion</div>
+      <div class="funnel-step" style="background:#0f1628;border:1px solid #1a2150">
+        <div><div class="fs-label">Free signup</div><div class="fs-sub">Connect one platform, see Gravity Score instantly</div></div>
+        <div class="fs-metric">Free tier</div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#2d3260;padding:3px 0">↓ ~40% activate</div>
+      <div class="funnel-step" style="background:#0f1628;border:1px solid #2d3260">
+        <div><div class="fs-label">Activation moment</div><div class="fs-sub">First AI insight or Escape Velocity alert — "wow moment"</div></div>
+        <div class="fs-metric">Days 1–3</div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#2d3260;padding:3px 0">↓ ~25% of actives convert</div>
+      <div class="funnel-step" style="background:#1a1035;border:1px solid #2d1a5e">
+        <div><div class="fs-label">Paid conversion</div><div class="fs-sub">Creator ($29) or Pro ($79) upgrade — hit a feature gate</div></div>
+        <div class="fs-metric">Days 7–21</div>
+      </div>
+      <div style="text-align:center;font-size:10px;color:#2d3260;padding:3px 0">↓ expansion</div>
+      <div class="funnel-step" style="background:#0a1a10;border:1px solid #173404">
+        <div><div class="fs-label">Expansion & referral</div><div class="fs-sub">Creator shares Gravity Score → invites peers → agency upsell</div></div>
+        <div class="fs-metric">Month 2+</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:20px">Key conversion levers</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card">
+        <div class="card-eye">Free → Paid trigger</div>
+        <div class="card-title">Feature gates at the right moment</div>
+        <div class="card-body">Free tier shows the Gravity Score but not the component breakdown. When a creator clicks "why is my score 62?", they hit the paywall. The question itself signals intent — they're already engaged.</div>
+      </div>
+      <div class="card">
+        <div class="card-eye">Retention driver</div>
+        <div class="card-title">Weekly digest keeps them coming back</div>
+        <div class="card-body">The Monday Dark Matter briefing and weekly AI digest create a habitual return visit regardless of whether they posted that week. Habits drive retention more than features.</div>
+      </div>
+      <div class="card">
+        <div class="card-eye">Virality mechanism</div>
+        <div class="card-title">Shareable Gravity Score card</div>
+        <div class="card-body">A beautiful, branded graphic showing a creator's Gravity Score and niche rank. Designed to be screenshot and shared on Stories. Every share is a free impression for Orbit.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partnerships -->
+  <div class="sec" id="partnerships">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">Strategic partnerships</div>
+    <div class="div"></div>
+
+    <div class="g2">
+      <div>
+        <h3>Talent agency partnerships</h3>
+        <p>The highest-leverage partnership category. Each agency partner brings an instant roster of creators to the platform.</p>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Agency partner program</span><span class="ch-effort med-effort">Priority</span></div>
+          <div class="ch-body">Offer agency partners: white-label Mission Control, co-branded creator onboarding, dedicated account manager, and a revenue-share on creators they refer who convert to paid. Target: 10 agency partners by end of Year 1, each bringing 10–50 creators.</div>
+        </div>
+        <div class="channel" style="margin-top:10px">
+          <div class="ch-head"><span class="ch-name">Creator management tools</span><span class="ch-effort low-effort">Integration</span></div>
+          <div class="ch-body">Integrate with tools talent managers already use: spreadsheet exports, CRM connections (HubSpot), and Notion templates. Meet agencies where they are before asking them to change workflows.</div>
+        </div>
+      </div>
+      <div>
+        <h3>Platform & tool integrations</h3>
+        <p>Integrations that extend Orbit's reach into adjacent creator workflows.</p>
+        <div class="channel">
+          <div class="ch-head"><span class="ch-name">Creator education platforms</span><span class="ch-effort low-effort">Distribution</span></div>
+          <div class="ch-body">Partner with creator education companies (Kajabi, Teachable, Skool) to offer Orbit as a recommended tool in their creator growth curriculum. Bundle offers at reduced pricing.</div>
+        </div>
+        <div class="channel" style="margin-top:10px">
+          <div class="ch-head"><span class="ch-name">Brand marketplace platforms</span><span class="ch-effort med-effort">Future</span></div>
+          <div class="ch-body">Year 2: partner with brand-creator platforms (AspireIQ, CreatorIQ) to surface Orbit's Gravity Score data in creator selection. Positions Orbit as the standard metric for campaign planning.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Marketing -->
+  <div class="sec" id="content-mktg">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">Content marketing strategy</div>
+    <div class="div"></div>
+    <p>Orbit's content marketing is not a blog. It's a strategic owned media operation designed to establish Orbit as the intelligence authority for the fitness and lifestyle creator space. Content should make creators smarter — and make Orbit synonymous with that intelligence.</p>
+
+    <h3>Content pillars</h3>
+    <div class="g3" style="margin-top:8px">
+      <div class="card accent">
+        <div class="card-eye">Pillar 1 — Signal</div>
+        <div class="card-title">Dark Matter weekly</div>
+        <div class="card-body">Free weekly email + social posts: top 3 trending signals in fitness/lifestyle this week. Makes Orbit indispensable even for non-paying users. Positions Orbit as the trend authority.</div>
+        <div style="margin-top:8px"><span class="tag">Email</span><span class="tag">Instagram</span><span class="tag">TikTok</span></div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 2 — Education</div>
+        <div class="card-title">Creator intelligence guides</div>
+        <div class="card-body">Long-form guides: "How to calculate your true engagement rate", "What Gravity Score means for brand deals", "How to read your content decay curve". SEO-optimized, gated behind free signup.</div>
+        <div style="margin-top:8px"><span class="tag">Blog</span><span class="tag">SEO</span><span class="tag">Lead gen</span></div>
+      </div>
+      <div class="card accent">
+        <div class="card-eye">Pillar 3 — Proof</div>
+        <div class="card-title">Creator case studies</div>
+        <div class="card-body">Monthly deep-dive: one creator's Orbit data story. Before and after. What they learned, what changed. Real numbers. Authentic and specific. Most shared content category in the creator space.</div>
+        <div style="margin-top:8px"><span class="tag">Social proof</span><span class="tag">Conversion</span></div>
+      </div>
+    </div>
+
+    <h3>Anchor content pieces — Year 1</h3>
+    <div class="g2" style="margin-top:8px">
+      <div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>State of the Fitness Creator 2026</strong> — Annual report using anonymized Orbit data. Industry-defining, PR-worthy, positioned for press coverage and conference presentations.</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>The Gravity Score Explained</strong> — Definitive guide to what makes a creator's content pull audiences. Establishes the metric before competitors can copy the concept.</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Escape Velocity: 10 Creator Breakout Moments Analyzed</strong> — Real data from real escape velocity events (anonymized). Shows the product in action without being a product demo.</div></div>
+      </div>
+      <div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>The Creator's Guide to Brand Deal Negotiation</strong> — Using data (Gravity Score, benchmark rank) to command higher rates. Direct value for the creator, subtle product placement.</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Dark Matter Report: Q3 2026 Fitness Trends</strong> — Quarterly trend forecast. Positions Orbit as the intelligence layer before the product is fully known.</div></div>
+        <div class="bullet"><div class="bdot"></div><div class="btext"><strong>What Your Talent Manager Isn't Telling You</strong> — Provocative SEO title. Addresses the creator/manager information gap. Drives both creator and agency signups.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Community -->
+  <div class="sec" id="community">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">Community strategy</div>
+    <div class="div"></div>
+    <p>The most defensible long-term moat in the creator tool space is not features — it's community. A creator community built around Orbit becomes a data network, a referral engine, and a product feedback loop simultaneously.</p>
+
+    <div class="g2">
+      <div>
+        <h3>Orbit community — Phase 1</h3>
+        <div class="card accent" style="margin-top:8px">
+          <div class="card-eye">Private Discord / Slack</div>
+          <div class="card-title">The Constellation</div>
+          <div class="card-body">Invite-only community for Pro and Agency users. Channels: #dark-matter-signals (weekly trend drops), #escape-velocity-wins (celebrate breakout posts), #gravity-score-flex (share your score). Orbit team is active — not just a forum.</div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="card-eye">Creator advisory board</div>
+          <div class="card-title">5 founding creators</div>
+          <div class="card-body">5 high-profile fitness/lifestyle creators who co-develop the product with us. Given early access to all features, equity-adjacent compensation (not cash), and public recognition. Their input shapes the roadmap and their posts drive acquisition.</div>
+        </div>
+      </div>
+      <div>
+        <h3>Creator program — Phase 2</h3>
+        <div class="card accent" style="margin-top:8px">
+          <div class="card-eye">Orbit Certified</div>
+          <div class="card-title">Creator intelligence certification</div>
+          <div class="card-body">A free certification program for creators who complete Orbit's education modules. Certificate is shareable on social and in brand pitches. Creates a credentialed community and drives top-of-funnel through certificate sharing.</div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="card-eye">Agency network</div>
+          <div class="card-title">Orbit Agency Council</div>
+          <div class="card-body">Quarterly roundtables for Agency tier users. Share anonymized industry benchmarks, preview upcoming features, shape the agency product roadmap. Creates high-value retention for the $499/mo tier.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div class="sec" id="budget">
+    <div class="sec-num">Section 10</div>
+    <div class="sec-title">Marketing budget — Year 1</div>
+    <div class="div"></div>
+
+    <table class="budget-table">
+      <tr><th>Category</th><th>Q1 (Pre-launch)</th><th>Q2 (Beta)</th><th>Q3 (Public launch)</th><th>Q4 (Scale)</th><th>Total</th></tr>
+      <tr>
+        <td><strong>Brand & design</strong><br/><span style="font-size:10px;color:#4a5280">Identity, assets, website</span></td>
+        <td>$12,000</td><td>$2,000</td><td>$1,500</td><td>$1,500</td><td>$17,000</td>
+      </tr>
+      <tr>
+        <td><strong>Content production</strong><br/><span style="font-size:10px;color:#4a5280">Guides, reports, case studies, video</span></td>
+        <td>$4,000</td><td>$6,000</td><td>$8,000</td><td>$10,000</td><td>$28,000</td>
+      </tr>
+      <tr>
+        <td><strong>Creator seeding</strong><br/><span style="font-size:10px;color:#4a5280">Free access + gifting to seed creators</span></td>
+        <td>$1,000</td><td>$5,000</td><td>$8,000</td><td>$6,000</td><td>$20,000</td>
+      </tr>
+      <tr>
+        <td><strong>Paid social (Meta)</strong><br/><span style="font-size:10px;color:#4a5280">Instagram/Facebook acquisition ads</span></td>
+        <td>$0</td><td>$0</td><td>$8,000</td><td>$15,000</td><td>$23,000</td>
+      </tr>
+      <tr>
+        <td><strong>Podcast sponsorships</strong><br/><span style="font-size:10px;color:#4a5280">Host-read ads on creator podcasts</span></td>
+        <td>$0</td><td>$3,000</td><td>$6,000</td><td>$8,000</td><td>$17,000</td>
+      </tr>
+      <tr>
+        <td><strong>PR & press</strong><br/><span style="font-size:10px;color:#4a5280">Outreach, press release distribution</span></td>
+        <td>$1,000</td><td>$2,000</td><td>$5,000</td><td>$3,000</td><td>$11,000</td>
+      </tr>
+      <tr>
+        <td><strong>Events & conferences</strong><br/><span style="font-size:10px;color:#4a5280">VidSummit, Creator Economy Live</span></td>
+        <td>$0</td><td>$0</td><td>$3,000</td><td>$8,000</td><td>$11,000</td>
+      </tr>
+      <tr>
+        <td><strong>Tools & software</strong><br/><span style="font-size:10px;color:#4a5280">Email, analytics, CRM, ads management</span></td>
+        <td>$500</td><td>$800</td><td>$1,200</td><td>$1,500</td><td>$4,000</td>
+      </tr>
+      <tr class="total">
+        <td><strong>Total</strong></td>
+        <td><strong>$18,500</strong></td>
+        <td><strong>$18,800</strong></td>
+        <td><strong>$40,700</strong></td>
+        <td><strong>$53,000</strong></td>
+        <td><strong>$131,000</strong></td>
+      </tr>
+    </table>
+
+    <div class="callout" style="margin-top:12px">
+      <div class="callout-label">Budget note</div>
+      <div class="callout-text">Year 1 marketing budget of $131K is intentionally lean. The agency roster provides zero-cost distribution for the first 6 months. Paid acquisition only begins in Q3 once case studies and product-market fit signals are confirmed. Budget scales with MRR from Q3 onward — target marketing spend at &lt;30% of MRR.</div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="sec" id="kpis">
+    <div class="sec-num">Section 11</div>
+    <div class="sec-title">GTM KPIs & success metrics</div>
+    <div class="div"></div>
+
+    <div class="g4" style="margin-bottom:16px">
+      <div class="kpi"><div class="kpi-num">500</div><div class="kpi-label">Paying accounts</div><div class="kpi-period">Month 12 target</div></div>
+      <div class="kpi"><div class="kpi-num">$312K</div><div class="kpi-label">ARR</div><div class="kpi-period">Month 12 target</div></div>
+      <div class="kpi"><div class="kpi-num">50+</div><div class="kpi-label">NPS score</div><div class="kpi-period">Sustained target</div></div>
+      <div class="kpi"><div class="kpi-num">&lt;5%</div><div class="kpi-label">Monthly churn</div><div class="kpi-period">Creator tier</div></div>
+    </div>
+
+    <table class="msg-table">
+      <tr><th>Metric</th><th>Month 3</th><th>Month 6</th><th>Month 9</th><th>Month 12</th></tr>
+      <tr><td><strong>Free signups (cumulative)</strong></td><td>150</td><td>800</td><td>2,500</td><td>5,000</td></tr>
+      <tr><td><strong>Paying accounts</strong></td><td>50 (beta)</td><td>200</td><td>350</td><td>500</td></tr>
+      <tr><td><strong>MRR</strong></td><td>$0 (beta)</td><td>$14K</td><td>$22K</td><td>$26K</td></tr>
+      <tr><td><strong>Agency accounts</strong></td><td>1 (own)</td><td>2</td><td>4</td><td>8</td></tr>
+      <tr><td><strong>Free → paid conversion rate</strong></td><td>—</td><td>25%</td><td>22%</td><td>20%</td></tr>
+      <tr><td><strong>Email subscribers</strong></td><td>500</td><td>2,000</td><td>4,000</td><td>8,000</td></tr>
+      <tr><td><strong>Orbit social followers (IG+TT)</strong></td><td>1,000</td><td>5,000</td><td>12,000</td><td>25,000</td></tr>
+      <tr><td><strong>NPS</strong></td><td>45</td><td>52</td><td>55</td><td>58</td></tr>
+      <tr><td><strong>CAC (blended)</strong></td><td>—</td><td>$80</td><td>$70</td><td>$60</td></tr>
+      <tr><td><strong>LTV:CAC ratio</strong></td><td>—</td><td>6:1</td><td>8:1</td><td>10:1</td></tr>
+    </table>
+
+    <div class="callout v" style="margin-top:12px">
+      <div class="callout-label">North star GTM metric</div>
+      <div class="callout-text"><strong>% of paying users who referred at least one other paying user within 90 days.</strong> This metric captures both product satisfaction (they're willing to recommend) and distribution efficiency (the product grows itself). Target: 30% of paying users by month 12.</div>
+    </div>
+  </div>
+
+  <div class="ftr">
+    <span class="ftr-brand">ORBIT</span>
+    <div style="display:flex;gap:16px">
+      <span class="ftr-link">GTM Plan v1.0 · March 2026</span>
+      <span class="ftr-link">Confidential</span>
+      <span class="ftr-link">hello@orbitapp.io</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

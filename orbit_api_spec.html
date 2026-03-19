@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — API Specification</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact;line-height:1.6}
+  .wrap{max-width:960px;margin:0 auto;background:#080b14}
+
+  .hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .logo{display:flex;align-items:center;gap:8px}
+  .wm{font-family:Georgia,serif;font-size:15px;letter-spacing:4px;color:#e8f0ff}
+  .hdr-meta{display:flex;align-items:center;gap:12px}
+  .hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+  .ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+  .toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:12px 32px;display:flex;gap:6px;flex-wrap:wrap}
+  .toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;cursor:pointer;text-decoration:none;letter-spacing:.04em}
+  .toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+
+  .sec{padding:32px;border-bottom:1px solid #1a2150}
+  .sec:last-child{border-bottom:none}
+  .sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+  .sec-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+  .sec-desc{font-size:12px;color:#6b7ab5;line-height:1.7;max-width:640px;margin-bottom:16px}
+  .div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+
+  h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+  h3:first-child{margin-top:0}
+  h4{font-size:10px;font-weight:500;color:#a78bfa;letter-spacing:.08em;text-transform:uppercase;margin:14px 0 6px}
+  p{font-size:12px;color:#8892b0;line-height:1.75;margin-bottom:10px}
+  p:last-child{margin-bottom:0}
+  strong{color:#c4b5fd;font-weight:500}
+  code{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;background:#0d1228;border:1px solid #1a2150;border-radius:4px;padding:1px 6px;color:#a78bfa}
+
+  /* Endpoint cards */
+  .endpoint{background:#0d1228;border:1px solid #1a2150;border-radius:10px;margin-bottom:12px;overflow:hidden}
+  .endpoint:last-child{margin-bottom:0}
+  .ep-head{padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #1a2150}
+  .method{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;font-weight:500;padding:3px 10px;border-radius:4px;flex-shrink:0;letter-spacing:.04em}
+  .get{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+  .post{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+  .put{background:#1a1200;color:#fbbf24;border:1px solid #412402}
+  .delete{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+  .patch{background:#0a1228;color:#6C63FF;border:1px solid #1a2150}
+  .ep-path{font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;color:#e8f0ff;flex:1}
+  .ep-desc{font-size:11px;color:#6b7ab5}
+  .ep-auth{font-size:9px;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 8px;color:#4a5280}
+  .ep-body{padding:14px 16px}
+  .param-table{width:100%;border-collapse:collapse}
+  .param-table th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:6px 10px;border-bottom:1px solid #1a2150;background:#0a0e1e}
+  .param-table td{font-size:11px;color:#8892b0;padding:7px 10px;border-bottom:1px solid #0d1228;vertical-align:top;line-height:1.5}
+  .param-table tr:last-child td{border-bottom:none}
+  .req-badge{display:inline-block;font-size:8px;padding:1px 6px;border-radius:3px;background:#1a0a0a;color:#f09595;border:1px solid #501313;margin-left:4px}
+  .opt-badge{display:inline-block;font-size:8px;padding:1px 6px;border-radius:3px;background:#0d1228;color:#4a5280;border:1px solid #1a2150;margin-left:4px}
+  .type{font-family:'JetBrains Mono','Courier New',monospace;font-size:10px;color:#6C63FF}
+
+  /* Code blocks */
+  .code-block{background:#040608;border:1px solid #1a2150;border-radius:8px;padding:14px 16px;margin:8px 0;overflow-x:auto}
+  .code-block pre{font-family:'JetBrains Mono','Courier New',monospace;font-size:11px;color:#a0aec0;line-height:1.65;white-space:pre}
+  .code-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+
+  /* Status codes */
+  .status-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .status-badge{font-size:10px;padding:3px 10px;border-radius:4px}
+  .s200{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+  .s201{background:#0a1228;color:#6C63FF;border:1px solid #1a2150}
+  .s400{background:#1a1200;color:#fbbf24;border:1px solid #412402}
+  .s401{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+  .s404{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+  .s429{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+  .s500{background:#1a0a0a;color:#f87171;border:1px solid #791F1F}
+
+  /* Info blocks */
+  .info{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:11px;color:#8892b0;line-height:1.6}
+  .info.v{border-left-color:#a78bfa}
+  .info.g{border-left-color:#4ade80}
+  .info.r{border-left-color:#f09595}
+  .info-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+  .info .info-label{color:#6C63FF}
+  .info.v .info-label{color:#a78bfa}
+  .info.g .info-label{color:#4ade80}
+  .info.r .info-label{color:#f09595}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+  .card-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:6px}
+  .card-body{font-size:11px;color:#6b7ab5;line-height:1.6}
+
+  .bullet{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+  .bullet:last-child{margin-bottom:0}
+  .bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:6px;flex-shrink:0}
+  .bdot.v{background:#a78bfa}
+  .btext{font-size:11px;color:#8892b0;line-height:1.55}
+  .btext strong{color:#c4b5fd;font-weight:500}
+
+  .ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+  .ftr-brand{font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#2d3260}
+  .ftr-links{display:flex;gap:16px}
+  .ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="wm">ORBIT</span>
+    </div>
+    <div class="hdr-meta">
+      <span class="hdr-tag">API Specification</span>
+      <span class="ver">v1.0 · REST API</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <a class="toc-item" href="#overview">Overview</a>
+    <a class="toc-item" href="#auth">Authentication</a>
+    <a class="toc-item" href="#creators">Creators</a>
+    <a class="toc-item" href="#analytics">Analytics</a>
+    <a class="toc-item" href="#gravity">Gravity Score</a>
+    <a class="toc-item" href="#insights">AI Insights</a>
+    <a class="toc-item" href="#constellation">Constellation</a>
+    <a class="toc-item" href="#escvel">Escape Velocity</a>
+    <a class="toc-item" href="#darkmatter">Dark Matter</a>
+    <a class="toc-item" href="#agency">Agency</a>
+    <a class="toc-item" href="#webhooks">Webhooks</a>
+    <a class="toc-item" href="#errors">Errors</a>
+  </div>
+
+  <!-- Overview -->
+  <div class="sec" id="overview">
+    <div class="sec-num">Section 01</div>
+    <div class="sec-title">API overview</div>
+    <div class="div"></div>
+    <p>The Orbit API is a RESTful HTTP API that provides programmatic access to all Orbit platform data and intelligence features. It is used internally by Orbit's web and mobile clients and is available to approved third-party integrations.</p>
+
+    <div class="g2">
+      <div class="card">
+        <div class="card-title">Base URL</div>
+        <div class="code-block" style="margin-top:8px"><pre>https://api.orbitapp.io/v1</pre></div>
+        <div class="card-body" style="margin-top:6px">All endpoints are versioned. Breaking changes will be introduced in a new version with a 6-month deprecation window for v1.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rate limits</div>
+        <div class="card-body">
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Free tier:</strong> 100 requests / hour</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Creator tier:</strong> 1,000 requests / hour</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Pro tier:</strong> 5,000 requests / hour</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Agency tier:</strong> 20,000 requests / hour</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext">Rate limit headers returned on every response: <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code>, <code>X-RateLimit-Reset</code></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Request format</h3>
+    <div class="g2">
+      <div>
+        <h4>Headers</h4>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><code>Authorization: Bearer {token}</code> — required on all authenticated endpoints</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><code>Content-Type: application/json</code> — required for POST/PUT/PATCH</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><code>X-Orbit-Version: 2026-03-01</code> — optional API version date pinning</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><code>Idempotency-Key: {uuid}</code> — recommended for POST requests</div></div>
+      </div>
+      <div>
+        <h4>Response format</h4>
+        <p>All responses return JSON. Successful responses follow the envelope pattern:</p>
+        <div class="code-block"><pre>{
+  "success": true,
+  "data": { ... },
+  "meta": {
+    "request_id": "req_abc123",
+    "timestamp": "2026-03-18T10:00:00Z"
+  }
+}</pre></div>
+      </div>
+    </div>
+
+    <h3>Pagination</h3>
+    <p>All list endpoints use cursor-based pagination for consistency and performance.</p>
+    <div class="code-block">
+      <div class="code-label">Paginated response envelope</div>
+      <pre>{
+  "success": true,
+  "data": [ ... ],
+  "pagination": {
+    "cursor": "cur_eyJpZCI6MTIzfQ",
+    "has_more": true,
+    "total_count": 842
+  }
+}</pre>
+    </div>
+    <p>Pass <code>?cursor=</code> and <code>?limit=</code> (max 100) as query params on subsequent requests.</p>
+  </div>
+
+  <!-- Authentication -->
+  <div class="sec" id="auth">
+    <div class="sec-num">Section 02</div>
+    <div class="sec-title">Authentication</div>
+    <div class="div"></div>
+    <p>Orbit uses JWT bearer tokens for API authentication. Tokens are obtained via the <code>/auth</code> endpoints and expire after 24 hours. Refresh tokens are valid for 30 days.</p>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/auth/token</span>
+        <span class="ep-desc">Obtain access token</span>
+        <span class="ep-auth">Public</span>
+      </div>
+      <div class="ep-body">
+        <h4>Request body</h4>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>email</code><span class="req-badge">required</span></td><td><span class="type">string</span></td><td>User email address</td></tr>
+          <tr><td><code>password</code><span class="req-badge">required</span></td><td><span class="type">string</span></td><td>User password (min 12 chars)</td></tr>
+          <tr><td><code>mfa_code</code><span class="opt-badge">optional</span></td><td><span class="type">string</span></td><td>6-digit TOTP code if MFA enabled</td></tr>
+        </table>
+        <div class="code-block" style="margin-top:10px">
+          <div class="code-label">Response 200</div>
+          <pre>{
+  "access_token": "eyJhbGciOiJSUzI1NiJ9...",
+  "refresh_token": "ref_abc123xyz",
+  "expires_in": 86400,
+  "token_type": "Bearer",
+  "user": {
+    "id": "usr_abc123",
+    "email": "creator@example.com",
+    "role": "creator",
+    "tier": "pro"
+  }
+}</pre>
+        </div>
+        <div class="status-row">
+          <span class="status-badge s200">200 OK</span>
+          <span class="status-badge s400">400 Invalid credentials</span>
+          <span class="status-badge s401">401 MFA required</span>
+          <span class="status-badge s429">429 Rate limited</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/auth/refresh</span>
+        <span class="ep-desc">Refresh access token</span>
+        <span class="ep-auth">Refresh token</span>
+      </div>
+      <div class="ep-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>refresh_token</code><span class="req-badge">required</span></td><td><span class="type">string</span></td><td>Valid refresh token from prior auth</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/auth/oauth/{provider}</span>
+        <span class="ep-desc">OAuth login (Google, Apple)</span>
+        <span class="ep-auth">Public</span>
+      </div>
+      <div class="ep-body">
+        <p>Supported providers: <code>google</code>, <code>apple</code>. Pass OAuth <code>id_token</code> in request body. Returns same token envelope as <code>/auth/token</code>.</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/auth/revoke</span>
+        <span class="ep-desc">Revoke token</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Revokes the current access token and optionally the refresh token. Pass <code>"revoke_refresh": true</code> to sign out all sessions.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creators -->
+  <div class="sec" id="creators">
+    <div class="sec-num">Section 03</div>
+    <div class="sec-title">Creators</div>
+    <div class="div"></div>
+    <p>Creator resources represent individual influencer accounts within Orbit. A creator may have multiple connected social platforms (see <code>/creators/{id}/connections</code>).</p>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/creators/me</span>
+        <span class="ep-desc">Get authenticated creator profile</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <div class="code-block">
+          <div class="code-label">Response 200</div>
+          <pre>{
+  "id": "crt_abc123",
+  "display_name": "Jessica Lee",
+  "handle": "jessicalee",
+  "email": "jessica@example.com",
+  "niche": "fitness",
+  "sub_niche": "strength_training",
+  "tier": "pro",
+  "gravity_score": 78,
+  "gravity_trend": "rising",
+  "connected_platforms": ["instagram", "tiktok"],
+  "created_at": "2026-01-15T09:00:00Z",
+  "last_sync_at": "2026-03-18T08:45:00Z"
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method patch">PATCH</span>
+        <span class="ep-path">/creators/me</span>
+        <span class="ep-desc">Update creator profile</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <table class="param-table">
+          <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>display_name</code><span class="opt-badge">optional</span></td><td><span class="type">string</span></td><td>Public display name</td></tr>
+          <tr><td><code>niche</code><span class="opt-badge">optional</span></td><td><span class="type">enum</span></td><td>One of: fitness, lifestyle, wellness, nutrition, beauty, travel</td></tr>
+          <tr><td><code>sub_niche</code><span class="opt-badge">optional</span></td><td><span class="type">string</span></td><td>Free text sub-category (e.g. "strength_training", "yoga")</td></tr>
+          <tr><td><code>benchmark_opt_in</code><span class="opt-badge">optional</span></td><td><span class="type">boolean</span></td><td>Consent to anonymized benchmarking pool. Default: false.</td></tr>
+          <tr><td><code>notification_prefs</code><span class="opt-badge">optional</span></td><td><span class="type">object</span></td><td>Push/email notification preferences per event type</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/creators/me/connections</span>
+        <span class="ep-desc">List connected social platforms</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <div class="code-block">
+          <div class="code-label">Response 200</div>
+          <pre>[
+  {
+    "platform": "instagram",
+    "platform_username": "@jessicalee",
+    "platform_id": "17841400123456789",
+    "status": "active",
+    "last_sync_at": "2026-03-18T08:45:00Z",
+    "follower_count": 284000,
+    "scopes": ["instagram_basic", "instagram_manage_insights"]
+  },
+  {
+    "platform": "tiktok",
+    "platform_username": "@jessicalee",
+    "status": "active",
+    "last_sync_at": "2026-03-18T08:30:00Z",
+    "follower_count": 142000,
+    "scopes": ["user.info.basic", "video.list"]
+  }
+]</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/creators/me/connections/{platform}/sync</span>
+        <span class="ep-desc">Trigger manual data sync</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Triggers an immediate data sync for the specified platform. Rate limited to once per 15 minutes per platform. Returns a <code>sync_job_id</code> that can be polled via <code>/jobs/{id}</code>.</p>
+        <div class="info v"><div class="info-label">Note</div>Platform sync is performed automatically every 15 minutes. Manual sync is available for Pro and Agency tiers only.</div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method delete">DELETE</span>
+        <span class="ep-path">/creators/me/connections/{platform}</span>
+        <span class="ep-desc">Disconnect a platform</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Revokes OAuth tokens for the specified platform and queues data deletion. Historical data is retained for 30 days before permanent deletion unless <code>"delete_immediately": true</code> is passed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="sec" id="analytics">
+    <div class="sec-num">Section 04</div>
+    <div class="sec-title">Analytics</div>
+    <div class="div"></div>
+    <p>The analytics endpoints return normalized performance data across connected platforms. All metrics are mapped to Orbit's canonical schema regardless of platform origin.</p>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/analytics/overview</span>
+        <span class="ep-desc">Aggregate cross-platform performance</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <h4>Query parameters</h4>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+          <tr><td><code>period</code></td><td><span class="type">enum</span></td><td>28d</td><td>7d | 28d | 90d | custom</td></tr>
+          <tr><td><code>start_date</code></td><td><span class="type">date</span></td><td>—</td><td>ISO 8601 date. Required if period=custom.</td></tr>
+          <tr><td><code>end_date</code></td><td><span class="type">date</span></td><td>—</td><td>ISO 8601 date. Required if period=custom.</td></tr>
+          <tr><td><code>platforms</code></td><td><span class="type">string[]</span></td><td>all</td><td>Comma-separated: instagram,tiktok,youtube</td></tr>
+          <tr><td><code>compare</code></td><td><span class="type">boolean</span></td><td>true</td><td>Include prior period comparison deltas</td></tr>
+        </table>
+        <div class="code-block" style="margin-top:10px">
+          <div class="code-label">Response 200</div>
+          <pre>{
+  "period": { "start": "2026-02-18", "end": "2026-03-18" },
+  "totals": {
+    "reach": 2400000,
+    "impressions": 5800000,
+    "engagement_rate": 0.068,
+    "follower_growth": 14200,
+    "content_count": 34,
+    "saves": 48200,
+    "shares": 12800
+  },
+  "deltas": {
+    "reach": 0.183,
+    "engagement_rate": 0.012,
+    "follower_growth": 0.22,
+    "content_count": -0.105
+  },
+  "by_platform": {
+    "instagram": { "reach": 1600000, "engagement_rate": 0.082, "follower_growth": 9200 },
+    "tiktok":    { "reach": 800000,  "engagement_rate": 0.067, "follower_growth": 5000 }
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/analytics/timeseries</span>
+        <span class="ep-desc">Time-series engagement data</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <h4>Query parameters</h4>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>metric</code><span class="req-badge">required</span></td><td><span class="type">enum</span></td><td>engagement_rate | reach | follower_count | saves | shares | impressions</td></tr>
+          <tr><td><code>granularity</code></td><td><span class="type">enum</span></td><td>day | week | month. Default: day.</td></tr>
+          <tr><td><code>period</code></td><td><span class="type">string</span></td><td>7d | 28d | 90d. Default: 28d.</td></tr>
+          <tr><td><code>platforms</code></td><td><span class="type">string[]</span></td><td>Filter to specific platforms</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/analytics/content</span>
+        <span class="ep-desc">List content with performance metrics</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <h4>Query parameters</h4>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>platform</code></td><td><span class="type">enum</span></td><td>Filter by platform</td></tr>
+          <tr><td><code>sort</code></td><td><span class="type">enum</span></td><td>engagement_rate | reach | saves | posted_at. Default: posted_at desc.</td></tr>
+          <tr><td><code>content_type</code></td><td><span class="type">enum</span></td><td>reel | post | story | video | short</td></tr>
+          <tr><td><code>limit</code></td><td><span class="type">integer</span></td><td>Max 100. Default 20.</td></tr>
+          <tr><td><code>cursor</code></td><td><span class="type">string</span></td><td>Pagination cursor</td></tr>
+        </table>
+        <div class="code-block" style="margin-top:10px">
+          <div class="code-label">Content object</div>
+          <pre>{
+  "id": "cnt_xyz789",
+  "platform": "instagram",
+  "platform_post_id": "18234567890",
+  "content_type": "reel",
+  "thumbnail_url": "https://cdn.orbitapp.io/thumbs/cnt_xyz789.jpg",
+  "caption_preview": "Morning routine that changed everything...",
+  "posted_at": "2026-03-12T07:14:00Z",
+  "duration_seconds": 14,
+  "hashtags": ["#morningroutine", "#fitness", "#wellness"],
+  "audio_id": "aud_espresso_01",
+  "metrics": {
+    "reach": 284000,
+    "impressions": 620000,
+    "engagement_rate": 0.112,
+    "likes": 28400,
+    "comments": 1842,
+    "saves": 9200,
+    "shares": 3100,
+    "plays": 540000
+  },
+  "baseline_multiple": 3.4,
+  "escape_velocity": true
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/analytics/best-times</span>
+        <span class="ep-desc">Optimal posting windows</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns recommended posting windows based on the creator's historical engagement patterns. Broken down by platform and day of week. Requires minimum 30 posts of history.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gravity Score -->
+  <div class="sec" id="gravity">
+    <div class="sec-num">Section 05</div>
+    <div class="sec-title">Gravity Score</div>
+    <div class="div"></div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/gravity</span>
+        <span class="ep-desc">Get current Gravity Score</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <div class="code-block">
+          <div class="code-label">Response 200</div>
+          <pre>{
+  "score": 78,
+  "trend": "rising",
+  "trend_delta": 4,
+  "calculated_at": "2026-03-18T06:00:00Z",
+  "components": {
+    "return_viewer_rate":  { "score": 82, "weight": 0.30, "value": 0.34 },
+    "save_share_depth":    { "score": 76, "weight": 0.25, "value": 0.062 },
+    "comment_quality":     { "score": 71, "weight": 0.20, "nlp_score": 0.71 },
+    "cross_platform_pull": { "score": 80, "weight": 0.15, "overlap_rate": 0.28 },
+    "follower_velocity":   { "score": 74, "weight": 0.10, "weekly_rate": 0.018 }
+  },
+  "peer_comparison": {
+    "niche_median": 58,
+    "top_10_pct_threshold": 85,
+    "percentile": 72
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/gravity/history</span>
+        <span class="ep-desc">Gravity Score history</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns daily Gravity Score over the past 90 days with annotated inflection points. Query param <code>?annotate=true</code> includes AI-generated explanations for significant changes.</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/gravity/scorecard</span>
+        <span class="ep-desc">Generate shareable scorecard</span>
+        <span class="ep-auth">Bearer token · Pro+</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns a pre-signed URL to a generated PNG/PDF scorecard suitable for brand deal pitches. Cached for 24 hours. Pass <code>?remove_branding=true</code> for Agency tier white-label output.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Insights -->
+  <div class="sec" id="insights">
+    <div class="sec-num">Section 06</div>
+    <div class="sec-title">AI insights</div>
+    <div class="div"></div>
+    <p>AI insight endpoints are powered by Orbit's intelligence engine. All responses are grounded in the creator's actual performance data. Responses may take 3–8 seconds — design for async/streaming where possible.</p>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/insights/weekly</span>
+        <span class="ep-desc">Weekly strategy digest</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns this week's AI-generated strategic digest — prioritized action list, performance summary, and top opportunity. Generated every Monday at 6am UTC in the creator's timezone. Cached until next generation.</p>
+        <div class="code-block">
+          <div class="code-label">Response 200</div>
+          <pre>{
+  "week_of": "2026-03-18",
+  "summary": "Your reach grew 18% this week, led by two Reels using trending audio...",
+  "top_actions": [
+    {
+      "priority": 1,
+      "action": "Post a follow-up to your Tuesday Reel within 48 hours",
+      "rationale": "Your escape velocity event is still warm — same format, same audio family",
+      "category": "escape_velocity"
+    },
+    {
+      "priority": 2,
+      "action": "Shift Thursday posts from 8pm to 6:30pm",
+      "rationale": "Your audience is 34% more active at 6-7pm on Thursdays based on 90-day data",
+      "category": "timing"
+    }
+  ],
+  "dark_matter_signal": {
+    "signal": "#BodyRecomp audio rising +44% in fitness niche",
+    "recommendation": "Consider a body recomp content series this week"
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/insights/content/{content_id}</span>
+        <span class="ep-desc">Analyze specific content performance</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Generates an AI analysis of a specific post. Explains performance relative to baseline, identifies contributing factors, and provides recommendations. Results cached per content ID.</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/insights/ask</span>
+        <span class="ep-desc">Ask the AI coach a question</span>
+        <span class="ep-auth">Bearer token · Pro+</span>
+      </div>
+      <div class="ep-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>question</code><span class="req-badge">required</span></td><td><span class="type">string</span></td><td>Natural language question about the creator's performance (max 500 chars)</td></tr>
+          <tr><td><code>context_window</code></td><td><span class="type">enum</span></td><td>7d | 28d | 90d. Default: 28d. Data window for the AI to reference.</td></tr>
+          <tr><td><code>stream</code></td><td><span class="type">boolean</span></td><td>If true, returns a streaming SSE response. Default: false.</td></tr>
+        </table>
+        <div class="info v" style="margin-top:10px"><div class="info-label">Streaming</div>When <code>stream: true</code>, the response is a Server-Sent Events stream. Connect to the returned <code>stream_url</code> and listen for <code>data:</code> events. Final event will have <code>event: done</code>.</div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/insights/feedback</span>
+        <span class="ep-desc">Submit insight feedback</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Submit thumbs up/down feedback on an AI insight. Required fields: <code>insight_id</code>, <code>rating</code> (1=positive, -1=negative), optional <code>comment</code>. Used to improve AI model quality.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constellation -->
+  <div class="sec" id="constellation">
+    <div class="sec-num">Section 07</div>
+    <div class="sec-title">Constellation</div>
+    <div class="div"></div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/constellation/rank</span>
+        <span class="ep-desc">Niche rank and benchmark position</span>
+        <span class="ep-auth">Bearer token · Creator+</span>
+      </div>
+      <div class="ep-body">
+        <div class="code-block">
+          <div class="code-label">Response 200</div>
+          <pre>{
+  "niche": "fitness",
+  "sub_niche": "strength_training",
+  "peer_pool_size": 840,
+  "rank": 4,
+  "percentile": 99,
+  "metrics": {
+    "engagement_rate": {
+      "creator": 0.068, "peer_median": 0.042,
+      "top_10_pct": 0.09, "percentile": 81
+    },
+    "gravity_score": {
+      "creator": 78, "peer_median": 58,
+      "top_10_pct": 85, "percentile": 72
+    },
+    "follower_growth_rate": {
+      "creator": 0.018, "peer_median": 0.011,
+      "top_10_pct": 0.028, "percentile": 68
+    }
+  },
+  "updated_at": "2026-03-17T06:00:00Z"
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/constellation/gap-analysis</span>
+        <span class="ep-desc">Identify gaps vs top performers</span>
+        <span class="ep-auth">Bearer token · Creator+</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns an AI-generated analysis of the specific behaviors differentiating creators in the top 10% of the creator's constellation from the creator's current performance. All peer data is anonymized and aggregated.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escape Velocity -->
+  <div class="sec" id="escvel">
+    <div class="sec-num">Section 08</div>
+    <div class="sec-title">Escape Velocity</div>
+    <div class="div"></div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/escape-velocity</span>
+        <span class="ep-desc">List escape velocity events</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns all detected escape velocity events ordered by recency. Each event includes the triggering content, analysis, and replication playbook. Query params: <code>?status=active|expired|actioned</code>, <code>?limit=</code>, <code>?cursor=</code>.</p>
+        <div class="code-block">
+          <div class="code-label">Escape velocity event object</div>
+          <pre>{
+  "id": "ev_abc123",
+  "content_id": "cnt_xyz789",
+  "platform": "instagram",
+  "detected_at": "2026-03-12T09:22:00Z",
+  "expires_at": "2026-03-14T07:14:00Z",
+  "status": "active",
+  "baseline_multiple": 6.2,
+  "analysis": {
+    "summary": "Your Tuesday Reel is performing 6.2× above baseline",
+    "factors": [
+      { "factor": "content_length", "detail": "14s — your top 5% length range" },
+      { "factor": "audio",          "detail": "Trending audio gaining +280% usage in fitness niche" },
+      { "factor": "posting_time",   "detail": "7:14am — within your optimal 6-8am window" },
+      { "factor": "save_rate",      "detail": "3× your normal save rate — high retention content" }
+    ]
+  },
+  "playbook": {
+    "action": "Post a follow-up Reel within 48 hours",
+    "format": "14-18 second Reel",
+    "audio_recommendation": "Same audio family — trending fitness audio from Dark Matter briefing",
+    "timing": "Tomorrow between 6:30am and 7:30am",
+    "caption_angle": "Continue the story or add part 2 framing"
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/escape-velocity/{id}/mark-actioned</span>
+        <span class="ep-desc">Mark event as actioned</span>
+        <span class="ep-auth">Bearer token</span>
+      </div>
+      <div class="ep-body">
+        <p>Mark an escape velocity event as actioned. Pass optional <code>follow_up_content_id</code> to link the follow-up post for outcome tracking.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark Matter -->
+  <div class="sec" id="darkmatter">
+    <div class="sec-num">Section 09</div>
+    <div class="sec-title">Dark Matter</div>
+    <div class="div"></div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/dark-matter/signals</span>
+        <span class="ep-desc">Get trending signals for creator's niche</span>
+        <span class="ep-auth">Bearer token · Creator+</span>
+      </div>
+      <div class="ep-body">
+        <h4>Query parameters</h4>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>type</code></td><td><span class="type">enum</span></td><td>audio | hashtag | format | topic. Default: all.</td></tr>
+          <tr><td><code>min_momentum</code></td><td><span class="type">float</span></td><td>Minimum momentum score (0–1). Default: 0.3.</td></tr>
+          <tr><td><code>limit</code></td><td><span class="type">integer</span></td><td>Max 50. Default 10.</td></tr>
+        </table>
+        <div class="code-block" style="margin-top:10px">
+          <div class="code-label">Signal object</div>
+          <pre>{
+  "id": "sig_abc123",
+  "type": "audio",
+  "label": "Espresso — Sabrina Carpenter",
+  "platform": "instagram",
+  "momentum_score": 0.87,
+  "usage_growth_7d": 2.8,
+  "niche_relevance": 0.92,
+  "estimated_peak_days": 12,
+  "usage_count_7d": 48200,
+  "content_brief_available": true,
+  "detected_at": "2026-03-10T00:00:00Z"
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/dark-matter/signals/{id}/brief</span>
+        <span class="ep-desc">Generate content brief from signal</span>
+        <span class="ep-auth">Bearer token · Pro+</span>
+      </div>
+      <div class="ep-body">
+        <p>Generates an AI-powered, ready-to-execute content brief tailored to the creator's voice and past top-performing content. Returns brief with caption angle, format recommendation, posting window, and hashtag suggestions. Generation takes 5–10 seconds.</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/dark-matter/briefing</span>
+        <span class="ep-desc">Get current weekly briefing</span>
+        <span class="ep-auth">Bearer token · Creator+</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns the current week's Dark Matter briefing — top 5 signals across all types, with one-line recommendations for each. Generated every Monday 5am UTC.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Agency -->
+  <div class="sec" id="agency">
+    <div class="sec-num">Section 10</div>
+    <div class="sec-title">Agency (Mission Control)</div>
+    <div class="div"></div>
+    <div class="info r"><div class="info-label">Access restriction</div>All <code>/agency</code> endpoints require an Agency tier account. Requests from Creator or Pro accounts will return <code>403 Forbidden</code>.</div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/agency/roster</span>
+        <span class="ep-desc">Get managed creator roster</span>
+        <span class="ep-auth">Bearer token · Agency</span>
+      </div>
+      <div class="ep-body">
+        <h4>Query parameters</h4>
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>sort</code></td><td><span class="type">enum</span></td><td>gravity_score | trajectory | reach | alerts. Default: trajectory.</td></tr>
+          <tr><td><code>filter</code></td><td><span class="type">enum</span></td><td>all | declining | alerts | no_activity</td></tr>
+          <tr><td><code>limit</code></td><td><span class="type">integer</span></td><td>Max 100. Default 50.</td></tr>
+        </table>
+        <div class="code-block" style="margin-top:10px">
+          <div class="code-label">Roster item object</div>
+          <pre>{
+  "creator_id": "crt_abc123",
+  "display_name": "Jessica Lee",
+  "handle": "jessicalee",
+  "gravity_score": 78,
+  "trajectory": "rising",
+  "reach_28d": 2400000,
+  "engagement_rate_28d": 0.068,
+  "follower_count": 426000,
+  "active_alerts": 1,
+  "last_post_at": "2026-03-17T18:22:00Z",
+  "platforms": ["instagram", "tiktok"]
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/agency/roster/{creator_id}/overview</span>
+        <span class="ep-desc">Get full creator analytics (manager view)</span>
+        <span class="ep-auth">Bearer token · Agency</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns the same data as <code>/analytics/overview</code> for any managed creator. Managers see full creator data subject to the creator's consent settings.</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method get">GET</span>
+        <span class="ep-path">/agency/alerts</span>
+        <span class="ep-desc">Unified alert feed across roster</span>
+        <span class="ep-auth">Bearer token · Agency</span>
+      </div>
+      <div class="ep-body">
+        <p>Returns all active alerts across all managed creators sorted by urgency. Alert types: <code>escape_velocity</code>, <code>trajectory_decline</code>, <code>dark_matter_opportunity</code>, <code>sync_error</code>. Filter by <code>?type=</code> and <code>?creator_id=</code>.</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/agency/reports/brand-deal</span>
+        <span class="ep-desc">Generate brand deal report</span>
+        <span class="ep-auth">Bearer token · Agency</span>
+      </div>
+      <div class="ep-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>creator_id</code><span class="req-badge">required</span></td><td><span class="type">string</span></td><td>Target creator ID</td></tr>
+          <tr><td><code>period</code></td><td><span class="type">enum</span></td><td>28d | 90d. Default: 28d.</td></tr>
+          <tr><td><code>format</code></td><td><span class="type">enum</span></td><td>pdf | json. Default: pdf.</td></tr>
+          <tr><td><code>white_label</code></td><td><span class="type">boolean</span></td><td>Remove Orbit branding from report. Default: false.</td></tr>
+          <tr><td><code>brand_name</code></td><td><span class="type">string</span></td><td>Brand name to personalize report header</td></tr>
+        </table>
+        <p style="margin-top:8px">Report generation is async. Returns a <code>report_job_id</code>. Poll <code>/jobs/{id}</code> for status. PDF download URL returned when complete (valid 7 days).</p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="ep-head">
+        <span class="method post">POST</span>
+        <span class="ep-path">/agency/roster/{creator_id}/notes</span>
+        <span class="ep-desc">Add manager note to creator dashboard</span>
+        <span class="ep-auth">Bearer token · Agency</span>
+      </div>
+      <div class="ep-body">
+        <table class="param-table">
+          <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+          <tr><td><code>note</code><span class="req-badge">required</span></td><td><span class="type">string</span></td><td>Note text (max 1000 chars)</td></tr>
+          <tr><td><code>visible_to_creator</code></td><td><span class="type">boolean</span></td><td>Show note in creator's dashboard. Default: true.</td></tr>
+          <tr><td><code>priority</code></td><td><span class="type">enum</span></td><td>normal | urgent. Default: normal.</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Webhooks -->
+  <div class="sec" id="webhooks">
+    <div class="sec-num">Section 11</div>
+    <div class="sec-title">Webhooks</div>
+    <div class="div"></div>
+    <p>Orbit sends webhook events for real-time notifications. Configure webhook endpoints in your account settings or via the API. All payloads are signed with HMAC-SHA256 using your webhook secret.</p>
+
+    <h3>Event types</h3>
+    <table class="param-table">
+      <tr><th>Event</th><th>Trigger</th><th>Tiers</th></tr>
+      <tr><td><code>escape_velocity.detected</code></td><td>Content crosses escape velocity threshold</td><td>All</td></tr>
+      <tr><td><code>gravity_score.changed</code></td><td>Gravity Score changes by ±3 points or more</td><td>Creator+</td></tr>
+      <tr><td><code>trajectory.declining</code></td><td>Orbit Path detects 7-day declining momentum</td><td>Creator+</td></tr>
+      <tr><td><code>dark_matter.briefing_ready</code></td><td>Weekly Dark Matter briefing generated</td><td>Creator+</td></tr>
+      <tr><td><code>dark_matter.urgent_signal</code></td><td>High-momentum signal detected (score >0.9)</td><td>Pro+</td></tr>
+      <tr><td><code>sync.completed</code></td><td>Platform data sync completed</td><td>All</td></tr>
+      <tr><td><code>sync.failed</code></td><td>Platform data sync failed (auth error, API limit)</td><td>All</td></tr>
+      <tr><td><code>report.ready</code></td><td>Async report generation complete</td><td>Agency</td></tr>
+    </table>
+
+    <h3>Webhook payload structure</h3>
+    <div class="code-block">
+      <div class="code-label">Escape velocity webhook payload</div>
+      <pre>POST https://your-endpoint.com/orbit-webhook
+Headers:
+  X-Orbit-Signature: sha256=abc123...
+  X-Orbit-Event: escape_velocity.detected
+  X-Orbit-Delivery: del_xyz789
+
+{
+  "event": "escape_velocity.detected",
+  "timestamp": "2026-03-12T09:22:14Z",
+  "data": {
+    "escape_velocity_id": "ev_abc123",
+    "creator_id": "crt_abc123",
+    "content_id": "cnt_xyz789",
+    "platform": "instagram",
+    "baseline_multiple": 6.2,
+    "expires_at": "2026-03-14T07:14:00Z"
+  }
+}</pre>
+    </div>
+
+    <div class="info g"><div class="info-label">Signature verification</div>Verify webhook authenticity by computing <code>HMAC-SHA256(payload_body, webhook_secret)</code> and comparing to the <code>X-Orbit-Signature</code> header. Reject any request where signatures do not match.</div>
+  </div>
+
+  <!-- Errors -->
+  <div class="sec" id="errors">
+    <div class="sec-num">Section 12</div>
+    <div class="sec-title">Errors</div>
+    <div class="div"></div>
+    <p>All errors return a consistent JSON envelope with a machine-readable <code>code</code> and human-readable <code>message</code>.</p>
+
+    <div class="code-block">
+      <div class="code-label">Error response envelope</div>
+      <pre>{
+  "success": false,
+  "error": {
+    "code": "INSUFFICIENT_TIER",
+    "message": "This endpoint requires a Pro or Agency subscription.",
+    "docs_url": "https://docs.orbitapp.io/errors/INSUFFICIENT_TIER",
+    "request_id": "req_abc123"
+  }
+}</pre>
+    </div>
+
+    <h3>Error codes</h3>
+    <table class="param-table">
+      <tr><th>HTTP Status</th><th>Code</th><th>Description</th></tr>
+      <tr><td><span class="status-badge s400" style="font-size:10px">400</span></td><td><code>INVALID_REQUEST</code></td><td>Missing or malformed request parameters</td></tr>
+      <tr><td><span class="status-badge s400" style="font-size:10px">400</span></td><td><code>INVALID_DATE_RANGE</code></td><td>start_date must be before end_date; max range 365 days</td></tr>
+      <tr><td><span class="status-badge s401" style="font-size:10px">401</span></td><td><code>UNAUTHORIZED</code></td><td>Missing or invalid bearer token</td></tr>
+      <tr><td><span class="status-badge s401" style="font-size:10px">401</span></td><td><code>TOKEN_EXPIRED</code></td><td>Access token has expired — refresh using /auth/refresh</td></tr>
+      <tr><td><span class="status-badge s401" style="font-size:10px">403</span></td><td><code>INSUFFICIENT_TIER</code></td><td>Endpoint requires a higher subscription tier</td></tr>
+      <tr><td><span class="status-badge s401" style="font-size:10px">403</span></td><td><code>NOT_MANAGED_CREATOR</code></td><td>Agency attempted to access a creator not on their roster</td></tr>
+      <tr><td><span class="status-badge s404" style="font-size:10px">404</span></td><td><code>NOT_FOUND</code></td><td>Requested resource does not exist</td></tr>
+      <tr><td><span class="status-badge s400" style="font-size:10px">409</span></td><td><code>SYNC_IN_PROGRESS</code></td><td>Manual sync requested while sync already running</td></tr>
+      <tr><td><span class="status-badge s400" style="font-size:10px">409</span></td><td><code>INSUFFICIENT_DATA</code></td><td>Feature requires more data (e.g. Constellation needs 30+ posts)</td></tr>
+      <tr><td><span class="status-badge s429" style="font-size:10px">429</span></td><td><code>RATE_LIMITED</code></td><td>Request quota exceeded. Retry after X-RateLimit-Reset timestamp.</td></tr>
+      <tr><td><span class="status-badge s500" style="font-size:10px">500</span></td><td><code>INTERNAL_ERROR</code></td><td>Unexpected server error. Include request_id when contacting support.</td></tr>
+      <tr><td><span class="status-badge s500" style="font-size:10px">503</span></td><td><code>PLATFORM_UNAVAILABLE</code></td><td>Upstream platform API unavailable. Data may be stale.</td></tr>
+    </table>
+  </div>
+
+  <div class="ftr">
+    <span class="ftr-brand">ORBIT</span>
+    <div class="ftr-links">
+      <span class="ftr-link">API Spec v1.0 · March 2026</span>
+      <span class="ftr-link">docs.orbitapp.io</span>
+      <span class="ftr-link">api@orbitapp.io</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Technical Architecture</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 0 40px}
+
+  .hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+  .logo{display:flex;align-items:center;gap:8px}
+  .wm{font-family:Georgia,serif;font-size:15px;letter-spacing:4px;color:#e8f0ff}
+  .hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+  .ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+  .arch{padding:28px 32px;display:flex;flex-direction:column;gap:0}
+
+  /* Layer wrapper */
+  .layer{display:flex;align-items:stretch;gap:0;margin-bottom:0}
+  .layer-label-col{width:80px;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;padding-right:14px}
+  .layer-label{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E;text-align:right;line-height:1.4}
+  .layer-body{flex:1;background:#0a0e1e;border:1px solid #1a2150;border-radius:10px;padding:16px;display:flex;gap:10px;align-items:stretch;min-height:72px}
+
+  /* Connector rows between layers */
+  .connector-row{display:flex;align-items:center;padding:0 0 0 94px;height:32px;gap:0;position:relative}
+
+  /* Service node */
+  .node{border-radius:8px;padding:10px 14px;display:flex;flex-direction:column;gap:2px;cursor:pointer;transition:opacity .15s;flex-shrink:0}
+  .node:hover{opacity:.85}
+  .node-title{font-size:11px;font-weight:500;line-height:1.3}
+  .node-sub{font-size:9px;line-height:1.4;opacity:.75}
+
+  /* Color variants */
+  .purple{background:#1a1f35;border:1px solid #3D3A9E}
+  .purple .node-title{color:#c4b5fd}
+  .purple .node-sub{color:#8b84c8}
+  .teal{background:#061a14;border:1px solid #0F6E56}
+  .teal .node-title{color:#5DCAA5}
+  .teal .node-sub{color:#3a8a6a}
+  .blue{background:#061228;border:1px solid #185FA5}
+  .blue .node-title{color:#85B7EB}
+  .blue .node-sub{color:#4a7aab}
+  .gray{background:#111110;border:1px solid #3d3d3a}
+  .gray .node-title{color:#B4B2A9}
+  .gray .node-sub{color:#6b6a65}
+  .amber{background:#1a1000;border:1px solid #854F0B}
+  .amber .node-title{color:#EF9F27}
+  .amber .node-sub{color:#8a6020}
+  .violet{background:#12082a;border:1px solid #534AB7}
+  .violet .node-title{color:#a78bfa}
+  .violet .node-sub{color:#6a5ab5}
+
+  /* Wide node that fills remaining space */
+  .node-grow{flex:1}
+
+  /* Arrow SVG connectors */
+  .arrows{width:100%;overflow:visible;display:block}
+
+  /* Legend */
+  .legend{display:flex;gap:20px;padding:16px 32px;border-top:1px solid #1a2150;margin-top:8px}
+  .leg-item{display:flex;align-items:center;gap:8px;font-size:10px;color:#4a5280}
+  .leg-line{width:24px;height:2px}
+  .leg-solid{background:#3D3A9E}
+  .leg-dashed{background:repeating-linear-gradient(90deg,#3D3A9E 0,#3D3A9E 4px,transparent 4px,transparent 7px)}
+
+  /* Data flow diagram */
+  .flow-section{padding:24px 32px;border-top:1px solid #1a2150}
+  .flow-title{font-family:Georgia,serif;font-size:16px;color:#e8f0ff;margin-bottom:4px}
+  .flow-sub{font-size:11px;color:#4a5280;margin-bottom:16px}
+  .flow-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0;align-items:center}
+  .flow-step{background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:12px 10px;text-align:center}
+  .flow-arrow-cell{display:flex;align-items:center;justify-content:center;color:#2d3260;font-size:16px}
+  .flow-num{font-family:Georgia,serif;font-size:18px;color:#1a2150;display:block;margin-bottom:3px}
+  .flow-name{font-size:10px;font-weight:500;color:#e8f0ff;display:block;margin-bottom:2px}
+  .flow-detail{font-size:9px;color:#4a5280;display:block;line-height:1.4}
+
+  /* Service detail cards -->
+  .detail-section{padding:24px 32px;border-top:1px solid #1a2150}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+  .detail-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px}
+  .dc-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .dc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .dc-name{font-size:12px;font-weight:500;color:#e8f0ff}
+  .dc-stack{font-size:9px;color:#3D3A9E;letter-spacing:.06em}
+  .dc-items{display:flex;flex-direction:column;gap:4px}
+  .dc-item{font-size:10px;color:#6b7ab5;display:flex;gap:6px;align-items:flex-start}
+  .dc-item::before{content:'—';color:#2d3260;flex-shrink:0}
+
+  .ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+  .ftr-brand{font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#2d3260}
+  .ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">
+    <svg width="20" height="20" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="hdr-tag">Technical architecture</span>
+    <span class="ver">v1.0</span>
+  </div>
+</div>
+
+<div class="arch">
+
+  <!-- Layer 1: Clients -->
+  <div class="layer">
+    <div class="layer-label-col"><span class="layer-label">Client<br/>layer</span></div>
+    <div class="layer-body">
+      <div class="node purple" style="width:180px">
+        <span class="node-title">Web app</span>
+        <span class="node-sub">Next.js 14 · React · SSR</span>
+        <span class="node-sub">Recharts · TailwindCSS</span>
+      </div>
+      <div class="node purple" style="width:180px">
+        <span class="node-title">iOS app</span>
+        <span class="node-sub">React Native · Expo</span>
+        <span class="node-sub">Push notifications</span>
+      </div>
+      <div class="node gray" style="width:180px">
+        <span class="node-title">Third-party integrations</span>
+        <span class="node-sub">Partner API consumers</span>
+        <span class="node-sub">Agency white-label</span>
+      </div>
+      <div class="node gray node-grow">
+        <span class="node-title">Webhook consumers</span>
+        <span class="node-sub">External event subscribers · HMAC-SHA256 verified</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector 1→2 -->
+  <div class="connector-row">
+    <svg class="arrows" height="32" viewBox="0 0 900 32">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#3D3A9E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <line x1="130" y1="0" x2="130" y2="30" stroke="#3D3A9E" stroke-width="1" marker-end="url(#ah)"/>
+      <line x1="310" y1="0" x2="230" y2="30" stroke="#3D3A9E" stroke-width="1" marker-end="url(#ah)"/>
+      <line x1="490" y1="0" x2="490" y2="30" stroke="#3D3A9E" stroke-width="1" marker-end="url(#ah)"/>
+      <line x1="700" y1="0" x2="700" y2="30" stroke="#3D3A9E" stroke-width="1" marker-end="url(#ah)"/>
+      <text x="145" y="18" font-size="9" fill="#2d3260" font-family="monospace">HTTPS</text>
+      <text x="500" y="18" font-size="9" fill="#2d3260" font-family="monospace">HTTPS</text>
+    </svg>
+  </div>
+
+  <!-- Layer 2: Edge -->
+  <div class="layer">
+    <div class="layer-label-col"><span class="layer-label">Edge<br/>layer</span></div>
+    <div class="layer-body">
+      <div class="node teal" style="flex:2">
+        <span class="node-title">API gateway</span>
+        <span class="node-sub">JWT auth · rate limiting · request routing</span>
+        <span class="node-sub">AWS API Gateway · custom middleware</span>
+      </div>
+      <div class="node teal" style="flex:1">
+        <span class="node-title">CDN</span>
+        <span class="node-sub">CloudFront</span>
+        <span class="node-sub">Static + thumbnails</span>
+      </div>
+      <div class="node teal" style="flex:1">
+        <span class="node-title">WebSocket server</span>
+        <span class="node-sub">Socket.io · real-time</span>
+        <span class="node-sub">Escape velocity alerts</span>
+      </div>
+      <div class="node teal" style="flex:1">
+        <span class="node-title">Load balancer</span>
+        <span class="node-sub">AWS ALB</span>
+        <span class="node-sub">Health checks</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector 2→3 -->
+  <div class="connector-row">
+    <svg class="arrows" height="32" viewBox="0 0 900 32">
+      <defs>
+        <marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <line x1="130" y1="0" x2="130" y2="30" stroke="#0F6E56" stroke-width="1" marker-end="url(#ah2)"/>
+      <line x1="280" y1="0" x2="310" y2="30" stroke="#0F6E56" stroke-width="1" marker-end="url(#ah2)"/>
+      <line x1="380" y1="0" x2="490" y2="30" stroke="#0F6E56" stroke-width="1" marker-end="url(#ah2)"/>
+      <line x1="500" y1="0" x2="670" y2="30" stroke="#0F6E56" stroke-width="1" marker-end="url(#ah2)"/>
+    </svg>
+  </div>
+
+  <!-- Layer 3: Core Services -->
+  <div class="layer">
+    <div class="layer-label-col"><span class="layer-label">Core<br/>services</span></div>
+    <div class="layer-body" style="flex-wrap:wrap;row-gap:10px">
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Analytics service</span>
+        <span class="node-sub">Node.js · Express</span>
+        <span class="node-sub">Metric aggregation</span>
+        <span class="node-sub">Dashboard API</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">AI engine service</span>
+        <span class="node-sub">Python · FastAPI</span>
+        <span class="node-sub">Gravity Score calc</span>
+        <span class="node-sub">Insight generation</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Ingestion service</span>
+        <span class="node-sub">Node.js · Bull queues</span>
+        <span class="node-sub">Platform sync jobs</span>
+        <span class="node-sub">Data normalization</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Notification service</span>
+        <span class="node-sub">Node.js · FCM · SES</span>
+        <span class="node-sub">Push + email alerts</span>
+        <span class="node-sub">WebSocket publish</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Auth service</span>
+        <span class="node-sub">Auth0 / Supabase</span>
+        <span class="node-sub">JWT issuance</span>
+        <span class="node-sub">OAuth provider</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Report service</span>
+        <span class="node-sub">Node.js · Puppeteer</span>
+        <span class="node-sub">PDF generation</span>
+        <span class="node-sub">Brand deal reports</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Trend service</span>
+        <span class="node-sub">Python · Celery</span>
+        <span class="node-sub">Dark Matter engine</span>
+        <span class="node-sub">Signal scoring</span>
+      </div>
+      <div class="node purple" style="width:calc(25% - 8px)">
+        <span class="node-title">Billing service</span>
+        <span class="node-sub">Node.js · Stripe SDK</span>
+        <span class="node-sub">Subscription mgmt</span>
+        <span class="node-sub">Tier enforcement</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector 3→4 -->
+  <div class="connector-row">
+    <svg class="arrows" height="32" viewBox="0 0 900 32">
+      <defs>
+        <marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <line x1="110" y1="0" x2="110" y2="30" stroke="#185FA5" stroke-width="1" marker-end="url(#ah3)"/>
+      <line x1="290" y1="0" x2="290" y2="30" stroke="#185FA5" stroke-width="1" marker-end="url(#ah3)"/>
+      <line x1="470" y1="0" x2="470" y2="30" stroke="#185FA5" stroke-width="1" marker-end="url(#ah3)"/>
+      <line x1="650" y1="0" x2="650" y2="30" stroke="#185FA5" stroke-width="1" marker-end="url(#ah3)"/>
+    </svg>
+  </div>
+
+  <!-- Layer 4: Data -->
+  <div class="layer">
+    <div class="layer-label-col"><span class="layer-label">Data<br/>layer</span></div>
+    <div class="layer-body">
+      <div class="node blue" style="flex:2">
+        <span class="node-title">PostgreSQL 15 + TimescaleDB</span>
+        <span class="node-sub">Primary relational store · row-level security (RLS)</span>
+        <span class="node-sub">Time-series hypertables: content_metrics · gravity_scores · follower_snapshots</span>
+        <span class="node-sub">AWS RDS Multi-AZ · automated backups · point-in-time recovery</span>
+      </div>
+      <div class="node blue" style="flex:1">
+        <span class="node-title">Redis 7</span>
+        <span class="node-sub">AWS ElastiCache</span>
+        <span class="node-sub">API cache · sessions</span>
+        <span class="node-sub">Bull job queues</span>
+      </div>
+      <div class="node blue" style="flex:1">
+        <span class="node-title">Elasticsearch</span>
+        <span class="node-sub">AWS OpenSearch</span>
+        <span class="node-sub">Trend signals index</span>
+        <span class="node-sub">Content search</span>
+      </div>
+      <div class="node blue" style="flex:1">
+        <span class="node-title">S3</span>
+        <span class="node-sub">AWS S3 + CloudFront</span>
+        <span class="node-sub">Thumbnails · PDFs</span>
+        <span class="node-sub">Data exports</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector 3→5 (platforms to ingestion, dashed) -->
+  <div class="connector-row">
+    <svg class="arrows" height="32" viewBox="0 0 900 32">
+      <defs>
+        <marker id="ah4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <line x1="130" y1="32" x2="130" y2="0" stroke="#888780" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah4)"/>
+      <line x1="310" y1="32" x2="310" y2="0" stroke="#888780" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah4)"/>
+      <line x1="490" y1="32" x2="490" y2="0" stroke="#888780" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah4)"/>
+      <line x1="670" y1="32" x2="670" y2="0" stroke="#888780" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah4)"/>
+      <text x="200" y="18" font-size="9" fill="#4a5280" font-family="monospace">OAuth · webhooks · polling</text>
+    </svg>
+  </div>
+
+  <!-- Layer 5: External platforms -->
+  <div class="layer">
+    <div class="layer-label-col"><span class="layer-label">External<br/>platforms</span></div>
+    <div class="layer-body">
+      <div class="node gray" style="flex:1">
+        <span class="node-title">Instagram</span>
+        <span class="node-sub">Meta Graph API v19</span>
+        <span class="node-sub">Webhooks + polling</span>
+      </div>
+      <div class="node gray" style="flex:1">
+        <span class="node-title">TikTok</span>
+        <span class="node-sub">TT for Developers</span>
+        <span class="node-sub">Polling (no webhooks)</span>
+      </div>
+      <div class="node gray" style="flex:1">
+        <span class="node-title">YouTube</span>
+        <span class="node-sub">Data API v3</span>
+        <span class="node-sub">Phase 2 · 48hr delay</span>
+      </div>
+      <div class="node gray" style="flex:1">
+        <span class="node-title">Snapchat</span>
+        <span class="node-sub">Marketing API</span>
+        <span class="node-sub">Phase 2</span>
+      </div>
+      <div class="node amber" style="flex:1">
+        <span class="node-title">Stripe</span>
+        <span class="node-sub">Subscriptions + billing</span>
+        <span class="node-sub">Webhooks for events</span>
+      </div>
+      <div class="node gray" style="flex:1">
+        <span class="node-title">FCM / APNs</span>
+        <span class="node-sub">Firebase push</span>
+        <span class="node-sub">Apple push service</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector services→AI (dashed) -->
+  <div class="connector-row">
+    <svg class="arrows" height="32" viewBox="0 0 900 32">
+      <defs>
+        <marker id="ah5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <line x1="200" y1="32" x2="200" y2="0" stroke="#534AB7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah5)"/>
+      <line x1="450" y1="32" x2="450" y2="0" stroke="#534AB7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#ah5)"/>
+      <text x="260" y="18" font-size="9" fill="#534AB7" font-family="monospace">AI service calls (async)</text>
+    </svg>
+  </div>
+
+  <!-- Layer 6: AI / Infra -->
+  <div class="layer">
+    <div class="layer-label-col"><span class="layer-label">AI &amp;<br/>infra</span></div>
+    <div class="layer-body">
+      <div class="node violet" style="flex:2">
+        <span class="node-title">Anthropic Claude API</span>
+        <span class="node-sub">claude-sonnet-4 · insight generation · coaching · content briefs · escape velocity analysis</span>
+      </div>
+      <div class="node gray" style="flex:2">
+        <span class="node-title">Custom ML models</span>
+        <span class="node-sub">Gravity Score algorithm · Orbit Path projection · Dark Matter momentum scoring · comment NLP</span>
+      </div>
+      <div class="node gray" style="flex:1">
+        <span class="node-title">Datadog</span>
+        <span class="node-sub">APM · infra monitoring</span>
+        <span class="node-sub">Alerting</span>
+      </div>
+      <div class="node gray" style="flex:1">
+        <span class="node-title">Sentry</span>
+        <span class="node-sub">Error tracking</span>
+        <span class="node-sub">Release health</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="leg-item"><div class="leg-line leg-solid"></div>Synchronous data flow</div>
+  <div class="leg-item"><div class="leg-line leg-dashed"></div>Async / external call</div>
+  <div style="margin-left:auto;display:flex;gap:12px">
+    <span style="font-size:9px;color:#3D3A9E">All services on AWS ECS · Fargate</span>
+    <span style="font-size:9px;color:#3D3A9E">·</span>
+    <span style="font-size:9px;color:#3D3A9E">99.9% uptime SLA</span>
+    <span style="font-size:9px;color:#3D3A9E">·</span>
+    <span style="font-size:9px;color:#3D3A9E">us-east-1 primary · eu-west-1 replica</span>
+  </div>
+</div>
+
+<!-- Data flow section -->
+<div class="flow-section">
+  <div class="flow-title">Data ingestion flow</div>
+  <div class="flow-sub">How a creator's post moves from Instagram to an AI insight</div>
+  <div class="flow-grid">
+    <div class="flow-step">
+      <span class="flow-num">01</span>
+      <span class="flow-name">Platform API</span>
+      <span class="flow-detail">IG webhook fires or 15-min poll hits new post</span>
+    </div>
+    <div class="flow-arrow-cell">→</div>
+    <div class="flow-step">
+      <span class="flow-num">02</span>
+      <span class="flow-name">Ingestion service</span>
+      <span class="flow-detail">Bull queue job · normalize to canonical schema</span>
+    </div>
+    <div class="flow-arrow-cell">→</div>
+    <div class="flow-step">
+      <span class="flow-num">03</span>
+      <span class="flow-name">PostgreSQL write</span>
+      <span class="flow-detail">content + content_metrics rows inserted</span>
+    </div>
+    <div class="flow-arrow-cell">→</div>
+    <div style="display:contents">
+      <div class="flow-step" style="grid-column:1">
+        <span class="flow-num">04</span>
+        <span class="flow-name">AI engine job</span>
+        <span class="flow-detail">Baseline multiple calc · escape velocity check</span>
+      </div>
+      <div class="flow-arrow-cell">→</div>
+      <div class="flow-step">
+        <span class="flow-num">05</span>
+        <span class="flow-name">Claude API call</span>
+        <span class="flow-detail">Generate analysis + replication playbook</span>
+      </div>
+      <div class="flow-arrow-cell">→</div>
+      <div class="flow-step">
+        <span class="flow-num">06</span>
+        <span class="flow-name">Notification dispatch</span>
+        <span class="flow-detail">Push alert + WebSocket event to creator</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Service detail section -->
+<div class="detail-section">
+  <div class="flow-title">Service specifications</div>
+  <div class="flow-sub" style="margin-bottom:0">Key technical details per service</div>
+  <div class="detail-grid">
+    <div class="detail-card">
+      <div class="dc-head">
+        <div class="dc-dot" style="background:#7F77DD"></div>
+        <div>
+          <div class="dc-name">Analytics service</div>
+          <div class="dc-stack">Node.js 20 · Express · AWS ECS Fargate</div>
+        </div>
+      </div>
+      <div class="dc-items">
+        <div class="dc-item">Serves all dashboard API endpoints (/analytics/*, /gravity/*, /constellation/*)</div>
+        <div class="dc-item">Pre-computed aggregates cached in Redis with 15-min TTL</div>
+        <div class="dc-item">Read replica PostgreSQL connection for heavy queries</div>
+        <div class="dc-item">Target: &lt;2s P95 dashboard load · 1,000 req/hr rate limit on Creator tier</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-head">
+        <div class="dc-dot" style="background:#7F77DD"></div>
+        <div>
+          <div class="dc-name">AI engine service</div>
+          <div class="dc-stack">Python 3.11 · FastAPI · AWS ECS Fargate</div>
+        </div>
+      </div>
+      <div class="dc-items">
+        <div class="dc-item">Gravity Score: nightly batch job at 2am UTC per creator</div>
+        <div class="dc-item">Escape velocity: event-driven trigger from ingestion service</div>
+        <div class="dc-item">Claude API calls: async with 8s timeout, exponential backoff retry</div>
+        <div class="dc-item">Custom ML: scikit-learn models for Orbit Path, Gravity Score components</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-head">
+        <div class="dc-dot" style="background:#7F77DD"></div>
+        <div>
+          <div class="dc-name">Ingestion service</div>
+          <div class="dc-stack">Node.js 20 · Bull · Redis · AWS ECS</div>
+        </div>
+      </div>
+      <div class="dc-items">
+        <div class="dc-item">Webhook handler for IG (instant) — polling fallback every 15 min</div>
+        <div class="dc-item">TikTok: polling every 15 min (no webhook support)</div>
+        <div class="dc-item">Queue priority: escape velocity detection jobs run at high priority</div>
+        <div class="dc-item">Metric snapshots captured at 1h, 6h, 24h, 72h, 7d, 30d post-publish</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-head">
+        <div class="dc-dot" style="background:#7F77DD"></div>
+        <div>
+          <div class="dc-name">Trend service (Dark Matter)</div>
+          <div class="dc-stack">Python 3.11 · Celery · Elasticsearch</div>
+        </div>
+      </div>
+      <div class="dc-items">
+        <div class="dc-item">Indexes audio track usage counts per niche every 6 hours</div>
+        <div class="dc-item">Momentum score recalculated daily via Celery beat scheduler</div>
+        <div class="dc-item">Weekly briefing generation: Celery task every Monday 5am UTC</div>
+        <div class="dc-item">Urgent signal alert: fires when momentum_score crosses 0.9 threshold</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Infrastructure section -->
+<div class="detail-section" style="border-top:1px solid #1a2150">
+  <div class="flow-title">Infrastructure overview</div>
+  <div class="flow-sub" style="margin-bottom:16px">AWS deployment topology</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+    <div class="detail-card">
+      <div class="dc-name" style="margin-bottom:8px">Compute</div>
+      <div class="dc-items">
+        <div class="dc-item">All services on ECS Fargate (serverless containers)</div>
+        <div class="dc-item">Auto-scaling on CPU and request count</div>
+        <div class="dc-item">Separate task definitions per service</div>
+        <div class="dc-item">ECR for container image registry</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-name" style="margin-bottom:8px">Database</div>
+      <div class="dc-items">
+        <div class="dc-item">RDS PostgreSQL Multi-AZ (us-east-1)</div>
+        <div class="dc-item">Read replica in eu-west-1 for GDPR</div>
+        <div class="dc-item">ElastiCache Redis cluster mode</div>
+        <div class="dc-item">Point-in-time recovery · 7-day backups</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-name" style="margin-bottom:8px">Security</div>
+      <div class="dc-items">
+        <div class="dc-item">VPC with private subnets for all services</div>
+        <div class="dc-item">TLS 1.3 everywhere · AES-256 at rest</div>
+        <div class="dc-item">Secrets Manager for API keys + tokens</div>
+        <div class="dc-item">WAF on API Gateway · DDoS protection</div>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-name" style="margin-bottom:8px">CI/CD</div>
+      <div class="dc-items">
+        <div class="dc-item">GitHub Actions for build + test pipeline</div>
+        <div class="dc-item">Blue/green deployments via ECS</div>
+        <div class="dc-item">Automated rollback on health check fail</div>
+        <div class="dc-item">Datadog APM + Sentry error tracking</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Technical Architecture v1.0 · March 2026</span>
+    <span class="ftr-link">Confidential</span>
+    <span class="ftr-link">engineering@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Feature Deep Dive</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .pg{background:#080b14;max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+
+  .hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 28px;display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:8px}
+  .wm{font-family:Georgia,serif;font-size:15px;letter-spacing:4px;color:#e8f0ff}
+  .htag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+
+  .sec{padding:28px;border-bottom:1px solid #1a2150}
+  .sec:last-child{border-bottom:none}
+  .eye{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+  .stitle{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+  .sbody{font-size:12px;color:#6b7ab5;line-height:1.7;max-width:560px;margin-bottom:16px}
+  .div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+  .fhero{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:20px;position:relative;overflow:hidden}
+  .fhero.accent{border-color:#2d3260}
+  .fhero-eye{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+  .fhero-title{font-size:14px;font-weight:500;color:#e8f0ff;margin-bottom:6px}
+  .fhero-body{font-size:11px;color:#6b7ab5;line-height:1.65}
+  .fhero-detail{margin-top:12px;padding-top:12px;border-top:1px solid #1a2150}
+  .fhero-detail-title{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+
+  .bullet{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+  .bullet:last-child{margin-bottom:0}
+  .bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:5px;flex-shrink:0}
+  .bdot.v{background:#a78bfa}
+  .btext{font-size:10px;color:#8892b0;line-height:1.5}
+  .btext strong{color:#c4b5fd;font-weight:500}
+
+  .mbadge{display:inline-flex;align-items:center;gap:5px;background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:3px 10px;margin-bottom:10px}
+  .mbadge-dot{width:5px;height:5px;border-radius:50%;background:#a78bfa}
+  .mbadge-text{font-size:9px;color:#a78bfa;letter-spacing:.06em}
+
+  .ai-card{background:#0a0818;border:1px solid #2d1a5e;border-radius:12px;padding:20px}
+  .ai-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .ai-name{font-size:11px;font-weight:500;color:#a78bfa;letter-spacing:.04em}
+  .ai-msg{background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 12px;margin-bottom:8px}
+  .ai-msg:last-child{margin-bottom:0}
+  .ai-msg-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+  .ai-msg-text{font-size:11px;color:#8892b0;line-height:1.6}
+  .ai-msg-text strong{color:#c4b5fd;font-weight:500}
+
+  .cmap{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:16px}
+  .cmap-title{font-size:10px;font-weight:500;color:#a0aec0;margin-bottom:12px}
+
+  .moat{background:#0d1228;border-left:3px solid #6C63FF;border-radius:0 10px 10px 0;padding:14px 16px;margin-top:12px}
+  .moat-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#6C63FF;margin-bottom:4px}
+  .moat-text{font-size:11px;color:#8892b0;line-height:1.6}
+  .moat-text strong{color:#e8f0ff;font-weight:500}
+
+  .fw-row{display:flex;align-items:center;gap:0;margin-top:4px}
+  .fw-step{flex:1;background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 12px;text-align:center}
+  .fw-num{font-family:Georgia,serif;font-size:18px;color:#1a2150}
+  .fw-title{font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:2px}
+  .fw-sub{font-size:9px;color:#4a5280;line-height:1.4}
+  .fw-arrow{font-size:14px;color:#2d3260;padding:0 4px;flex-shrink:0}
+
+  .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .tag{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 9px;font-size:9px;color:#8892b0}
+  .tag.v{background:#1a1035;border-color:#2d1a5e;color:#a78bfa}
+</style>
+</head>
+<body>
+<div class="pg">
+
+  <div class="hdr">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="wm">ORBIT</span>
+    </div>
+    <span class="htag">Feature deep dive · Creator Intelligence Platform</span>
+  </div>
+
+  <!-- Gravity Score -->
+  <div class="sec">
+    <div class="eye">Feature 01 — Core differentiator</div>
+    <div class="stitle">Gravity Score™</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic — gravity = audience pull</span></div>
+        <p class="sbody" style="margin-bottom:12px">Most platforms measure reach. Orbit measures pull — the gravitational force a creator exerts on their audience. Gravity Score is a proprietary composite metric that captures true influence, not just impressions.</p>
+        <div class="fhero accent">
+          <div class="fhero-detail-title">What goes into Gravity Score</div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Return rate</strong> — what % of viewers come back within 7 days</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Save &amp; share depth</strong> — content people return to and pass on</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Comment quality</strong> — NLP-scored for depth vs shallow reactions</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Cross-platform pull</strong> — audience following across multiple channels</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Follower velocity</strong> — rate of acceleration, not just net growth</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="fhero" style="margin-bottom:12px">
+          <div class="fhero-eye">Why it matters</div>
+          <div class="fhero-title">Brands negotiate on reach. They should negotiate on gravity.</div>
+          <div class="fhero-body" style="margin-top:6px">A creator with 200K followers and a Gravity Score of 84 is more valuable than one with 800K and a score of 31. Orbit gives creators and their managers a single, defensible number that reframes every brand deal conversation.</div>
+        </div>
+        <div class="moat">
+          <div class="moat-label">Brand tie-in</div>
+          <div class="moat-text">The Gravity Score lives on the creator's profile like a vital sign. It becomes <strong>the metric Orbit is known for</strong> — the number creators reference in pitches, the thing managers optimize for, the standard brands start asking about.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orbit Path -->
+  <div class="sec">
+    <div class="eye">Feature 02 — Trajectory intelligence</div>
+    <div class="stitle">Orbit Path</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div class="fhero accent">
+        <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic — orbital path = content trajectory</span></div>
+        <div class="fhero-title" style="margin-top:4px">Predictive growth modeling</div>
+        <div class="fhero-body" style="margin-top:6px">Just as a satellite's path can be calculated from current velocity and mass, a creator's growth trajectory can be modeled from current momentum signals. Orbit Path shows where you're headed — not just where you've been.</div>
+        <div class="fhero-detail">
+          <div class="fhero-detail-title">Orbit Path surfaces</div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>30/60/90-day growth projections</strong> based on current trajectory</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Trajectory alerts</strong> when momentum shifts — positive or negative</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Inflection point detection</strong> — identifies what caused a curve change</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext"><strong>Platform decay curves</strong> — when a platform is losing traction for this creator specifically</div></div>
+        </div>
+      </div>
+      <div class="fhero">
+        <div class="fhero-eye">Standout moment</div>
+        <div class="fhero-title">The trajectory conversation</div>
+        <div class="fhero-body" style="margin-top:6px">When a talent manager sits down with a creator for a quarterly review, they pull up the Orbit Path visualization — a literal curved trajectory line showing the creator's projected position in 90 days. It transforms an abstract conversation about "growth" into a concrete, visual, shared understanding.</div>
+        <div class="tag-row">
+          <div class="tag">Predictive</div>
+          <div class="tag">Visual</div>
+          <div class="tag">Actionable</div>
+          <div class="tag v">Orbit AI powered</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escape Velocity -->
+  <div class="sec">
+    <div class="eye">Feature 03 — Breakthrough detection</div>
+    <div class="stitle">Escape Velocity</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic — escape velocity = breakthrough content</span></div>
+        <p class="sbody" style="margin-bottom:12px">When a rocket reaches escape velocity it breaks free of gravity and enters a new orbit. When a piece of content breaks free of a creator's normal performance range — Orbit flags it instantly, reverse-engineers why it happened, and tells you how to replicate it.</p>
+        <div class="ai-card">
+          <div class="ai-head">
+            <svg width="14" height="14" viewBox="0 0 96 96">
+              <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="18" cy="48" r="9" fill="#a78bfa"/>
+            </svg>
+            <span class="ai-name">Orbit AI — Escape Velocity alert</span>
+          </div>
+          <div class="ai-msg">
+            <div class="ai-msg-label">Detected 2 hours ago</div>
+            <div class="ai-msg-text"><strong>Your Tuesday Reel hit escape velocity</strong> — performing 6.2× above your baseline. Key factors: 14s length, trending audio "Espresso", posted at 7:14am. Your audience saved this at 3× your normal rate.</div>
+          </div>
+          <div class="ai-msg">
+            <div class="ai-msg-label">Recommended action</div>
+            <div class="ai-msg-text">Post a <strong>follow-up Reel within 48 hours</strong> using the same format and audio family. Creators who capitalize on escape velocity events within 48hrs see 2.3× higher sustained growth in the following 30 days.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="fhero accent" style="margin-bottom:12px">
+          <div class="fhero-eye">What makes this different</div>
+          <div class="fhero-title">Most tools tell you what happened. Escape Velocity tells you what to do next — immediately.</div>
+          <div class="fhero-body" style="margin-top:6px">The 48-hour window after a breakout post is the most valuable creative moment a creator has. Orbit is the only platform that identifies it in real time, explains it, and gives a specific replication strategy.</div>
+        </div>
+        <div class="fhero">
+          <div class="fhero-detail-title">Escape Velocity breakdown includes</div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Format analysis</strong> — length, style, structure vs your norms</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Timing analysis</strong> — day, hour, cadence proximity</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Audio/hashtag match</strong> — trending signals that amplified reach</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Audience segment breakdown</strong> — which segment drove the spike</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Replication playbook</strong> — a specific action within 48hrs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constellation -->
+  <div class="sec">
+    <div class="eye">Feature 04 — Benchmarking &amp; positioning</div>
+    <div class="stitle">Constellation View</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic — constellation = your niche network</span></div>
+        <p class="sbody" style="margin-bottom:12px">You don't exist in isolation. You're part of a constellation of creators in your space. Orbit maps your exact position within it — who's near you, who's pulling ahead, and where the open space is.</p>
+        <div class="cmap">
+          <div class="cmap-title">Constellation map — fitness creators · 100K–500K tier</div>
+          <svg width="100%" height="180" viewBox="0 0 400 180">
+            <circle cx="200" cy="90" r="70" fill="none" stroke="#1a2150" stroke-width="0.5" stroke-dasharray="2 4"/>
+            <circle cx="200" cy="90" r="110" fill="none" stroke="#1a2150" stroke-width="0.5" stroke-dasharray="2 6" opacity="0.5"/>
+            <circle cx="200" cy="90" r="8" fill="#a78bfa" opacity="0.9"/>
+            <circle cx="200" cy="90" r="14" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.3"/>
+            <text x="200" y="112" text-anchor="middle" font-size="8" fill="#a78bfa" font-family="Georgia,serif">You</text>
+            <circle cx="148" cy="58" r="5" fill="#6C63FF" opacity="0.7"/>
+            <text x="148" y="72" text-anchor="middle" font-size="7" fill="#4a5280">@fitjess</text>
+            <circle cx="258" cy="52" r="6" fill="#6C63FF" opacity="0.6"/>
+            <text x="258" y="66" text-anchor="middle" font-size="7" fill="#4a5280">@movewithsam</text>
+            <circle cx="272" cy="110" r="4" fill="#3D3A9E" opacity="0.7"/>
+            <text x="272" y="124" text-anchor="middle" font-size="7" fill="#4a5280">@dailyburn</text>
+            <circle cx="140" cy="118" r="7" fill="#6C63FF" opacity="0.5"/>
+            <text x="140" y="132" text-anchor="middle" font-size="7" fill="#4a5280">@sweatwithk</text>
+            <circle cx="310" cy="75" r="3" fill="#1a2150" stroke="#2d3260" stroke-width="1"/>
+            <circle cx="88" cy="82" r="4" fill="#1a2150" stroke="#2d3260" stroke-width="1"/>
+            <line x1="200" y1="90" x2="148" y2="58" stroke="#2d3260" stroke-width="0.4"/>
+            <line x1="200" y1="90" x2="258" y2="52" stroke="#2d3260" stroke-width="0.4"/>
+            <line x1="200" y1="90" x2="140" y2="118" stroke="#2d3260" stroke-width="0.4"/>
+            <line x1="200" y1="90" x2="272" y2="110" stroke="#2d3260" stroke-width="0.4"/>
+            <text x="16" y="16" font-size="8" fill="#3D3A9E" font-family="Georgia,serif">Gravity Score: 78</text>
+            <text x="16" y="28" font-size="8" fill="#3D3A9E" font-family="Georgia,serif">Niche rank: #4 of 840</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="fhero accent" style="margin-bottom:12px">
+          <div class="fhero-eye">True peer benchmarking</div>
+          <div class="fhero-title">Not industry averages. Your actual neighbors in the constellation.</div>
+          <div class="fhero-body" style="margin-top:6px">Orbit doesn't compare you to all creators. It finds your true peers — same niche, similar following size, same platform mix — and benchmarks you specifically against them. The result is benchmarking data that's actually actionable.</div>
+        </div>
+        <div class="fhero">
+          <div class="fhero-detail-title">Constellation intelligence includes</div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Niche rank</strong> — your position among true peers, updated weekly</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Gap analysis</strong> — what the creators ahead of you are doing differently</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>White space mapping</strong> — content territory in your niche that's underserved</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Rising creators</strong> — who's moving fast in your constellation</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark Matter -->
+  <div class="sec">
+    <div class="eye">Feature 05 — Trend intelligence</div>
+    <div class="stitle">Dark Matter</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic — dark matter = hidden opportunity</span></div>
+        <p class="sbody" style="margin-bottom:0">Dark matter makes up most of the universe but can't be seen directly — it's detected by its gravitational effects. In creator terms, it's the trends building momentum before they become visible. Orbit surfaces them first.</p>
+        <div class="moat" style="margin-top:12px">
+          <div class="moat-label">The key insight</div>
+          <div class="moat-text">By the time a trend appears on a general trending page, <strong>it's already too late</strong>. The creators who win are the ones who caught it 2–3 weeks earlier. Dark Matter is Orbit's early warning system.</div>
+        </div>
+      </div>
+      <div class="fhero accent">
+        <div class="fhero-detail-title">What Dark Matter tracks</div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Pre-viral audio</strong> — sounds gaining velocity before they chart, filtered to your niche</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Format emergence</strong> — new content structures being adopted by top performers first</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Hashtag momentum</strong> — tags growing faster than baseline, niche-specific</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Topic acceleration</strong> — conversation clusters forming around emerging themes</div></div>
+        <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Brand interest signals</strong> — categories where brand spend is increasing</div></div>
+        <div class="fhero-detail" style="margin-top:12px">
+          <div class="fhero-detail-title">Delivered as</div>
+          <div class="bullet"><div class="bdot"></div><div class="btext">Weekly Dark Matter briefing — your niche's hidden signals in one digest</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext">Real-time alerts when a signal crosses a momentum threshold</div></div>
+          <div class="bullet"><div class="bdot"></div><div class="btext">Content brief generator — turns a Dark Matter signal into a ready-to-execute post concept</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mission Control -->
+  <div class="sec">
+    <div class="eye">Feature 06 — Agency layer</div>
+    <div class="stitle">Mission Control</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div>
+        <div class="mbadge"><div class="mbadge-dot"></div><span class="mbadge-text">Brand mechanic — mission control = agency oversight</span></div>
+        <p class="sbody" style="margin-bottom:12px">Every space mission has a command center monitoring every craft simultaneously. Mission Control is Orbit's agency dashboard — one screen for every creator you manage, with intelligent alerts so nothing falls through the cracks.</p>
+        <div class="fhero">
+          <div class="fhero-detail-title">Built for talent managers</div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Roster overview</strong> — all creators, all platforms, one screen</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Alert triage</strong> — escape velocity events, trajectory dips, trend opportunities</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Brand deal reports</strong> — auto-generated performance decks for any creator</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Comparative roster view</strong> — see which creators are ascending vs plateauing</div></div>
+          <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>White-label export</strong> — branded reports for brand partners</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="fhero accent" style="margin-bottom:12px">
+          <div class="fhero-eye">The agency advantage</div>
+          <div class="fhero-title">Your agency data becomes the product's moat.</div>
+          <div class="fhero-body" style="margin-top:6px">Every creator your agency manages enriches the benchmarking dataset for all of them. As your roster grows, the intelligence gets sharper. Orbit turns your existing business into a compounding data advantage no external competitor can replicate.</div>
+        </div>
+        <div class="fhero">
+          <div class="fhero-eye">Unique to Orbit</div>
+          <div class="fhero-title">The Creator-Manager loop</div>
+          <div class="fhero-body" style="margin-top:6px">Creators see their own view. Managers see the fleet view. Both see the same underlying data — contextualized for their role. When a manager flags a strategy change, it appears as a note in the creator's dashboard. Real-time alignment, zero friction.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flywheel -->
+  <div class="sec">
+    <div class="eye">How it all compounds</div>
+    <div class="stitle">The Orbit flywheel</div>
+    <div class="div"></div>
+    <p class="sbody">Each feature reinforces the others. The more creators on Orbit, the richer the Constellation data. The richer the Constellation data, the more precise the Gravity Scores. The more precise the scores, the better the Escape Velocity detection. This is a compounding intelligence loop — and it's why the first-mover advantage in this niche is so significant.</p>
+    <div class="fw-row">
+      <div class="fw-step"><div class="fw-num">01</div><div class="fw-title">Creators join</div><div class="fw-sub">Agency roster seeds the data</div></div>
+      <div class="fw-arrow">→</div>
+      <div class="fw-step"><div class="fw-num">02</div><div class="fw-title">Data enriches</div><div class="fw-sub">Constellation &amp; benchmarks sharpen</div></div>
+      <div class="fw-arrow">→</div>
+      <div class="fw-step"><div class="fw-num">03</div><div class="fw-title">AI improves</div><div class="fw-sub">Gravity Scores &amp; predictions get smarter</div></div>
+      <div class="fw-arrow">→</div>
+      <div class="fw-step"><div class="fw-num">04</div><div class="fw-title">Creators grow</div><div class="fw-sub">Results drive referrals &amp; retention</div></div>
+      <div class="fw-arrow">→</div>
+      <div class="fw-step" style="border-color:#2d3260"><div class="fw-num" style="color:#2d3260">05</div><div class="fw-title" style="color:#a78bfa">Moat widens</div><div class="fw-sub">Impossible to replicate without the data</div></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

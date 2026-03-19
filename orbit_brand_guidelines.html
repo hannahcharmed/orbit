@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Brand Guidelines</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:1000px;margin:0 auto}
+
+/* Header */
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:18px 40px;display:flex;align-items:center;justify-content:space-between}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.wm{font-family:Georgia,serif;font-size:16px;letter-spacing:5px;color:#e8f0ff}
+.hdr-right{display:flex;align-items:center;gap:12px}
+.hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.12em;text-transform:uppercase}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+/* Section shell */
+.sec{padding:48px 40px;border-bottom:1px solid #1a2150}
+.sec-eye{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+.sec-title{font-family:Georgia,serif;font-size:26px;color:#e8f0ff;margin-bottom:8px}
+.sec-body{font-size:12px;color:#6b7ab5;line-height:1.75;max-width:580px;margin-bottom:28px}
+.div{width:32px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:24px}
+
+h3{font-family:Georgia,serif;font-size:16px;font-weight:400;color:#e8f0ff;margin:28px 0 10px}
+h3:first-child{margin-top:0}
+h4{font-size:9px;font-weight:500;color:#3D3A9E;letter-spacing:.14em;text-transform:uppercase;margin:18px 0 8px}
+p{font-size:12px;color:#8892b0;line-height:1.75;margin-bottom:8px}
+p:last-child{margin-bottom:0}
+strong{color:#c4b5fd;font-weight:500}
+
+/* Cover / hero */
+.cover{min-height:380px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border-bottom:1px solid #1a2150;background:#080b14}
+.cover-content{text-align:center;position:relative;z-index:2}
+.cover-eye{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#3D3A9E;margin-bottom:16px}
+.cover-title{font-family:Georgia,serif;font-size:56px;font-weight:400;color:#e8f0ff;letter-spacing:.04em;line-height:1}
+.cover-sub{font-size:13px;color:#6b7ab5;margin-top:14px;letter-spacing:.06em}
+.cover-line{width:60px;height:1px;background:#3D3A9E;margin:16px auto}
+
+/* Grid helpers */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+
+/* Logo section */
+.logo-showcase{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.logo-panel{border-radius:12px;overflow:hidden}
+.logo-bg-dark{background:#080b14;border:1px solid #1a2150;padding:36px;display:flex;align-items:center;justify-content:center;height:160px}
+.logo-bg-navy{background:#0f1628;border:1px solid #1a2150;padding:36px;display:flex;align-items:center;justify-content:center;height:160px}
+.logo-bg-light{background:#f0f2ff;padding:36px;display:flex;align-items:center;justify-content:center;height:160px}
+.logo-bg-white{background:#ffffff;padding:36px;display:flex;align-items:center;justify-content:center;height:160px}
+.logo-label{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;text-align:center;margin-top:8px}
+
+/* Mark sizes */
+.mark-row{display:flex;align-items:flex-end;gap:24px;padding:24px;background:#0d1228;border:1px solid #1a2150;border-radius:12px}
+.mark-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.mark-size{font-size:9px;color:#3D3A9E;letter-spacing:.06em}
+
+/* Color palette */
+.palette-row{display:flex;border-radius:12px;overflow:hidden;height:80px;margin-bottom:12px}
+.swatch{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:8px 10px;cursor:pointer;transition:flex .2s}
+.swatch:hover{flex:1.4}
+.sw-name{font-size:9px;font-weight:500;letter-spacing:.04em;line-height:1.3}
+.sw-hex{font-size:8px;opacity:.75}
+
+.swatch-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.swatch-cell{border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;justify-content:flex-end}
+.sc-name{font-size:8px;font-weight:500;line-height:1.3;margin-bottom:1px}
+.sc-hex{font-size:7px;opacity:.7}
+
+/* Typography */
+.type-specimen{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:24px 28px;margin-bottom:12px}
+.type-sample-xl{font-family:Georgia,serif;font-size:48px;font-weight:400;color:#e8f0ff;letter-spacing:.02em;line-height:1.1;margin-bottom:4px}
+.type-sample-lg{font-family:Georgia,serif;font-size:28px;font-weight:400;color:#e8f0ff;line-height:1.2;margin-bottom:4px}
+.type-sample-md{font-size:18px;font-weight:500;color:#e8f0ff;line-height:1.4;margin-bottom:4px}
+.type-sample-sm{font-size:13px;color:#a0aec0;line-height:1.7}
+.type-label{font-size:8px;color:#3D3A9E;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.type-meta{font-size:9px;color:#4a5280;margin-top:6px}
+
+.font-pair{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:20px 24px;display:flex;gap:24px;align-items:flex-start}
+.fp-left{width:200px;flex-shrink:0}
+.fp-name{font-size:13px;font-weight:500;color:#e8f0ff;margin-bottom:3px}
+.fp-role{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.fp-chars{font-size:22px;color:#a78bfa;letter-spacing:.1em;font-family:Georgia,serif}
+.fp-chars.ui{font-family:'Helvetica Neue',Arial,sans-serif;font-size:20px;color:#6C63FF}
+.fp-chars.mono{font-family:'Courier New',monospace;font-size:18px;color:#4ade80}
+
+/* Voice / tone */
+.voice-example{background:#0d1228;border-left:3px solid #6C63FF;border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:10px}
+.voice-example.v{border-left-color:#a78bfa}
+.ve-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#6C63FF;margin-bottom:5px}
+.voice-example.v .ve-label{color:#a78bfa}
+.ve-text{font-family:Georgia,serif;font-size:14px;color:#e8f0ff;line-height:1.6;font-style:italic}
+
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.do-box{background:#0a1a10;border:1px solid #173404;border-radius:10px;padding:14px}
+.dont-box{background:#1a0a0a;border:1px solid #501313;border-radius:10px;padding:14px}
+.dd-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.do-box .dd-label{color:#4ade80}
+.dont-box .dd-label{color:#f09595}
+.dd-item{font-size:11px;color:#8892b0;line-height:1.6;margin-bottom:5px;display:flex;gap:6px;align-items:flex-start}
+.dd-item::before{font-size:10px;flex-shrink:0}
+.do-box .dd-item::before{content:'✓';color:#4ade80}
+.dont-box .dd-item::before{content:'✗';color:#f09595}
+
+/* Iconography / visual language */
+.icon-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.icon-cell{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px 10px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.icon-label{font-size:9px;color:#4a5280;text-align:center;line-height:1.3}
+
+/* Motion principles */
+.motion-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.motion-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px}
+.mc-title{font-size:11px;font-weight:500;color:#e8f0ff;margin-bottom:5px}
+.mc-val{font-family:'Courier New',monospace;font-size:10px;color:#6C63FF;margin-bottom:6px}
+.mc-desc{font-size:10px;color:#6b7ab5;line-height:1.5}
+
+/* UI component showcase */
+.comp-group{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:20px;margin-bottom:12px}
+.comp-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:12px}
+
+/* Buttons */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border-radius:8px;padding:9px 18px;font-size:12px;font-weight:500;cursor:pointer;border:none;letter-spacing:.02em;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:#6C63FF;color:#fff}
+.btn-secondary{background:#1a1f35;color:#a78bfa;border:1px solid #3D3A9E}
+.btn-ghost{background:transparent;color:#e8f0ff;border:1px solid #2d3260}
+.btn-danger{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.btn-sm{padding:6px 12px;font-size:11px;border-radius:6px}
+.btn-lg{padding:12px 24px;font-size:14px;border-radius:10px}
+
+/* Pills / badges */
+.pill-row{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border-radius:20px;padding:3px 12px;font-size:10px;font-weight:500}
+.pill-purple{background:#1a1f35;color:#a78bfa;border:1px solid #2d3260}
+.pill-blue{background:#06122a;color:#6C63FF;border:1px solid #1a2150}
+.pill-green{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+.pill-red{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.pill-amber{background:#1a1000;color:#EF9F27;border:1px solid #412402}
+.pill-gray{background:#111110;color:#B4B2A9;border:1px solid #3d3d3a}
+
+/* Stat card */
+.stat-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px}
+.sc-eye{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+.sc-val{font-family:Georgia,serif;font-size:28px;color:#e8f0ff;line-height:1;margin-bottom:4px}
+.sc-delta{font-size:10px}
+.sc-delta.up{color:#4ade80}
+.sc-delta.down{color:#f09595}
+
+/* AI message */
+.ai-msg{background:#0a0818;border:1px solid #2d1a5e;border-radius:10px;padding:14px 16px}
+.ai-head{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.ai-badge{background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:2px 8px;font-size:8px;color:#a78bfa;letter-spacing:.06em}
+.ai-text{font-size:11px;color:#8892b0;line-height:1.65}
+.ai-text strong{color:#c4b5fd;font-weight:500}
+
+/* Imagery / photography direction */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.photo-card{border-radius:10px;overflow:hidden;position:relative}
+.photo-fill{height:140px;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.1em;text-transform:uppercase}
+.photo-label{padding:10px 12px;background:#0a0e1e;border:1px solid #1a2150;border-top:none;border-radius:0 0 10px 10px}
+.photo-label-text{font-size:9px;color:#4a5280}
+
+/* Brand application examples */
+.app-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.app-card{border-radius:12px;overflow:hidden;border:1px solid #1a2150}
+.app-header{padding:14px 16px;border-bottom:1px solid #1a2150;display:flex;align-items:center;gap:8px}
+.app-header-label{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+.app-body{padding:16px}
+
+/* Spacing scale */
+.space-row{display:flex;align-items:flex-end;gap:16px;padding:20px;background:#0d1228;border:1px solid #1a2150;border-radius:12px}
+.space-item{display:flex;flex-direction:column;align-items:center;gap:8px}
+.space-block{background:#6C63FF;border-radius:2px;opacity:.6;width:20px}
+.space-label{font-size:8px;color:#3D3A9E;text-align:center}
+.space-val{font-family:'Courier New',monospace;font-size:8px;color:#a78bfa}
+
+/* Animation keyframes */
+@keyframes pulse-ring{0%,100%{opacity:.3}50%{opacity:.7}}
+@keyframes orbit-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ring-pulse{animation:pulse-ring 2.5s ease-in-out infinite}
+.orbit-anim{animation:orbit-spin 8s linear infinite;transform-origin:50% 50%}
+
+/* Footer */
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:16px 40px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:11px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo-wrap">
+    <svg width="22" height="22" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-tag">Brand Guidelines</span>
+    <span class="ver">v1.0 · 2026</span>
+  </div>
+</div>
+
+<!-- Cover -->
+<div class="cover">
+  <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:.04" viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid slice">
+    <circle cx="500" cy="190" r="320" fill="none" stroke="#6C63FF" stroke-width="1"/>
+    <circle cx="500" cy="190" r="240" fill="none" stroke="#6C63FF" stroke-width="0.7"/>
+    <circle cx="500" cy="190" r="160" fill="none" stroke="#6C63FF" stroke-width="0.5"/>
+    <circle cx="500" cy="190" r="80" fill="none" stroke="#6C63FF" stroke-width="0.4"/>
+    <circle cx="500" cy="190" r="24" fill="none" stroke="#6C63FF" stroke-width="0.4"/>
+  </svg>
+  <div class="cover-content">
+    <div class="cover-eye">Creator Intelligence Platform</div>
+    <div class="cover-title">ORBIT</div>
+    <div class="cover-line"></div>
+    <div class="cover-sub">Brand guidelines · Identity system · Voice & tone</div>
+  </div>
+</div>
+
+<!-- 01 Brand essence -->
+<div class="sec">
+  <div class="sec-eye">Section 01</div>
+  <div class="sec-title">Brand essence</div>
+  <div class="div"></div>
+  <div class="g2" style="gap:32px;align-items:start">
+    <div>
+      <h4>Mission</h4>
+      <p>To give every creator the intelligence layer they need to grow with intention — not guesswork.</p>
+      <h4>Vision</h4>
+      <p>A world where every creator understands the gravitational pull they have on their audience, and knows exactly how to strengthen it.</p>
+      <h4>Brand line</h4>
+      <div style="background:#0d1228;border:1px solid #2d3260;border-radius:10px;padding:16px 20px;margin-top:6px">
+        <p style="font-family:Georgia,serif;font-size:18px;color:#e8f0ff;font-style:italic;line-height:1.5">"Your audience doesn't follow you. They orbit you."</p>
+      </div>
+    </div>
+    <div>
+      <h4>Brand personality</h4>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+        <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:#e8f0ff;font-weight:500">Intelligent</span>
+          <span style="font-size:10px;color:#4a5280">not clinical</span>
+        </div>
+        <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:#e8f0ff;font-weight:500">Elevated</span>
+          <span style="font-size:10px;color:#4a5280">not elitist</span>
+        </div>
+        <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:#e8f0ff;font-weight:500">Precise</span>
+          <span style="font-size:10px;color:#4a5280">not cold</span>
+        </div>
+        <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:#e8f0ff;font-weight:500">Cosmic</span>
+          <span style="font-size:10px;color:#4a5280">not mystical</span>
+        </div>
+        <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:11px;color:#e8f0ff;font-weight:500">Bold</span>
+          <span style="font-size:10px;color:#4a5280">not aggressive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 02 Logo -->
+<div class="sec">
+  <div class="sec-eye">Section 02</div>
+  <div class="sec-title">Logo system</div>
+  <div class="div"></div>
+
+  <h3>Primary lockup</h3>
+  <div class="logo-showcase">
+    <div>
+      <div class="logo-panel"><div class="logo-bg-dark">
+        <svg width="260" height="60" viewBox="0 0 260 60">
+          <path d="M14,30 A18,18 0 0,1 32,12" fill="none" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M32,12 A18,18 0 0,1 50,30" fill="none" stroke="#a78bfa" stroke-width="1.4" opacity="0.5" stroke-linecap="round"/>
+          <path d="M50,30 A18,18 0 0,1 32,48" fill="none" stroke="#a78bfa" stroke-width="0.6" opacity="0.18" stroke-linecap="round"/>
+          <path d="M32,48 A18,18 0 0,1 14,30" fill="none" stroke="#a78bfa" stroke-width="0.3" opacity="0.07" stroke-linecap="round"/>
+          <circle cx="14" cy="30" r="4" fill="#a78bfa"/>
+          <circle cx="14" cy="30" r="7" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.3"/>
+          <text x="64" y="36" font-family="Georgia,serif" font-size="26" fill="#ffffff" letter-spacing="5" opacity="0.97">ORBIT</text>
+        </svg>
+      </div></div>
+      <div class="logo-label">Primary — dark background</div>
+    </div>
+    <div>
+      <div class="logo-panel"><div class="logo-bg-light">
+        <svg width="260" height="60" viewBox="0 0 260 60">
+          <path d="M14,30 A18,18 0 0,1 32,12" fill="none" stroke="#3D3A9E" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M32,12 A18,18 0 0,1 50,30" fill="none" stroke="#3D3A9E" stroke-width="1.4" opacity="0.5" stroke-linecap="round"/>
+          <path d="M50,30 A18,18 0 0,1 32,48" fill="none" stroke="#3D3A9E" stroke-width="0.6" opacity="0.18" stroke-linecap="round"/>
+          <path d="M32,48 A18,18 0 0,1 14,30" fill="none" stroke="#3D3A9E" stroke-width="0.3" opacity="0.07" stroke-linecap="round"/>
+          <circle cx="14" cy="30" r="4" fill="#3D3A9E"/>
+          <circle cx="14" cy="30" r="7" fill="none" stroke="#3D3A9E" stroke-width="0.5" opacity="0.3"/>
+          <text x="64" y="36" font-family="Georgia,serif" font-size="26" fill="#0f1628" letter-spacing="5" opacity="0.95">ORBIT</text>
+        </svg>
+      </div></div>
+      <div class="logo-label">Primary — light background</div>
+    </div>
+    <div>
+      <div class="logo-panel"><div class="logo-bg-navy">
+        <svg width="260" height="60" viewBox="0 0 260 60">
+          <path d="M14,30 A18,18 0 0,1 32,12" fill="none" stroke="#6C63FF" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M32,12 A18,18 0 0,1 50,30" fill="none" stroke="#6C63FF" stroke-width="1.4" opacity="0.5" stroke-linecap="round"/>
+          <path d="M50,30 A18,18 0 0,1 32,48" fill="none" stroke="#6C63FF" stroke-width="0.6" opacity="0.18" stroke-linecap="round"/>
+          <path d="M32,48 A18,18 0 0,1 14,30" fill="none" stroke="#6C63FF" stroke-width="0.3" opacity="0.07" stroke-linecap="round"/>
+          <circle cx="14" cy="30" r="4" fill="#6C63FF"/>
+          <circle cx="14" cy="30" r="7" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.3"/>
+          <text x="64" y="36" font-family="Georgia,serif" font-size="26" fill="#e8f0ff" letter-spacing="5" opacity="0.97">ORBIT</text>
+        </svg>
+      </div></div>
+      <div class="logo-label">Orbit blue — UI surfaces</div>
+    </div>
+    <div>
+      <div class="logo-panel"><div class="logo-bg-white">
+        <svg width="260" height="60" viewBox="0 0 260 60">
+          <path d="M14,30 A18,18 0 0,1 32,12" fill="none" stroke="#6C63FF" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M32,12 A18,18 0 0,1 50,30" fill="none" stroke="#6C63FF" stroke-width="1.4" opacity="0.5" stroke-linecap="round"/>
+          <path d="M50,30 A18,18 0 0,1 32,48" fill="none" stroke="#6C63FF" stroke-width="0.6" opacity="0.18" stroke-linecap="round"/>
+          <path d="M32,48 A18,18 0 0,1 14,30" fill="none" stroke="#6C63FF" stroke-width="0.3" opacity="0.07" stroke-linecap="round"/>
+          <circle cx="14" cy="30" r="4" fill="#6C63FF"/>
+          <circle cx="14" cy="30" r="7" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.3"/>
+          <text x="64" y="36" font-family="Georgia,serif" font-size="26" fill="#1a2150" letter-spacing="5" opacity="0.95">ORBIT</text>
+        </svg>
+      </div></div>
+      <div class="logo-label">White background — print, docs</div>
+    </div>
+  </div>
+
+  <h3>Mark only</h3>
+  <div class="mark-row">
+    <div class="mark-item">
+      <svg width="64" height="64" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.18" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.07" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="7" fill="#a78bfa"/>
+        <circle cx="18" cy="48" r="11" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.3"/>
+      </svg>
+      <span class="mark-size">64px</span>
+    </div>
+    <div class="mark-item">
+      <svg width="48" height="48" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.18" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.07" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="7" fill="#a78bfa"/>
+      </svg>
+      <span class="mark-size">48px</span>
+    </div>
+    <div class="mark-item">
+      <svg width="32" height="32" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.18" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="7" fill="#a78bfa"/>
+      </svg>
+      <span class="mark-size">32px</span>
+    </div>
+    <div class="mark-item">
+      <svg width="20" height="20" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2.5" opacity="0.4" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="mark-size">20px</span>
+    </div>
+    <div class="mark-item">
+      <svg width="16" height="16" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="10" fill="#a78bfa"/>
+      </svg>
+      <span class="mark-size">16px</span>
+    </div>
+    <div style="flex:1;padding-left:24px;border-left:1px solid #1a2150">
+      <h4 style="margin-top:0">The arc principle</h4>
+      <p>The mark is a fading orbital arc — a single path that gains intensity at the leading edge (the data point) and fades as it completes the circle. At small sizes the fade disappears, leaving a clean bold arc and dot. Never crop, rotate, or modify the arc.</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px">Logo clearspace & misuse</h3>
+  <div class="g2" style="gap:12px;margin-top:4px">
+    <div style="background:#0d1228;border:1px solid #173404;border-radius:10px;padding:16px">
+      <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4ade80;margin-bottom:10px">Correct usage</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.7">
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#4ade80">✓</span> Minimum clearspace = height of the letter O on all sides</div>
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#4ade80">✓</span> Always use approved color combinations</div>
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#4ade80">✓</span> Maintain minimum width of 80px for full lockup</div>
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#4ade80">✓</span> Mark only permitted below 80px width</div>
+        <div style="display:flex;gap:6px"><span style="color:#4ade80">✓</span> Wordmark always set in Georgia serif, letter-spacing 5px</div>
+      </div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #501313;border-radius:10px;padding:16px">
+      <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#f09595;margin-bottom:10px">Never do this</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.7">
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#f09595">✗</span> Don't stretch, skew, or rotate the mark</div>
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#f09595">✗</span> Don't change the wordmark typeface</div>
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#f09595">✗</span> Don't place on a busy photographic background</div>
+        <div style="margin-bottom:4px;display:flex;gap:6px"><span style="color:#f09595">✗</span> Don't use unapproved colors on the mark</div>
+        <div style="display:flex;gap:6px"><span style="color:#f09595">✗</span> Don't add effects (shadows, outlines, glows)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 03 Color -->
+<div class="sec">
+  <div class="sec-eye">Section 03</div>
+  <div class="sec-title">Color system</div>
+  <div class="div"></div>
+
+  <h3>Primary palette</h3>
+  <div class="palette-row">
+    <div class="swatch" style="background:#080b14"><span class="sw-name" style="color:#2d3260">Deep Void</span><span class="sw-hex" style="color:#2d3260">#080B14</span></div>
+    <div class="swatch" style="background:#0f1628"><span class="sw-name" style="color:#3D3A9E">Space Black</span><span class="sw-hex" style="color:#3D3A9E">#0F1628</span></div>
+    <div class="swatch" style="background:#1a2150"><span class="sw-name" style="color:#6b7ab5">Nebula Navy</span><span class="sw-hex" style="color:#6b7ab5">#1A2150</span></div>
+    <div class="swatch" style="background:#3D3A9E"><span class="sw-name" style="color:#c4b5fd">Cosmic Purple</span><span class="sw-hex" style="color:#c4b5fd">#3D3A9E</span></div>
+    <div class="swatch" style="background:#6C63FF;flex:1.4"><span class="sw-name" style="color:#e0deff">Orbit Blue</span><span class="sw-hex" style="color:#c4c0f8">#6C63FF</span></div>
+    <div class="swatch" style="background:#a78bfa"><span class="sw-name" style="color:#2a1a5e">Nova Violet</span><span class="sw-hex" style="color:#2a1a5e">#A78BFA</span></div>
+    <div class="swatch" style="background:#e8f0ff;flex:.8"><span class="sw-name" style="color:#1a2150">Starlight</span><span class="sw-hex" style="color:#3D3A9E">#E8F0FF</span></div>
+  </div>
+
+  <h3>Color roles</h3>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px">
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px">
+      <div style="width:28px;height:28px;background:#080b14;border:1px solid #1a2150;border-radius:6px;margin-bottom:8px"></div>
+      <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Deep Void + Space Black</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.5">App backgrounds, page shells, modal backdrops</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px">
+      <div style="width:28px;height:28px;background:#6C63FF;border-radius:6px;margin-bottom:8px"></div>
+      <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Orbit Blue</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.5">Primary CTAs, active states, links, highlights, charts</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px">
+      <div style="width:28px;height:28px;background:#a78bfa;border-radius:6px;margin-bottom:8px"></div>
+      <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Nova Violet</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.5">AI-powered features exclusively — Orbit AI badge, insight panels, coaching</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px">
+      <div style="width:28px;height:28px;background:#4ade80;border-radius:6px;margin-bottom:8px"></div>
+      <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Success Green</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.5">Positive deltas, rising trajectory, successful states</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px">
+      <div style="width:28px;height:28px;background:#f09595;border-radius:6px;margin-bottom:8px"></div>
+      <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Alert Red</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.5">Declining metrics, errors, destructive actions</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px">
+      <div style="width:28px;height:28px;background:#EF9F27;border-radius:6px;margin-bottom:8px"></div>
+      <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Amber</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.5">Warnings, pending states, Escape Velocity alerts</div>
+    </div>
+  </div>
+
+  <h3>Color combinations — accessible pairings</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+    <div style="background:#6C63FF;border-radius:10px;padding:16px 14px;text-align:center">
+      <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:4px">Orbit Blue</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.7)">on white text</div>
+      <div style="font-size:8px;color:rgba(255,255,255,.5);margin-top:4px">AAA · 4.6:1</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px 14px;text-align:center">
+      <div style="font-size:13px;font-weight:500;color:#a78bfa;margin-bottom:4px">Nova Violet</div>
+      <div style="font-size:10px;color:#4a5280">on space black</div>
+      <div style="font-size:8px;color:#2d3260;margin-top:4px">AA · 3.8:1</div>
+    </div>
+    <div style="background:#1a2150;border-radius:10px;padding:16px 14px;text-align:center">
+      <div style="font-size:13px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Starlight</div>
+      <div style="font-size:10px;color:#8892b0">on nebula navy</div>
+      <div style="font-size:8px;color:#6b7ab5;margin-top:4px">AAA · 8.1:1</div>
+    </div>
+    <div style="background:#080b14;border-radius:10px;padding:16px 14px;text-align:center">
+      <div style="font-size:13px;font-weight:500;color:#6C63FF;margin-bottom:4px">Orbit Blue</div>
+      <div style="font-size:10px;color:#3D3A9E">on deep void</div>
+      <div style="font-size:8px;color:#2d3260;margin-top:4px">AA · 3.2:1</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 Typography -->
+<div class="sec">
+  <div class="sec-eye">Section 04</div>
+  <div class="sec-title">Typography</div>
+  <div class="div"></div>
+
+  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+    <div class="font-pair">
+      <div class="fp-left">
+        <div class="fp-name">Georgia</div>
+        <div class="fp-role">Display · Brand · Wordmark</div>
+        <div class="fp-chars">Aa Bb Cc 0123</div>
+      </div>
+      <div style="flex:1;border-left:1px solid #1a2150;padding-left:20px">
+        <div style="font-size:10px;color:#4a5280;margin-bottom:10px;letter-spacing:.08em;text-transform:uppercase">Used for</div>
+        <p>Headlines, the wordmark, large numerical displays, editorial pull quotes, and feature names. Georgia's serif brings warmth and authority — it stops the UI from feeling like a cold data tool.</p>
+      </div>
+    </div>
+    <div class="font-pair">
+      <div class="fp-left">
+        <div class="fp-name">Inter / System UI</div>
+        <div class="fp-role">Interface · Body · Labels</div>
+        <div class="fp-chars ui">Aa Bb Cc 0123</div>
+      </div>
+      <div style="flex:1;border-left:1px solid #1a2150;padding-left:20px">
+        <div style="font-size:10px;color:#4a5280;margin-bottom:10px;letter-spacing:.08em;text-transform:uppercase">Used for</div>
+        <p>All UI text, body copy, labels, navigation, and form elements. Inter at system scale — clean, legible at small sizes, and feels native to every platform.</p>
+      </div>
+    </div>
+    <div class="font-pair">
+      <div class="fp-left">
+        <div class="fp-name">JetBrains Mono</div>
+        <div class="fp-role">Data · Code · Metrics</div>
+        <div class="fp-chars mono">Aa Bb 0123</div>
+      </div>
+      <div style="flex:1;border-left:1px solid #1a2150;padding-left:20px">
+        <div style="font-size:10px;color:#4a5280;margin-bottom:10px;letter-spacing:.08em;text-transform:uppercase">Used for</div>
+        <p>Metric values in dense data contexts, API documentation, code snippets, and anywhere precision-reading of numbers matters. The tabular figures keep columns aligned perfectly.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Type scale</h3>
+  <div class="type-specimen">
+    <div style="margin-bottom:20px">
+      <div class="type-label">Display · Georgia · 48px · weight 400</div>
+      <div class="type-sample-xl">Creator intelligence.</div>
+    </div>
+    <div style="border-top:1px solid #1a2150;padding-top:16px;margin-bottom:16px">
+      <div class="type-label">Heading 1 · Georgia · 28px · weight 400</div>
+      <div class="type-sample-lg">Your audience doesn't follow you.</div>
+    </div>
+    <div style="border-top:1px solid #1a2150;padding-top:16px;margin-bottom:16px">
+      <div class="type-label">Heading 2 · Inter · 18px · weight 500</div>
+      <div class="type-sample-md">Performance overview · last 28 days</div>
+    </div>
+    <div style="border-top:1px solid #1a2150;padding-top:14px;margin-bottom:14px">
+      <div class="type-label">Body · Inter · 13px · weight 400 · line-height 1.7</div>
+      <div class="type-sample-sm">Your Reels under 18 seconds are outperforming longer content by 3.4×. Tuesday and Thursday posts between 6–8pm drive 62% of your weekly reach. Your Gravity Score of 78 puts you in the top 12% of fitness creators at your tier.</div>
+    </div>
+    <div style="border-top:1px solid #1a2150;padding-top:14px">
+      <div class="type-label">Label · Inter · 9px · weight 500 · letter-spacing .12em · uppercase</div>
+      <div style="font-size:9px;font-weight:500;color:#3D3A9E;letter-spacing:.12em;text-transform:uppercase">Total reach · avg engagement · follower growth</div>
+    </div>
+  </div>
+</div>
+
+<!-- 05 Iconography & visual language -->
+<div class="sec">
+  <div class="sec-eye">Section 05</div>
+  <div class="sec-title">Iconography & visual language</div>
+  <div class="div"></div>
+
+  <h3>Icon style</h3>
+  <p>All icons use a consistent 1.5px stroke, rounded caps and joins, at 16×16px (24×24px for featured). Icons are line-only — no fills except for the Orbit mark. Source: Lucide icon set.</p>
+
+  <div class="icon-grid" style="margin-top:12px">
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18M12.5 3a17 17 0 0 1 0 18"/>
+      </svg>
+      <span class="icon-label">Orbit / globe</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      <span class="icon-label">Pulse / activity</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+      </svg>
+      <span class="icon-label">Trending up</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      <span class="icon-label">Gravity Score</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+      </svg>
+      <span class="icon-label">Escape Velocity</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <span class="icon-label">Dark Matter</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      <span class="icon-label">Constellation</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      <span class="icon-label">Mission Control</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      <span class="icon-label">Analytics</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+      </svg>
+      <span class="icon-label">Alert</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      <span class="icon-label">Success</span>
+    </div>
+    <div class="icon-cell">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <span class="icon-label">Search</span>
+    </div>
+  </div>
+
+  <h3>Orbital graphic language</h3>
+  <p>The orbital arc is Orbit's core visual metaphor and appears throughout marketing, UI, and documentation. It must always suggest motion — a path with a clear leading edge. These are the five approved variations.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px">
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <svg width="60" height="60" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3" stroke-linecap="round"/>
+        <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+        <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.6" opacity="0.18" stroke-linecap="round"/>
+        <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.3" opacity="0.07" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="6" fill="#a78bfa"/>
+      </svg>
+      <span style="font-size:9px;color:#4a5280;text-align:center">Primary mark</span>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <svg width="60" height="60" viewBox="0 0 96 96">
+        <ellipse cx="48" cy="48" rx="34" ry="16" fill="none" stroke="#6C63FF" stroke-width="1" opacity="0.4"/>
+        <ellipse cx="48" cy="48" rx="34" ry="16" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.2" transform="rotate(60,48,48)"/>
+        <ellipse cx="48" cy="48" rx="34" ry="16" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.2" transform="rotate(120,48,48)"/>
+        <circle cx="48" cy="14" r="4" fill="#6C63FF" opacity="0.9"/>
+      </svg>
+      <span style="font-size:9px;color:#4a5280;text-align:center">Multi-orbit</span>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <svg width="60" height="60" viewBox="0 0 96 96">
+        <circle cx="48" cy="48" r="32" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.2"/>
+        <circle cx="48" cy="48" r="22" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.3"/>
+        <circle cx="48" cy="48" r="12" fill="none" stroke="#6C63FF" stroke-width="0.6" opacity="0.5"/>
+        <circle cx="48" cy="48" r="4" fill="#6C63FF" opacity="0.8"/>
+        <circle cx="48" cy="16" r="3" fill="#a78bfa" opacity="0.7"/>
+        <circle cx="76" cy="62" r="2" fill="#a78bfa" opacity="0.5"/>
+      </svg>
+      <span style="font-size:9px;color:#4a5280;text-align:center">Constellation</span>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <svg width="60" height="60" viewBox="0 0 96 96">
+        <path d="M20,76 C30,50 50,30 76,20" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.8" stroke-linecap="round"/>
+        <path d="M20,76 C32,55 52,38 76,20" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.4" stroke-linecap="round"/>
+        <circle cx="76" cy="20" r="5" fill="#a78bfa"/>
+        <circle cx="76" cy="20" r="9" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.3"/>
+      </svg>
+      <span style="font-size:9px;color:#4a5280;text-align:center">Orbit Path</span>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:8px">
+      <svg width="60" height="60" viewBox="0 0 96 96" class="ring-pulse">
+        <circle cx="48" cy="48" r="36" fill="none" stroke="#6C63FF" stroke-width="1" opacity="0.3"/>
+        <circle cx="48" cy="48" r="26" fill="none" stroke="#6C63FF" stroke-width="1.5" opacity="0.5"/>
+        <circle cx="48" cy="48" r="14" fill="#6C63FF" opacity="0.2"/>
+        <circle cx="48" cy="48" r="5" fill="#6C63FF" opacity="0.9"/>
+      </svg>
+      <span style="font-size:9px;color:#4a5280;text-align:center">Gravity pulse</span>
+    </div>
+  </div>
+</div>
+
+<!-- 06 Voice & tone -->
+<div class="sec">
+  <div class="sec-eye">Section 06</div>
+  <div class="sec-title">Voice & tone</div>
+  <div class="div"></div>
+
+  <h3>Brand voice</h3>
+  <p>Orbit sounds like a brilliant strategist who happens to have all the data. Direct, specific, never generic. Every sentence should answer "so what?" — not just describe what happened.</p>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0 24px">
+    <div class="voice-example"><div class="ve-label">Marketing</div><div class="ve-text">"Every creator has a gravitational pull. We measure it."</div></div>
+    <div class="voice-example v"><div class="ve-label">Orbit AI insight</div><div class="ve-text">"Your Tuesday Reel hit escape velocity — performing 6.2× above your baseline. Post a follow-up within 48 hours using the same format. Creators who capitalize on escape velocity events within 48hrs see 2.3× higher sustained growth."</div></div>
+    <div class="voice-example"><div class="ve-label">Onboarding</div><div class="ve-text">"Your Gravity Score is 78. That puts you in the top 12% of fitness creators at your tier. Here's what's pulling it up — and what would push it higher."</div></div>
+    <div class="voice-example v"><div class="ve-label">Empty state</div><div class="ve-text">"Connect Instagram to see your Gravity Score. Takes 30 seconds."</div></div>
+  </div>
+
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="dd-label">Sound like this</div>
+      <div class="dd-item">Specific and grounded in data</div>
+      <div class="dd-item">Direct — subject, verb, impact</div>
+      <div class="dd-item">Confident without being arrogant</div>
+      <div class="dd-item">Uses "your" — possessive, personal</div>
+      <div class="dd-item">Tells you what to do next</div>
+      <div class="dd-item">Short sentences. White space. Impact.</div>
+    </div>
+    <div class="dont-box">
+      <div class="dd-label">Never sound like this</div>
+      <div class="dd-item">"Post more consistently to grow"</div>
+      <div class="dd-item">"Our AI-powered platform leverages..."</div>
+      <div class="dd-item">"We're excited to announce..."</div>
+      <div class="dd-item">"Data-driven insights for creators"</div>
+      <div class="dd-item">Passive voice or corporate hedging</div>
+      <div class="dd-item">Emoji in professional contexts</div>
+    </div>
+  </div>
+</div>
+
+<!-- 07 UI Components -->
+<div class="sec">
+  <div class="sec-eye">Section 07</div>
+  <div class="sec-title">UI components</div>
+  <div class="div"></div>
+
+  <h3>Buttons</h3>
+  <div class="comp-group">
+    <div class="comp-label">Button variants</div>
+    <div class="btn-row" style="margin-bottom:14px">
+      <button class="btn btn-primary">Get started</button>
+      <button class="btn btn-secondary">View details</button>
+      <button class="btn btn-ghost">Cancel</button>
+      <button class="btn btn-danger">Disconnect</button>
+    </div>
+    <div class="comp-label">Button sizes</div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg">Generate report</button>
+      <button class="btn btn-primary">Connect platform</button>
+      <button class="btn btn-primary btn-sm">View</button>
+    </div>
+  </div>
+
+  <h3>Badges & pills</h3>
+  <div class="comp-group">
+    <div class="comp-label">Status & category indicators</div>
+    <div class="pill-row">
+      <span class="pill pill-purple">Orbit AI</span>
+      <span class="pill pill-blue">Pro tier</span>
+      <span class="pill pill-green">Rising</span>
+      <span class="pill pill-red">Declining</span>
+      <span class="pill pill-amber">Escape velocity</span>
+      <span class="pill pill-gray">Free tier</span>
+    </div>
+  </div>
+
+  <h3>Stat cards</h3>
+  <div class="comp-group">
+    <div class="comp-label">Dashboard metrics</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div class="stat-card">
+        <div class="sc-eye">Gravity Score</div>
+        <div class="sc-val">78</div>
+        <div class="sc-delta up">+4 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-eye">Total reach</div>
+        <div class="sc-val">2.4M</div>
+        <div class="sc-delta up">+18.3%</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-eye">Engagement</div>
+        <div class="sc-val">6.8%</div>
+        <div class="sc-delta up">+1.2pts</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-eye">Niche rank</div>
+        <div class="sc-val">#4</div>
+        <div class="sc-delta" style="color:#4a5280">of 840 creators</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>AI insight panel</h3>
+  <div class="comp-group">
+    <div class="comp-label">Nova Violet is reserved exclusively for AI-powered UI elements</div>
+    <div class="ai-msg">
+      <div class="ai-head">
+        <svg width="14" height="14" viewBox="0 0 96 96">
+          <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="18" cy="48" r="9" fill="#a78bfa"/>
+        </svg>
+        <span class="ai-badge">Orbit AI</span>
+      </div>
+      <div class="ai-text"><strong>Your Reels under 18s are outperforming longer content by 3.4×.</strong> Tuesday and Thursday posts between 6–8pm drive 62% of your weekly reach. Your Gravity Score of 78 puts you in the top 12% of fitness creators — benchmarked against 840 similar accounts.</div>
+    </div>
+  </div>
+
+  <h3>Spacing scale</h3>
+  <div class="space-row">
+    <div class="space-item"><div class="space-block" style="height:4px"></div><span class="space-label">2xs</span><span class="space-val">4px</span></div>
+    <div class="space-item"><div class="space-block" style="height:8px"></div><span class="space-label">xs</span><span class="space-val">8px</span></div>
+    <div class="space-item"><div class="space-block" style="height:12px"></div><span class="space-label">sm</span><span class="space-val">12px</span></div>
+    <div class="space-item"><div class="space-block" style="height:16px"></div><span class="space-label">md</span><span class="space-val">16px</span></div>
+    <div class="space-item"><div class="space-block" style="height:24px"></div><span class="space-label">lg</span><span class="space-val">24px</span></div>
+    <div class="space-item"><div class="space-block" style="height:32px"></div><span class="space-label">xl</span><span class="space-val">32px</span></div>
+    <div class="space-item"><div class="space-block" style="height:48px"></div><span class="space-label">2xl</span><span class="space-val">48px</span></div>
+    <div class="space-item"><div class="space-block" style="height:64px"></div><span class="space-label">3xl</span><span class="space-val">64px</span></div>
+    <div style="flex:1;padding-left:20px;border-left:1px solid #1a2150;align-self:center">
+      <p>Base unit: 4px. All spacing is a multiple of 4. Component padding defaults to 16px (md). Card padding: 20–24px. Section padding: 32–48px.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 08 Motion -->
+<div class="sec">
+  <div class="sec-eye">Section 08</div>
+  <div class="sec-title">Motion principles</div>
+  <div class="div"></div>
+  <p>Motion in Orbit should feel like the precision of orbital mechanics — purposeful, measured, and never decorative. Every animation should reinforce the product's intelligence.</p>
+
+  <div class="motion-row" style="margin-top:16px">
+    <div class="motion-card">
+      <div class="mc-title">Ease default</div>
+      <div class="mc-val">cubic-bezier(0.4, 0, 0.2, 1)</div>
+      <div class="mc-desc">Material standard ease. Used for all state transitions — hover, focus, open/close. Feels responsive without being snappy.</div>
+    </div>
+    <div class="motion-card">
+      <div class="mc-title">Duration scale</div>
+      <div class="mc-val">100 / 200 / 300 / 500ms</div>
+      <div class="mc-desc">100ms: micro (hover). 200ms: UI transitions. 300ms: panels and modals. 500ms: page-level and chart animations.</div>
+    </div>
+    <div class="motion-card">
+      <div class="mc-title">Orbit Path animation</div>
+      <div class="mc-val">stroke-dashoffset · 1.2s linear</div>
+      <div class="mc-desc">The orbital arc animates by drawing the stroke from the data point forward. Never spins in full circles — always a partial arc in motion.</div>
+    </div>
+    <div class="motion-card">
+      <div class="mc-title">Chart entrance</div>
+      <div class="mc-val">fade + translateY(8px) · 300ms</div>
+      <div class="mc-desc">Data elements enter from slightly below with a fade. Bars grow upward from baseline. Lines draw left to right at 500ms.</div>
+    </div>
+    <div class="motion-card">
+      <div class="mc-title">Gravity pulse</div>
+      <div class="mc-val">opacity 0.3→0.7 · 2.5s ease</div>
+      <div class="mc-desc">Concentric ring pulse used for the Gravity Score indicator and live data states. Slow, meditative — not urgent.</div>
+    </div>
+    <div class="motion-card">
+      <div class="mc-title">Reduced motion</div>
+      <div class="mc-val">@media(prefers-reduced-motion)</div>
+      <div class="mc-desc">All animations wrapped in this media query. Opacity transitions remain; transforms and draws are disabled for accessibility.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 09 Brand applications -->
+<div class="sec">
+  <div class="sec-eye">Section 09</div>
+  <div class="sec-title">Brand applications</div>
+  <div class="div"></div>
+
+  <h3>Social profile card</h3>
+  <div style="background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:20px;max-width:320px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <div style="width:44px;height:44px;border-radius:50%;background:#1a1f35;border:1px solid #2d3260;display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" viewBox="0 0 96 96">
+          <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+          <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+          <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+          <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+        </svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:#e8f0ff">@jessicalee</div>
+        <div style="font-size:10px;color:#4a5280">fitness · 284K followers</div>
+      </div>
+      <div style="margin-left:auto;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:4px 10px">
+        <span style="font-size:9px;color:#a78bfa;letter-spacing:.04em">Pro</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div style="flex:1;background:#0a0e1e;border:1px solid #1a2150;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff">78</div>
+        <div style="font-size:8px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase;margin-top:2px">Gravity Score</div>
+      </div>
+      <div style="flex:1;background:#0a0e1e;border:1px solid #1a2150;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#4ade80">#4</div>
+        <div style="font-size:8px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase;margin-top:2px">Niche rank</div>
+      </div>
+      <div style="flex:1;background:#0a0e1e;border:1px solid #1a2150;border-radius:8px;padding:10px;text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff">6.8%</div>
+        <div style="font-size:8px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase;margin-top:2px">Engagement</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Email header</h3>
+  <div style="background:#080b14;border:1px solid #1a2150;border-radius:12px;overflow:hidden;max-width:560px;margin-bottom:24px">
+    <div style="background:#0a0e1e;padding:20px 28px;border-bottom:1px solid #1a2150;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <svg width="18" height="18" viewBox="0 0 96 96">
+          <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+          <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+        </svg>
+        <span style="font-family:Georgia,serif;font-size:13px;letter-spacing:3px;color:#e8f0ff">ORBIT</span>
+      </div>
+      <span style="font-size:9px;color:#3D3A9E;letter-spacing:.1em">Weekly intelligence</span>
+    </div>
+    <div style="padding:24px 28px">
+      <div style="font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px">Dark Matter · week of Mar 18</div>
+      <div style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:8px">This week's signals for fitness creators</div>
+      <div style="font-size:11px;color:#6b7ab5;line-height:1.7">Three trends gaining momentum in your niche before they peak — plus your Gravity Score update and this week's recommended action.</div>
+    </div>
+  </div>
+
+  <h3>Photography & imagery direction</h3>
+  <div class="photo-grid">
+    <div class="photo-card">
+      <div class="photo-fill" style="background:#0d1228;border:1px solid #1a2150;border-radius:10px 10px 0 0">
+        <svg width="80" height="60" viewBox="0 0 80 60">
+          <circle cx="40" cy="30" r="22" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.3"/>
+          <circle cx="40" cy="30" r="5" fill="#6C63FF" opacity="0.5"/>
+          <line x1="10" y1="50" x2="30" y2="30" stroke="#a78bfa" stroke-width="0.5" opacity="0.4"/>
+          <line x1="70" y1="20" x2="50" y2="30" stroke="#a78bfa" stroke-width="0.5" opacity="0.4"/>
+          <circle cx="10" cy="50" r="2" fill="#a78bfa" opacity="0.6"/>
+          <circle cx="70" cy="20" r="3" fill="#6C63FF" opacity="0.6"/>
+          <circle cx="60" cy="50" r="1.5" fill="#a78bfa" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="photo-label"><div class="photo-label-text">Abstract data visualization — orbital, precise, dark-field</div></div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-fill" style="background:#0f1628;border:1px solid #1a2150;border-radius:10px 10px 0 0">
+        <svg width="80" height="60" viewBox="0 0 80 60">
+          <rect x="8" y="35" width="10" height="20" rx="2" fill="#3D3A9E" opacity="0.6"/>
+          <rect x="22" y="25" width="10" height="30" rx="2" fill="#534AB7" opacity="0.7"/>
+          <rect x="36" y="15" width="10" height="40" rx="2" fill="#6C63FF" opacity="0.8"/>
+          <rect x="50" y="20" width="10" height="35" rx="2" fill="#7F77DD" opacity="0.7"/>
+          <rect x="64" y="28" width="10" height="27" rx="2" fill="#a78bfa" opacity="0.9"/>
+          <line x1="5" y1="55" x2="77" y2="55" stroke="#2d3260" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <div class="photo-label"><div class="photo-label-text">Clean data charts — dark backgrounds, Orbit blue palette</div></div>
+    </div>
+    <div class="photo-card">
+      <div class="photo-fill" style="background:#0a0e1e;border:1px solid #1a2150;border-radius:10px 10px 0 0">
+        <svg width="80" height="60" viewBox="0 0 80 60">
+          <path d="M10,50 C20,40 30,20 70,10" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.8" stroke-linecap="round"/>
+          <circle cx="70" cy="10" r="4" fill="#a78bfa"/>
+          <circle cx="70" cy="10" r="8" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.3"/>
+          <path d="M10,50 C22,42 33,24 70,10" fill="none" stroke="#a78bfa" stroke-width="0.6" opacity="0.3" stroke-linecap="round"/>
+          <circle cx="10" cy="50" r="2" fill="#6C63FF" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="photo-label"><div class="photo-label-text">Orbit Path trajectory — upward, purposeful, singular</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:12px;background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div>
+      <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4ade80;margin-bottom:8px">Use imagery that feels</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.7">
+        Dark, precise, and cosmic · Abstract data patterns · Creators working (not posing) · Upward trajectories · Isolated on dark backgrounds · Clean product UI screenshots
+      </div>
+    </div>
+    <div>
+      <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#f09595;margin-bottom:8px">Avoid imagery that feels</div>
+      <div style="font-size:10px;color:#6b7ab5;line-height:1.7">
+        Generic stock photography · Bright white backgrounds · Cheesy "success" imagery (fist pumps, confetti) · Cluttered or noisy compositions · Oversaturated colors
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:20px">
+    <span class="ftr-link">Brand Guidelines v1.0 · 2026</span>
+    <span class="ftr-link">Confidential</span>
+    <span class="ftr-link">brand@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
