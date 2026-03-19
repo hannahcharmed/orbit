@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Competitive Analysis</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:1000px;margin:0 auto}
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+.toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:10px 36px;display:flex;gap:6px;flex-wrap:wrap}
+.toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;text-decoration:none}
+.toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+.sec{padding:32px 36px;border-bottom:1px solid #1a2150}
+.sec:last-child{border-bottom:none}
+.sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.sec-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+.div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+h3:first-child{margin-top:0}
+h4{font-size:9px;font-weight:500;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin:14px 0 6px}
+p{font-size:11px;color:#8892b0;line-height:1.75;margin-bottom:8px}
+p:last-child{margin-bottom:0}
+strong{color:#c4b5fd;font-weight:500}
+code{font-family:'Courier New',monospace;font-size:10px;background:#0d1228;border:1px solid #1a2150;border-radius:4px;padding:1px 5px;color:#a78bfa}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.card.accent{border-color:#2d3260}
+.card-eye{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.card-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:5px}
+.card-body{font-size:10px;color:#6b7ab5;line-height:1.6}
+.callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0}
+.callout.v{border-left-color:#a78bfa}
+.callout.g{border-left-color:#4ade80}
+.callout.r{border-left-color:#f09595}
+.callout.a{border-left-color:#EF9F27}
+.cl-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+.callout.v .cl-label{color:#a78bfa}
+.callout.g .cl-label{color:#4ade80}
+.callout.r .cl-label{color:#f09595}
+.callout.a .cl-label{color:#EF9F27}
+.cl-text{font-size:11px;color:#8892b0;line-height:1.6}
+.cl-text strong{color:#e8f0ff;font-weight:500}
+.bullet{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.bullet:last-child{margin-bottom:0}
+.bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:5px;flex-shrink:0}
+.bdot.v{background:#a78bfa}
+.bdot.g{background:#4ade80}
+.bdot.r{background:#f09595}
+.bdot.a{background:#EF9F27}
+.btext{font-size:11px;color:#8892b0;line-height:1.55}
+.btext strong{color:#c4b5fd;font-weight:500}
+
+/* Competitor cards */
+.comp-card{background:#0d1228;border:1px solid #1a2150;border-radius:12px;overflow:hidden;margin-bottom:16px}
+.comp-head{padding:16px 18px;border-bottom:1px solid #1a2150;display:flex;align-items:center;justify-content:space-between}
+.comp-name{font-family:Georgia,serif;font-size:18px;color:#e8f0ff}
+.comp-tagline{font-size:10px;color:#4a5280;margin-top:2px}
+.comp-badges{display:flex;gap:6px;align-items:center}
+.badge{font-size:8px;padding:2px 9px;border-radius:20px}
+.threat-high{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.threat-med{background:#1a1200;color:#EF9F27;border:1px solid #412402}
+.threat-low{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+.tier-badge{background:#1a1f35;color:#a78bfa;border:1px solid #2d3260}
+.comp-body{padding:16px 18px}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.comp-section{margin-bottom:0}
+.cs-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+.cs-item{font-size:10px;color:#8892b0;line-height:1.6;margin-bottom:3px;display:flex;gap:5px}
+.cs-item.pos::before{content:'✓';color:#4ade80;flex-shrink:0}
+.cs-item.neg::before{content:'✗';color:#f09595;flex-shrink:0}
+.cs-item.neu::before{content:'·';color:#4a5280;flex-shrink:0}
+.comp-footer{padding:12px 18px;background:#090d1c;border-top:1px solid #1a2150;display:flex;align-items:center;justify-content:space-between}
+.cf-orbit{font-size:10px;color:#6b7ab5}
+.cf-orbit strong{color:#a78bfa}
+.pricing-pill{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 10px;font-size:9px;color:#e8f0ff}
+
+/* Feature matrix */
+.matrix{width:100%;border-collapse:collapse}
+.matrix th{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#3D3A9E;text-align:center;padding:10px 8px;border-bottom:1px solid #1a2150;background:#090d1c}
+.matrix th:first-child{text-align:left}
+.matrix td{font-size:10px;color:#8892b0;padding:9px 8px;border-bottom:1px solid #090d1c;text-align:center;vertical-align:middle}
+.matrix td:first-child{text-align:left;color:#a0aec0;font-weight:500}
+.matrix tr:hover td{background:#0a0e1e}
+.matrix .orbit-col{background:#0d1228!important}
+.matrix .section-row td{background:#090d1c;color:#3D3A9E;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;text-align:left}
+.yes{color:#4ade80;font-size:14px}
+.no{color:#f09595;font-size:14px}
+.partial{color:#EF9F27;font-size:12px}
+.orbit-yes{color:#a78bfa;font-size:14px;font-weight:500}
+
+/* Positioning map */
+.pos-map{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:20px;position:relative}
+.axis-label{font-size:9px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase}
+.comp-dot{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default}
+.dot-circle{border-radius:50%;display:flex;align-items:center;justify-content:center}
+.dot-label{font-size:8px;color:#8892b0;white-space:nowrap;text-align:center;line-height:1.3}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:10px;overflow:hidden}
+.swot-q{padding:16px}
+.swot-q-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+
+/* Pricing comparison */
+.price-table{width:100%;border-collapse:collapse}
+.price-table th{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:8px 12px;border-bottom:1px solid #1a2150;background:#090d1c}
+.price-table td{font-size:10px;color:#8892b0;padding:8px 12px;border-bottom:1px solid #090d1c;vertical-align:top}
+.price-table tr:last-child td{border-bottom:none}
+.price-table td:first-child{color:#a0aec0;font-weight:500}
+
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase">Competitive Analysis</span>
+    <span class="ver">v1.0 · March 2026</span>
+  </div>
+</div>
+
+<div class="toc">
+  <a class="toc-item" href="#landscape">Landscape overview</a>
+  <a class="toc-item" href="#competitors">Competitor profiles</a>
+  <a class="toc-item" href="#matrix">Feature matrix</a>
+  <a class="toc-item" href="#positioning">Positioning map</a>
+  <a class="toc-item" href="#pricing">Pricing comparison</a>
+  <a class="toc-item" href="#swot">SWOT analysis</a>
+  <a class="toc-item" href="#strategy">Competitive strategy</a>
+</div>
+
+<!-- Landscape -->
+<div class="sec" id="landscape">
+  <div class="sec-num">Section 01</div>
+  <div class="sec-title">Competitive landscape</div>
+  <div class="div"></div>
+  <p>The creator analytics space is crowded with tools but almost entirely populated by products built for brands and agencies — not creators. This is Orbit's fundamental opportunity. Every major competitor shares the same flaw: they treat analytics as a reporting function rather than a coaching function.</p>
+
+  <div class="g3" style="margin-top:12px">
+    <div class="card accent">
+      <div class="card-eye">Category 1</div>
+      <div class="card-title">Social media management tools</div>
+      <div class="card-body">Later, Hootsuite, Buffer, Sprout Social. Built for scheduling and publishing. Analytics is a secondary feature. Designed for marketing teams managing brand accounts — not individual creators optimising their own growth.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Category 2</div>
+      <div class="card-title">Influencer intelligence platforms</div>
+      <div class="card-body">HypeAuditor, Modash, Traackr, CreatorIQ. Built for brands discovering and vetting creators. Data is viewed from the outside — what does this creator look like to a brand? Not useful for the creator themselves.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Category 3</div>
+      <div class="card-title">Native platform analytics</div>
+      <div class="card-body">Instagram Insights, TikTok Analytics, YouTube Studio. Free and always on, but siloed to one platform, no cross-platform view, no benchmarking, no AI coaching. The baseline every creator already has.</div>
+    </div>
+  </div>
+
+  <div class="callout v" style="margin-top:16px">
+    <div class="cl-label">The whitespace Orbit owns</div>
+    <div class="cl-text">There is currently <strong>no product</strong> that combines (1) creator-native analytics, (2) true niche benchmarking, (3) AI coaching grounded in the creator's own data, and (4) a talent agency management layer — in a single platform built specifically for lifestyle and fitness creators. That gap is Orbit's entire reason for existing.</div>
+  </div>
+</div>
+
+<!-- Competitor Profiles -->
+<div class="sec" id="competitors">
+  <div class="sec-num">Section 02</div>
+  <div class="sec-title">Competitor profiles</div>
+  <div class="div"></div>
+
+  <!-- Later -->
+  <div class="comp-card">
+    <div class="comp-head">
+      <div>
+        <div class="comp-name">Later</div>
+        <div class="comp-tagline">Social media scheduling and analytics · later.com</div>
+      </div>
+      <div class="comp-badges">
+        <span class="pricing-pill">$18–$80/mo</span>
+        <span class="badge threat-med">Medium threat</span>
+      </div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-grid">
+        <div class="comp-section">
+          <div class="cs-label">Strengths</div>
+          <div class="cs-item pos">Strong Instagram and TikTok integration</div>
+          <div class="cs-item pos">Large existing user base (7M+ users)</div>
+          <div class="cs-item pos">Well-known brand in the creator space</div>
+          <div class="cs-item pos">Link-in-bio feature drives stickiness</div>
+          <div class="cs-item pos">Good content calendar UX</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Weaknesses</div>
+          <div class="cs-item neg">Analytics is secondary to scheduling</div>
+          <div class="cs-item neg">No AI coaching or intelligent insights</div>
+          <div class="cs-item neg">No niche benchmarking</div>
+          <div class="cs-item neg">Not built for talent agencies</div>
+          <div class="cs-item neg">Generic best-practice tips, not personalised</div>
+          <div class="cs-item neg">No Escape Velocity or trajectory features</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Who uses it</div>
+          <div class="cs-item neu">Individual creators and small brands</div>
+          <div class="cs-item neu">Primarily Instagram-focused</div>
+          <div class="cs-item neu">Lifestyle and fashion heavy user base</div>
+          <div class="cs-item neu">Users want scheduling + basic analytics</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      <div class="cf-orbit"><strong>Orbit vs Later:</strong> Later is a publishing tool with analytics bolted on. Orbit is an intelligence platform with no publishing. Creators often use Later for scheduling and Orbit for strategy — they're not necessarily in direct competition for the same job.</div>
+      <span class="badge threat-med">Indirect competitor</span>
+    </div>
+  </div>
+
+  <!-- Sprout Social -->
+  <div class="comp-card">
+    <div class="comp-head">
+      <div>
+        <div class="comp-name">Sprout Social</div>
+        <div class="comp-tagline">Enterprise social media management · sproutsocial.com</div>
+      </div>
+      <div class="comp-badges">
+        <span class="pricing-pill">$249–$499+/mo</span>
+        <span class="badge threat-low">Low threat</span>
+      </div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-grid">
+        <div class="comp-section">
+          <div class="cs-label">Strengths</div>
+          <div class="cs-item pos">Deep analytics and reporting capabilities</div>
+          <div class="cs-item pos">Strong enterprise sales and brand recognition</div>
+          <div class="cs-item pos">Multi-platform coverage including LinkedIn</div>
+          <div class="cs-item pos">Listening and sentiment analysis features</div>
+          <div class="cs-item pos">Well-funded ($300M+ raised)</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Weaknesses</div>
+          <div class="cs-item neg">Priced entirely out of individual creator range</div>
+          <div class="cs-item neg">Designed for brand social teams, not creators</div>
+          <div class="cs-item neg">No creator-specific benchmarking</div>
+          <div class="cs-item neg">No AI coaching layer</div>
+          <div class="cs-item neg">Overwhelming UX for individual creators</div>
+          <div class="cs-item neg">No talent agency management features</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Who uses it</div>
+          <div class="cs-item neu">Mid-market and enterprise marketing teams</div>
+          <div class="cs-item neu">Agencies managing brand accounts</div>
+          <div class="cs-item neu">Rarely used by individual creators</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      <div class="cf-orbit"><strong>Orbit vs Sprout Social:</strong> Completely different markets. No individual creator pays $249/mo for social analytics. Sprout is a non-competitor for Orbit's target user — they're both in "analytics" but serve entirely different jobs and budgets.</div>
+      <span class="badge threat-low">Different market</span>
+    </div>
+  </div>
+
+  <!-- HypeAuditor -->
+  <div class="comp-card">
+    <div class="comp-head">
+      <div>
+        <div class="comp-name">HypeAuditor</div>
+        <div class="comp-tagline">Influencer analytics and discovery · hypeauditor.com</div>
+      </div>
+      <div class="comp-badges">
+        <span class="pricing-pill">$299–$999+/mo</span>
+        <span class="badge threat-med">Medium threat</span>
+      </div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-grid">
+        <div class="comp-section">
+          <div class="cs-label">Strengths</div>
+          <div class="cs-item pos">Large influencer database (85M+ profiles)</div>
+          <div class="cs-item pos">Audience quality scoring and fraud detection</div>
+          <div class="cs-item pos">Used by brands for creator vetting</div>
+          <div class="cs-item pos">Detailed demographic breakdowns</div>
+          <div class="cs-item pos">Competitive benchmarking (brand-side view)</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Weaknesses</div>
+          <div class="cs-item neg">Built for brands buying creators, not creators themselves</div>
+          <div class="cs-item neg">Data is public/estimated — not first-party connected</div>
+          <div class="cs-item neg">No AI coaching or strategic recommendations</div>
+          <div class="cs-item neg">No talent agency management</div>
+          <div class="cs-item neg">Expensive for individual creator use</div>
+          <div class="cs-item neg">No real-time data — batch updates</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Who uses it</div>
+          <div class="cs-item neu">Brand marketing teams vetting influencers</div>
+          <div class="cs-item neu">PR agencies running influencer campaigns</div>
+          <div class="cs-item neu">Some creators use free report as media kit</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      <div class="cf-orbit"><strong>Orbit vs HypeAuditor:</strong> HypeAuditor looks at creators from the outside. Orbit is built for the inside view. The Gravity Score and AI coaching have no equivalent in HypeAuditor. However, some creators use HypeAuditor's free profile report in brand pitches — the Orbit scorecard directly replaces this use case.</div>
+      <span class="badge threat-med">Partial overlap</span>
+    </div>
+  </div>
+
+  <!-- Metricool -->
+  <div class="comp-card">
+    <div class="comp-head">
+      <div>
+        <div class="comp-name">Metricool</div>
+        <div class="comp-tagline">Social media analytics and scheduling · metricool.com</div>
+      </div>
+      <div class="comp-badges">
+        <span class="pricing-pill">Free–$119/mo</span>
+        <span class="badge threat-high">High threat</span>
+      </div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-grid">
+        <div class="comp-section">
+          <div class="cs-label">Strengths</div>
+          <div class="cs-item pos">Strong cross-platform analytics coverage</div>
+          <div class="cs-item pos">Affordable pricing accessible to creators</div>
+          <div class="cs-item pos">Free tier with real functionality</div>
+          <div class="cs-item pos">Good reporting and export features</div>
+          <div class="cs-item pos">Growing creator user base</div>
+          <div class="cs-item pos">Best time to post recommendations</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Weaknesses</div>
+          <div class="cs-item neg">No AI coaching — purely descriptive analytics</div>
+          <div class="cs-item neg">No niche benchmarking</div>
+          <div class="cs-item neg">No agency / roster management</div>
+          <div class="cs-item neg">Generic insights, not personalised</div>
+          <div class="cs-item neg">No Gravity Score or proprietary metrics</div>
+          <div class="cs-item neg">No trend intelligence (Dark Matter equivalent)</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Who uses it</div>
+          <div class="cs-item neu">Individual creators and freelancers</div>
+          <div class="cs-item neu">Small marketing agencies</div>
+          <div class="cs-item neu">Creators wanting cross-platform overview</div>
+          <div class="cs-item neu">Price-sensitive segment</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      <div class="cf-orbit"><strong>Orbit vs Metricool:</strong> Metricool is Orbit's closest price-comparable competitor and the most likely tool creators are switching from. The key differentiator is intelligence — Metricool shows you numbers, Orbit tells you what to do. Orbit's benchmarking and AI layer are decisive advantages.</div>
+      <span class="badge threat-high">Primary competitor</span>
+    </div>
+  </div>
+
+  <!-- Modash -->
+  <div class="comp-card">
+    <div class="comp-head">
+      <div>
+        <div class="comp-name">Modash</div>
+        <div class="comp-tagline">Creator discovery and campaign analytics · modash.io</div>
+      </div>
+      <div class="comp-badges">
+        <span class="pricing-pill">$299–$999/mo</span>
+        <span class="badge threat-low">Low direct threat</span>
+      </div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-grid">
+        <div class="comp-section">
+          <div class="cs-label">Strengths</div>
+          <div class="cs-item pos">Strong creator discovery database</div>
+          <div class="cs-item pos">Campaign management and tracking</div>
+          <div class="cs-item pos">Detailed audience overlap analysis</div>
+          <div class="cs-item pos">Good fit for agencies running brand campaigns</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Weaknesses</div>
+          <div class="cs-item neg">Brand/agency tool, not creator tool</div>
+          <div class="cs-item neg">Expensive for individual creators</div>
+          <div class="cs-item neg">No AI coaching or recommendations</div>
+          <div class="cs-item neg">Data is estimated, not first-party</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Strategic note</div>
+          <div class="cs-item neu">Potential data partnership — Modash data could supplement Orbit's benchmarking pool in early stages</div>
+          <div class="cs-item neu">Different buyer (brand teams vs creators)</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      <div class="cf-orbit"><strong>Orbit vs Modash:</strong> Modash is a potential data partner more than a competitor. They have creator discovery data we could license to seed the benchmarking pool. Not a direct competitor for the creator-facing product.</div>
+      <span class="badge threat-low">Potential partner</span>
+    </div>
+  </div>
+
+  <!-- Iconosquare -->
+  <div class="comp-card">
+    <div class="comp-head">
+      <div>
+        <div class="comp-name">Iconosquare</div>
+        <div class="comp-tagline">Social media analytics for professionals · iconosquare.com</div>
+      </div>
+      <div class="comp-badges">
+        <span class="pricing-pill">$49–$179/mo</span>
+        <span class="badge threat-med">Medium threat</span>
+      </div>
+    </div>
+    <div class="comp-body">
+      <div class="comp-grid">
+        <div class="comp-section">
+          <div class="cs-label">Strengths</div>
+          <div class="cs-item pos">Deep Instagram analytics (long track record)</div>
+          <div class="cs-item pos">Competitive benchmarking features</div>
+          <div class="cs-item pos">Affordable for individuals</div>
+          <div class="cs-item pos">Clean reporting and PDF exports</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Weaknesses</div>
+          <div class="cs-item neg">No meaningful AI or coaching layer</div>
+          <div class="cs-item neg">Limited TikTok analytics</div>
+          <div class="cs-item neg">Benchmarking is generic, not niche-filtered</div>
+          <div class="cs-item neg">No trend intelligence</div>
+          <div class="cs-item neg">Declining user perception vs newer tools</div>
+        </div>
+        <div class="comp-section">
+          <div class="cs-label">Who uses it</div>
+          <div class="cs-item neu">Instagram-focused creators and brands</div>
+          <div class="cs-item neu">Small agencies wanting clean reports</div>
+          <div class="cs-item neu">Creators wanting competitor tracking</div>
+        </div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      <div class="cf-orbit"><strong>Orbit vs Iconosquare:</strong> Similar price point, Instagram-first. The AI coaching and niche-specific benchmarking are decisive advantages. Iconosquare creators are a strong acquisition target — they're paying for analytics already, they understand the value, and they're being underserved.</div>
+      <span class="badge threat-med">Acquisition target audience</span>
+    </div>
+  </div>
+</div>
+
+<!-- Feature Matrix -->
+<div class="sec" id="matrix">
+  <div class="sec-num">Section 03</div>
+  <div class="sec-title">Feature comparison matrix</div>
+  <div class="div"></div>
+
+  <div style="overflow-x:auto">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th style="text-align:left;min-width:200px">Feature</th>
+          <th style="color:#a78bfa;background:#0d1228">ORBIT</th>
+          <th>Later</th>
+          <th>Metricool</th>
+          <th>Iconosquare</th>
+          <th>HypeAuditor</th>
+          <th>Sprout Social</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-row"><td colspan="7">Core analytics</td></tr>
+        <tr>
+          <td>Cross-platform unified dashboard</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>Real-time data sync (&lt;15 min)</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>24-month historical data</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>Content decay curve analysis</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr class="section-row"><td colspan="7">AI & intelligence</td></tr>
+        <tr>
+          <td>AI coaching & recommendations</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">~</span></td>
+        </tr>
+        <tr>
+          <td>Personalised insights (not generic tips)</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Gravity Score™ (proprietary metric)</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Escape Velocity breakout detection</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Growth trajectory prediction</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr class="section-row"><td colspan="7">Benchmarking</td></tr>
+        <tr>
+          <td>Niche-specific peer benchmarking</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="partial">~</span></td>
+        </tr>
+        <tr>
+          <td>True peer matching (niche + tier + platform)</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Niche rank (your position among peers)</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr class="section-row"><td colspan="7">Trend intelligence</td></tr>
+        <tr>
+          <td>Pre-viral audio detection</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Niche-filtered trend signals</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Weekly trend briefing</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr class="section-row"><td colspan="7">Agency & management</td></tr>
+        <tr>
+          <td>Multi-creator roster management</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>Creator-manager collaboration layer</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Auto-generated brand deal reports</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>White-label agency reports</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr class="section-row"><td colspan="7">Product</td></tr>
+        <tr>
+          <td>Mobile app (iOS native)</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td>Free tier with meaningful value</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">~</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td>Built for lifestyle/fitness creators</td>
+          <td class="orbit-col"><span class="orbit-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:10px;font-size:9px;color:#4a5280;align-items:center;flex-wrap:wrap">
+    <span><span class="orbit-yes">✓</span> Full feature</span>
+    <span><span class="yes">✓</span> Available</span>
+    <span><span class="partial">~</span> Partial / limited</span>
+    <span><span class="no">✗</span> Not available</span>
+  </div>
+</div>
+
+<!-- Positioning Map -->
+<div class="sec" id="positioning">
+  <div class="sec-num">Section 04</div>
+  <div class="sec-title">Positioning map</div>
+  <div class="div"></div>
+  <p>Two dimensions define the competitive space: <strong>creator-centricity</strong> (built for creators vs built for brands) and <strong>intelligence depth</strong> (prescriptive coaching vs descriptive reporting). Orbit is the only product in the top-right quadrant.</p>
+
+  <div class="pos-map" style="height:360px;margin-top:12px">
+    <!-- Axes -->
+    <div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase">High intelligence</div>
+    <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase">Descriptive only</div>
+    <div style="position:absolute;left:10px;top:50%;transform:translateY(-50%) rotate(-90deg);font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap">Brand-centric</div>
+    <div style="position:absolute;right:10px;top:50%;transform:translateY(-50%) rotate(90deg);font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap">Creator-centric</div>
+    <!-- Centre lines -->
+    <div style="position:absolute;top:50%;left:30px;right:30px;height:1px;background:#1a2150"></div>
+    <div style="position:absolute;left:50%;top:30px;bottom:30px;width:1px;background:#1a2150"></div>
+
+    <!-- Quadrant labels -->
+    <div style="position:absolute;top:40px;left:40px;font-size:8px;color:#2d3260">Brand AI tools</div>
+    <div style="position:absolute;top:40px;right:40px;font-size:8px;color:#2d3260;text-align:right">Creator intelligence</div>
+    <div style="position:absolute;bottom:40px;left:40px;font-size:8px;color:#2d3260">Brand dashboards</div>
+    <div style="position:absolute;bottom:40px;right:40px;font-size:8px;color:#2d3260;text-align:right">Creator analytics</div>
+
+    <!-- Sprout Social -->
+    <div style="position:absolute;top:28%;left:18%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:#4a5280"></div>
+      <div style="font-size:8px;color:#6b7ab5;text-align:center">Sprout Social</div>
+    </div>
+    <!-- HypeAuditor -->
+    <div style="position:absolute;top:60%;left:22%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:11px;height:11px;border-radius:50%;background:#4a5280"></div>
+      <div style="font-size:8px;color:#6b7ab5;text-align:center">HypeAuditor</div>
+    </div>
+    <!-- Modash -->
+    <div style="position:absolute;top:68%;left:30%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:10px;height:10px;border-radius:50%;background:#4a5280"></div>
+      <div style="font-size:8px;color:#6b7ab5;text-align:center">Modash</div>
+    </div>
+    <!-- Iconosquare -->
+    <div style="position:absolute;top:65%;right:30%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:11px;height:11px;border-radius:50%;background:#4a5280"></div>
+      <div style="font-size:8px;color:#6b7ab5;text-align:center">Iconosquare</div>
+    </div>
+    <!-- Later -->
+    <div style="position:absolute;top:72%;right:22%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:12px;height:12px;border-radius:50%;background:#4a5280"></div>
+      <div style="font-size:8px;color:#6b7ab5;text-align:center">Later</div>
+    </div>
+    <!-- Metricool -->
+    <div style="position:absolute;top:62%;right:26%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:11px;height:11px;border-radius:50%;background:#4a5280"></div>
+      <div style="font-size:8px;color:#6b7ab5;text-align:center">Metricool</div>
+    </div>
+    <!-- Native analytics -->
+    <div style="position:absolute;top:78%;right:16%;display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:9px;height:9px;border-radius:50%;background:#2d3260"></div>
+      <div style="font-size:8px;color:#4a5280;text-align:center">Native analytics</div>
+    </div>
+    <!-- ORBIT -->
+    <div style="position:absolute;top:18%;right:18%;display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div style="width:20px;height:20px;border-radius:50%;background:#a78bfa;display:flex;align-items:center;justify-content:center">
+        <svg width="10" height="10" viewBox="0 0 96 96"><path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="48" r="8" fill="#fff"/></svg>
+      </div>
+      <div style="font-size:9px;color:#a78bfa;font-weight:500;text-align:center;font-family:Georgia,serif;letter-spacing:1px">ORBIT</div>
+      <div style="font-size:7px;color:#6C63FF;text-align:center">Alone in this quadrant</div>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Comparison -->
+<div class="sec" id="pricing">
+  <div class="sec-num">Section 05</div>
+  <div class="sec-title">Pricing comparison</div>
+  <div class="div"></div>
+  <table class="price-table">
+    <tr>
+      <th>Product</th>
+      <th>Entry / free tier</th>
+      <th>Mid tier</th>
+      <th>Top / agency tier</th>
+      <th>Orbit advantage</th>
+    </tr>
+    <tr>
+      <td><strong>Orbit</strong></td>
+      <td>Free — Gravity Score + basic insights</td>
+      <td>$29/mo Creator · $79/mo Pro</td>
+      <td>$499/mo Agency (roster mgmt)</td>
+      <td style="color:#a78bfa">Niche-specific AI coaching at every tier</td>
+    </tr>
+    <tr>
+      <td><strong>Later</strong></td>
+      <td>Free — 1 platform, limited posts</td>
+      <td>$18–$40/mo (scheduling focused)</td>
+      <td>$80/mo (teams)</td>
+      <td style="color:#4ade80">Orbit Pro = same price, massively more analytics depth</td>
+    </tr>
+    <tr>
+      <td><strong>Metricool</strong></td>
+      <td>Free — limited analytics, 1 brand</td>
+      <td>$22–$59/mo</td>
+      <td>$119/mo (agencies)</td>
+      <td style="color:#4ade80">Orbit offers AI coaching Metricool doesn't have at any price</td>
+    </tr>
+    <tr>
+      <td><strong>Iconosquare</strong></td>
+      <td>14-day trial only — no free tier</td>
+      <td>$49/mo Single</td>
+      <td>$179/mo Teams</td>
+      <td style="color:#4ade80">Orbit free tier is more useful than Iconosquare's paid entry</td>
+    </tr>
+    <tr>
+      <td><strong>HypeAuditor</strong></td>
+      <td>Free profile report only</td>
+      <td>$299/mo (brand-side)</td>
+      <td>$999+/mo Enterprise</td>
+      <td style="color:#4ade80">Orbit is 10× cheaper with more creator-relevant features</td>
+    </tr>
+    <tr>
+      <td><strong>Sprout Social</strong></td>
+      <td>30-day trial only</td>
+      <td>$249/mo Standard</td>
+      <td>$499+/mo Advanced</td>
+      <td style="color:#4ade80">Completely different buyer — not comparable for creators</td>
+    </tr>
+  </table>
+  <div class="callout g" style="margin-top:14px">
+    <div class="cl-label">Pricing strategy insight</div>
+    <div class="cl-text">Orbit's $29 Creator tier is priced below Metricool and Iconosquare's comparable tiers while delivering significantly more value. The <strong>$79 Pro tier is the true value proposition</strong> — full benchmarking, Escape Velocity, and Dark Matter at a price that feels like a no-brainer compared to alternatives. The Agency tier at $499 is actually below Sprout Social's entry price, for a more creator-relevant product.</div>
+  </div>
+</div>
+
+<!-- SWOT -->
+<div class="sec" id="swot">
+  <div class="sec-num">Section 06</div>
+  <div class="sec-title">SWOT analysis</div>
+  <div class="div"></div>
+  <div class="swot">
+    <div class="swot-q" style="background:#0a1a10;border:1px solid #173404">
+      <div class="swot-q-label" style="color:#4ade80">Strengths</div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">First-party data from agency roster — unique moat competitors can't replicate quickly</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">Proprietary Gravity Score™ metric becomes the standard creators reference</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">AI coaching layer — no competitor has this at Orbit's price point</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">Agency + creator dual product creates two revenue streams from one data asset</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">Niche focus (lifestyle/fitness) enables depth generic tools can't match</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">Bootstrapped — no investor pressure to scale prematurely</div></div>
+    </div>
+    <div class="swot-q" style="background:#1a0a0a;border:1px solid #501313">
+      <div class="swot-q-label" style="color:#f09595">Weaknesses</div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">No brand recognition — zero awareness vs established competitors</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Small engineering team limits development speed vs funded competitors</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Platform API dependency — Instagram and TikTok can restrict access</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Benchmarking requires critical mass to be meaningful — cold start challenge</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">No scheduling/publishing features — limits stickiness vs tools like Later</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Niche focus (strength and weakness) — excludes non-lifestyle verticals initially</div></div>
+    </div>
+    <div class="swot-q" style="background:#061228;border:1px solid #1a2150">
+      <div class="swot-q-label" style="color:#6C63FF">Opportunities</div>
+      <div class="bullet"><div class="bdot"></div><div class="btext">Creator economy growing 20%+ annually — massive tailwind</div></div>
+      <div class="bullet"><div class="bdot"></div><div class="btext">No AI-native competitor in the creator analytics space — first-mover window</div></div>
+      <div class="bullet"><div class="bdot"></div><div class="btext">Brand partnership marketplace — future revenue stream from both sides</div></div>
+      <div class="bullet"><div class="bdot"></div><div class="btext">Expand to adjacent verticals (beauty, wellness) with same product</div></div>
+      <div class="bullet"><div class="bdot"></div><div class="btext">White-label product for other talent agencies at scale</div></div>
+      <div class="bullet"><div class="bdot"></div><div class="btext">Data network effects — each creator added makes the product better for all</div></div>
+    </div>
+    <div class="swot-q" style="background:#1a1200;border:1px solid #412402">
+      <div class="swot-q-label" style="color:#EF9F27">Threats</div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Later, Metricool or Iconosquare add AI coaching — removes key differentiator</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Meta or TikTok build first-party analytics tools that satisfy creators</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Well-funded new entrant specifically targeting creator intelligence space</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Platform API restrictions reduce data quality or access</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Creator fatigue with analytics tools — "just another dashboard"</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Economic downturn reducing creator tool spending</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Competitive Strategy -->
+<div class="sec" id="strategy">
+  <div class="sec-num">Section 07</div>
+  <div class="sec-title">Competitive strategy</div>
+  <div class="div"></div>
+
+  <h3>How to win</h3>
+  <div class="g2" style="margin-top:8px">
+    <div>
+      <div class="callout g">
+        <div class="cl-label">Strategy 1 — Own the metric</div>
+        <div class="cl-text">Make the <strong>Gravity Score™</strong> the metric creators reference when talking about their value. When a creator tells a brand "my Gravity Score is 78" in a pitch, that's Orbit in every conversation. File the trademark. Build the brand story around it. Get it into creator vocabulary before anyone can copy it.</div>
+      </div>
+      <div class="callout g" style="margin-top:8px">
+        <div class="cl-label">Strategy 2 — Niche before broad</div>
+        <div class="cl-text">Resist the temptation to expand to all niches early. Being the <strong>best tool for fitness and lifestyle creators</strong> beats being average for everyone. When fitness creators recommend tools to each other, Orbit's name will be the one they say — because it was built specifically for them.</div>
+      </div>
+    </div>
+    <div>
+      <div class="callout v">
+        <div class="cl-label">Strategy 3 — Speed of insight</div>
+        <div class="cl-text">Competitors respond to data — Orbit responds to creators. The moat is not the features, it's the <strong>compounding data advantage</strong>. Every creator who opts into benchmarking makes the platform smarter. Build fast, iterate with the agency roster, and widen the intelligence gap before a funded competitor can catch up.</div>
+      </div>
+      <div class="callout v" style="margin-top:8px">
+        <div class="cl-label">Strategy 4 — The agency flywheel</div>
+        <div class="cl-text">No competitor has an agency-creator dual product. Use this to create an <strong>acquisition flywheel</strong>: agencies bring creators onto Orbit, creators refer other creators, those creators' managers want Mission Control. One agency partnership = 10–50 warm creator signups with zero paid acquisition cost.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>How to respond to competitive moves</h3>
+  <table class="price-table" style="margin-top:8px">
+    <tr><th>Threat</th><th>Response</th></tr>
+    <tr><td><strong>Metricool launches AI insights</strong></td><td>Accelerate Escape Velocity and Dark Matter features — the breakout detection and pre-viral trend intelligence are proprietary advantages that take real data infrastructure to build. Metricool adding generic AI tips is not the same as Orbit's niche-specific intelligence.</td></tr>
+    <tr><td><strong>Later acquires an AI analytics startup</strong></td><td>Emphasise the creator-native brand. Later is a scheduling tool — their AI will always be secondary to their publishing product. Orbit's entire product is intelligence. The positioning is "your coach" vs "your scheduler."</td></tr>
+    <tr><td><strong>New well-funded AI creator analytics entrant</strong></td><td>Data moat is the defence. A new entrant needs 12–18 months to build a comparable benchmarking dataset. Double down on creator community, Gravity Score trademark, and niche depth. Move faster on the agency layer — harder to replicate without existing agency relationships.</td></tr>
+    <tr><td><strong>Instagram launches native AI analytics</strong></td><td>Lean into the cross-platform narrative — Instagram's AI only knows Instagram. Orbit is the only place creators see their complete picture across all platforms. Add YouTube and Snapchat faster to widen the cross-platform moat.</td></tr>
+  </table>
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Competitive Analysis v1.0 · March 2026</span>
+    <span class="ftr-link">Confidential</span>
+    <span class="ftr-link">strategy@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

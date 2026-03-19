@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Creator Media Kit</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:900px;margin:0 auto}
+
+/* Controls */
+.controls{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:14px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ctrl-label{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;margin-right:4px}
+.ctrl-input{background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:5px 10px;font-size:11px;color:#e8f0ff;outline:none;width:160px}
+.ctrl-input:focus{border-color:#6C63FF}
+.ctrl-input.sm{width:90px}
+.ctrl-input.xs{width:70px}
+.ctrl-btn{background:#6C63FF;color:#fff;border:none;border-radius:6px;padding:6px 16px;font-size:10px;font-weight:500;cursor:pointer;letter-spacing:.04em}
+.ctrl-btn:hover{background:#5a52e0}
+.ctrl-sep{width:1px;height:20px;background:#1a2150}
+
+/* Kit pages */
+.kit{background:#080b14;display:flex;flex-direction:column}
+
+/* Cover page */
+.cover{min-height:520px;display:flex;flex-direction:column;justify-content:flex-end;background:#080b14;position:relative;overflow:hidden;border-bottom:1px solid #1a2150}
+.cover-bg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+.cover-content{position:relative;z-index:2;padding:40px 48px}
+.cover-orbit-badge{display:flex;align-items:center;gap:6px;margin-bottom:20px}
+.cob-text{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E}
+.creator-avatar{width:64px;height:64px;border-radius:50%;background:#1a1f35;border:2px solid #3D3A9E;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:22px;color:#a78bfa;margin-bottom:14px}
+.creator-name-display{font-family:Georgia,serif;font-size:36px;color:#e8f0ff;margin-bottom:4px;line-height:1.1}
+.creator-handle{font-size:13px;color:#4a5280;margin-bottom:6px}
+.creator-niche-badge{display:inline-block;background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:3px 12px;font-size:10px;color:#a78bfa;margin-bottom:20px}
+.cover-stats{display:flex;gap:24px;padding-top:20px;border-top:1px solid #1a2150}
+.cstat{display:flex;flex-direction:column;gap:3px}
+.cstat-num{font-family:Georgia,serif;font-size:26px;color:#e8f0ff}
+.cstat-label{font-size:9px;color:#4a5280;letter-spacing:.06em;text-transform:uppercase}
+
+/* Page sections */
+.page-sec{padding:32px 48px;border-bottom:1px solid #1a2150}
+.ps-eye{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+.ps-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:14px}
+.div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+
+/* Gravity score hero */
+.gs-hero{background:#0d1228;border:1px solid #2d3260;border-radius:14px;padding:24px;display:flex;align-items:center;gap:24px;margin-bottom:16px}
+.gs-score-block{text-align:center;min-width:120px}
+.gs-score{font-family:Georgia,serif;font-size:64px;color:#e8f0ff;line-height:1}
+.gs-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-top:4px}
+.gs-rank{display:inline-block;background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:3px 10px;font-size:10px;color:#a78bfa;margin-top:8px}
+.gs-divider{width:1px;background:#1a2150;align-self:stretch}
+.gs-breakdown{flex:1}
+.gsb-title{font-size:11px;font-weight:500;color:#e8f0ff;margin-bottom:10px}
+.gsb-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.gsb-row:last-child{margin-bottom:0}
+.gsb-name{font-size:10px;color:#8892b0;width:140px;flex-shrink:0}
+.gsb-bar-wrap{flex:1;height:4px;background:#1a2150;border-radius:2px}
+.gsb-bar{height:4px;border-radius:2px;background:#6C63FF}
+.gsb-val{font-size:10px;color:#a78bfa;font-family:'Courier New',monospace;width:28px;text-align:right;flex-shrink:0}
+
+/* Platform stats */
+.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.platform-card{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:16px}
+.pc-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.pc-dot{width:10px;height:10px;border-radius:50%}
+.pc-name{font-size:12px;font-weight:500;color:#e8f0ff}
+.pc-handle{font-size:10px;color:#4a5280}
+.pc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pcs-item{text-align:center}
+.pcs-num{font-family:Georgia,serif;font-size:18px;color:#e8f0ff}
+.pcs-label{font-size:8px;color:#4a5280;text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+
+/* Content performance */
+.content-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.content-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;overflow:hidden}
+.cc-thumb{height:80px;display:flex;align-items:center;justify-content:center;background:#0a0e1e;position:relative}
+.cc-tag{position:absolute;top:6px;left:6px;background:#1a1035;border:1px solid #2d1a5e;border-radius:4px;padding:2px 6px;font-size:7px;color:#a78bfa;letter-spacing:.06em}
+.cc-body{padding:10px}
+.cc-title{font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px;line-height:1.4}
+.cc-stats{display:flex;gap:6px}
+.cc-stat{font-size:9px;color:#6b7ab5}
+
+/* Audience demographics */
+.demo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+.demo-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.dc-title{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:10px}
+.dc-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.dc-bar-row:last-child{margin-bottom:0}
+.dc-label{font-size:9px;color:#8892b0;width:70px;flex-shrink:0}
+.dc-bar-wrap{flex:1;height:5px;background:#1a2150;border-radius:3px}
+.dc-bar{height:5px;border-radius:3px}
+.dc-val{font-size:9px;color:#6b7ab5;width:28px;text-align:right;flex-shrink:0;font-family:'Courier New',monospace}
+
+/* Brand services */
+.services-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.service-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.sc-type{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.sc-name{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:6px}
+.sc-desc{font-size:10px;color:#6b7ab5;line-height:1.55;margin-bottom:8px}
+.sc-price{font-family:Georgia,serif;font-size:16px;color:#e8f0ff}
+.sc-price span{font-size:10px;color:#4a5280}
+
+/* Testimonials / brand logos */
+.brands-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.brand-pill{background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:6px 14px;font-size:10px;color:#8892b0;font-weight:500}
+
+/* Benchmark callout */
+.bench-callout{background:#0a0818;border:1px solid #2d1a5e;border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.bc-head{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.bc-badge{background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:2px 8px;font-size:8px;color:#a78bfa}
+.bc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.bcg-item{text-align:center}
+.bcg-val{font-family:Georgia,serif;font-size:22px;color:#e8f0ff;margin-bottom:2px}
+.bcg-label{font-size:9px;color:#6b7ab5;line-height:1.4}
+.bcg-context{font-size:8px;color:#a78bfa;margin-top:2px}
+
+/* CTA / contact */
+.contact-sec{background:#0d1228;border-radius:12px;padding:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.cs-left{}
+.cs-name{font-family:Georgia,serif;font-size:18px;color:#e8f0ff;margin-bottom:4px}
+.cs-sub{font-size:11px;color:#6b7ab5;margin-bottom:10px}
+.cs-contacts{display:flex;gap:12px;flex-wrap:wrap}
+.cs-contact{display:flex;gap:5px;align-items:center}
+.cs-contact-label{font-size:9px;color:#3D3A9E;letter-spacing:.06em;text-transform:uppercase}
+.cs-contact-val{font-size:10px;color:#a78bfa}
+.cs-right{text-align:right}
+.cs-orbit-badge{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:8px}
+.cs-orbit-name{font-family:Georgia,serif;font-size:12px;letter-spacing:3px;color:#4a5280}
+
+/* Footer strip */
+.kit-footer{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 48px;display:flex;align-items:center;justify-content:space-between}
+.kf-brand{display:flex;align-items:center;gap:6px}
+.kf-text{font-size:8px;color:#3D3A9E;letter-spacing:.06em}
+.kf-date{font-size:8px;color:#2d3260}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Controls -->
+<div class="controls">
+  <span class="ctrl-label">Customise</span>
+  <input class="ctrl-input" id="in-name" placeholder="Creator name" value="Jessica Lee" oninput="update()"/>
+  <input class="ctrl-input sm" id="in-handle" placeholder="@handle" value="@jessicalee" oninput="update()"/>
+  <div class="ctrl-sep"></div>
+  <input class="ctrl-input xs" id="in-gs" placeholder="Score" value="78" oninput="update()"/>
+  <input class="ctrl-input xs" id="in-rank" placeholder="Rank" value="#4" oninput="update()"/>
+  <input class="ctrl-input xs" id="in-pool" placeholder="Pool" value="840" oninput="update()"/>
+  <div class="ctrl-sep"></div>
+  <input class="ctrl-input xs" id="in-ig-fol" placeholder="IG followers" value="284K" oninput="update()"/>
+  <input class="ctrl-input xs" id="in-tt-fol" placeholder="TT followers" value="142K" oninput="update()"/>
+  <div class="ctrl-sep"></div>
+  <input class="ctrl-input sm" id="in-email" placeholder="Contact email" value="hi@jessicalee.co" oninput="update()"/>
+  <button class="ctrl-btn" onclick="window.print()">Save PDF</button>
+</div>
+
+<!-- Kit -->
+<div class="kit" id="kit">
+
+  <!-- Cover -->
+  <div class="cover">
+    <svg class="cover-bg" viewBox="0 0 900 520" preserveAspectRatio="xMidYMid slice">
+      <circle cx="750" cy="120" r="320" fill="none" stroke="#6C63FF" stroke-width="0.6" opacity="0.08"/>
+      <circle cx="750" cy="120" r="240" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.06"/>
+      <circle cx="750" cy="120" r="160" fill="none" stroke="#6C63FF" stroke-width="0.4" opacity="0.05"/>
+      <circle cx="750" cy="120" r="80" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06"/>
+      <circle cx="750" cy="120" r="30" fill="#a78bfa" opacity="0.04"/>
+      <circle cx="430" cy="260" r="1.5" fill="#a78bfa" opacity="0.3"/>
+      <circle cx="520" cy="180" r="1" fill="#6C63FF" opacity="0.3"/>
+      <circle cx="600" cy="300" r="1.5" fill="#a78bfa" opacity="0.2"/>
+      <circle cx="350" cy="340" r="1" fill="#6C63FF" opacity="0.25"/>
+    </svg>
+    <div class="cover-content">
+      <div class="cover-orbit-badge">
+        <svg width="14" height="14" viewBox="0 0 96 96">
+          <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+          <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+        </svg>
+        <span class="cob-text">Powered by Orbit · Creator Intelligence</span>
+      </div>
+      <div class="creator-avatar" id="kit-avatar">JL</div>
+      <div class="creator-name-display" id="kit-name">Jessica Lee</div>
+      <div class="creator-handle" id="kit-handle">@jessicalee</div>
+      <div class="creator-niche-badge">Fitness · Strength Training · Lifestyle</div>
+      <div class="cover-stats">
+        <div class="cstat">
+          <span class="cstat-num" id="kit-ig-fol">284K</span>
+          <span class="cstat-label">Instagram</span>
+        </div>
+        <div class="cstat">
+          <span class="cstat-num" id="kit-tt-fol">142K</span>
+          <span class="cstat-label">TikTok</span>
+        </div>
+        <div class="cstat">
+          <span class="cstat-num">426K</span>
+          <span class="cstat-label">Total reach</span>
+        </div>
+        <div class="cstat">
+          <span class="cstat-num">6.8%</span>
+          <span class="cstat-label">Avg engagement</span>
+        </div>
+        <div class="cstat">
+          <span class="cstat-num"><span id="kit-gs-cover">78</span></span>
+          <span class="cstat-label">Gravity Score™</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gravity Score section -->
+  <div class="page-sec">
+    <div class="ps-eye">Orbit intelligence</div>
+    <div class="ps-title">Gravity Score™</div>
+    <div class="div"></div>
+
+    <div class="gs-hero">
+      <div class="gs-score-block">
+        <div class="gs-score" id="kit-gs">78</div>
+        <div class="gs-label">Gravity Score™</div>
+        <div class="gs-rank" id="kit-rank">Top 6% of fitness creators</div>
+      </div>
+      <div class="gs-divider"></div>
+      <div class="gs-breakdown">
+        <div class="gsb-title">Score breakdown</div>
+        <div class="gsb-row">
+          <span class="gsb-name">Return viewer rate</span>
+          <div class="gsb-bar-wrap"><div class="gsb-bar" style="width:82%"></div></div>
+          <span class="gsb-val">82</span>
+        </div>
+        <div class="gsb-row">
+          <span class="gsb-name">Save & share depth</span>
+          <div class="gsb-bar-wrap"><div class="gsb-bar" style="width:76%"></div></div>
+          <span class="gsb-val">76</span>
+        </div>
+        <div class="gsb-row">
+          <span class="gsb-name">Comment quality</span>
+          <div class="gsb-bar-wrap"><div class="gsb-bar" style="width:71%"></div></div>
+          <span class="gsb-val">71</span>
+        </div>
+        <div class="gsb-row">
+          <span class="gsb-name">Cross-platform pull</span>
+          <div class="gsb-bar-wrap"><div class="gsb-bar" style="width:80%"></div></div>
+          <span class="gsb-val">80</span>
+        </div>
+        <div class="gsb-row">
+          <span class="gsb-name">Follower velocity</span>
+          <div class="gsb-bar-wrap"><div class="gsb-bar" style="width:74%"></div></div>
+          <span class="gsb-val">74</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bench-callout">
+      <div class="bc-head">
+        <svg width="12" height="12" viewBox="0 0 96 96">
+          <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="18" cy="48" r="9" fill="#a78bfa"/>
+        </svg>
+        <span class="bc-badge">Orbit Constellation · verified benchmark data</span>
+      </div>
+      <div class="bc-grid">
+        <div class="bcg-item">
+          <div class="bcg-val" id="kit-rank-display">#4</div>
+          <div class="bcg-label">Niche rank among fitness creators</div>
+          <div class="bcg-context" id="kit-pool">of 840 similar creators</div>
+        </div>
+        <div class="bcg-item">
+          <div class="bcg-val">Top 6%</div>
+          <div class="bcg-label">Gravity Score percentile in niche</div>
+          <div class="bcg-context">Fitness · 100K–500K tier</div>
+        </div>
+        <div class="bcg-item">
+          <div class="bcg-val">1.6×</div>
+          <div class="bcg-label">Above niche median engagement rate</div>
+          <div class="bcg-context">Niche median: 4.2%</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:9px;color:#4a5280;line-height:1.6">
+      Gravity Score™ is a proprietary metric calculated by Orbit using first-party connected account data. It measures true audience pull across five dimensions: return viewer rate, save/share depth, comment quality, cross-platform following, and follower velocity. Benchmarks sourced from Orbit's anonymized creator pool of <span id="kit-pool2">840</span> fitness and lifestyle creators. Data period: last 28 days.
+    </div>
+  </div>
+
+  <!-- Platform performance -->
+  <div class="page-sec">
+    <div class="ps-eye">Performance data</div>
+    <div class="ps-title">Platform performance</div>
+    <div class="div"></div>
+
+    <div class="platform-grid">
+      <div class="platform-card">
+        <div class="pc-head">
+          <div class="pc-dot" style="background:#e1306c"></div>
+          <div>
+            <div class="pc-name">Instagram</div>
+            <div class="pc-handle" id="kit-ig-handle">@jessicalee · <span id="kit-ig-fol2">284K</span> followers</div>
+          </div>
+        </div>
+        <div class="pc-stats">
+          <div class="pcs-item">
+            <div class="pcs-num">8.2%</div>
+            <div class="pcs-label">Engagement</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">1.6M</div>
+            <div class="pcs-label">Reach/mo</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">+9.2K</div>
+            <div class="pcs-label">Followers/mo</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">3.4%</div>
+            <div class="pcs-label">Save rate</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">94%</div>
+            <div class="pcs-label">Real followers</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">28d</div>
+            <div class="pcs-label">Data period</div>
+          </div>
+        </div>
+      </div>
+      <div class="platform-card">
+        <div class="pc-head">
+          <div class="pc-dot" style="background:#69c9d0"></div>
+          <div>
+            <div class="pc-name">TikTok</div>
+            <div class="pc-handle" id="kit-tt-handle">@jessicalee · <span id="kit-tt-fol2">142K</span> followers</div>
+          </div>
+        </div>
+        <div class="pc-stats">
+          <div class="pcs-item">
+            <div class="pcs-num">6.7%</div>
+            <div class="pcs-label">Engagement</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">820K</div>
+            <div class="pcs-label">Reach/mo</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">+5.0K</div>
+            <div class="pcs-label">Followers/mo</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">4.1%</div>
+            <div class="pcs-label">Save rate</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">2.4M</div>
+            <div class="pcs-label">Total views/mo</div>
+          </div>
+          <div class="pcs-item">
+            <div class="pcs-num">28d</div>
+            <div class="pcs-label">Data period</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top content -->
+    <div style="font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:10px">Top performing content · last 28 days</div>
+    <div class="content-row">
+      <div class="content-card">
+        <div class="cc-thumb" style="background:#0d1228">
+          <div class="cc-tag">Reel · 14s</div>
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect x="4" y="4" width="24" height="24" rx="4" fill="none" stroke="#2d3260" stroke-width="1"/>
+            <polygon points="12,10 24,16 12,22" fill="#6C63FF" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="cc-body">
+          <div class="cc-title">Morning routine that changed my training</div>
+          <div class="cc-stats">
+            <span class="cc-stat">284K reach</span>
+            <span class="cc-stat">· 11.2% eng</span>
+            <span class="cc-stat">· 3.4× baseline</span>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="cc-thumb" style="background:#0d1228">
+          <div class="cc-tag">Reel · 22s</div>
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect x="4" y="4" width="24" height="24" rx="4" fill="none" stroke="#2d3260" stroke-width="1"/>
+            <polygon points="12,10 24,16 12,22" fill="#6C63FF" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="cc-body">
+          <div class="cc-title">5 things I wish I knew about protein timing</div>
+          <div class="cc-stats">
+            <span class="cc-stat">196K reach</span>
+            <span class="cc-stat">· 9.8% eng</span>
+            <span class="cc-stat">· 2.8× baseline</span>
+          </div>
+        </div>
+      </div>
+      <div class="content-card">
+        <div class="cc-thumb" style="background:#0d1228">
+          <div class="cc-tag">Carousel · 8 slides</div>
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <rect x="4" y="4" width="24" height="24" rx="4" fill="none" stroke="#2d3260" stroke-width="1"/>
+            <rect x="8" y="8" width="16" height="16" rx="2" fill="#a78bfa" opacity="0.2"/>
+            <rect x="10" y="10" width="12" height="12" rx="1" fill="#a78bfa" opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="cc-body">
+          <div class="cc-title">Full week of meals — what I actually eat</div>
+          <div class="cc-stats">
+            <span class="cc-stat">142K reach</span>
+            <span class="cc-stat">· 9.1% eng</span>
+            <span class="cc-stat">· 2.4× baseline</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audience demographics -->
+  <div class="page-sec">
+    <div class="ps-eye">Audience insights</div>
+    <div class="ps-title">Who follows Jessica</div>
+    <div class="div"></div>
+
+    <div class="demo-grid">
+      <div class="demo-card">
+        <div class="dc-title">Gender split</div>
+        <div class="dc-bar-row">
+          <span class="dc-label">Female</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:72%;background:#a78bfa"></div></div>
+          <span class="dc-val">72%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">Male</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:26%;background:#6C63FF"></div></div>
+          <span class="dc-val">26%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">Other</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:2%;background:#3D3A9E"></div></div>
+          <span class="dc-val">2%</span>
+        </div>
+      </div>
+      <div class="demo-card">
+        <div class="dc-title">Age distribution</div>
+        <div class="dc-bar-row">
+          <span class="dc-label">18–24</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:28%;background:#6C63FF"></div></div>
+          <span class="dc-val">28%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">25–34</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:44%;background:#a78bfa"></div></div>
+          <span class="dc-val">44%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">35–44</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:18%;background:#6C63FF"></div></div>
+          <span class="dc-val">18%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">45+</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:10%;background:#3D3A9E"></div></div>
+          <span class="dc-val">10%</span>
+        </div>
+      </div>
+      <div class="demo-card">
+        <div class="dc-title">Top locations</div>
+        <div class="dc-bar-row">
+          <span class="dc-label">United States</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:58%;background:#6C63FF"></div></div>
+          <span class="dc-val">58%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">United Kingdom</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:12%;background:#6C63FF"></div></div>
+          <span class="dc-val">12%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">Australia</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:8%;background:#6C63FF"></div></div>
+          <span class="dc-val">8%</span>
+        </div>
+        <div class="dc-bar-row">
+          <span class="dc-label">Canada</span>
+          <div class="dc-bar-wrap"><div class="dc-bar" style="width:6%;background:#6C63FF"></div></div>
+          <span class="dc-val">6%</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div style="text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff">82%</div>
+        <div style="font-size:9px;color:#4a5280;margin-top:2px;line-height:1.4">Audience active in fitness content weekly</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff">34%</div>
+        <div style="font-size:9px;color:#4a5280;margin-top:2px;line-height:1.4">Audience also follows fitness brands</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#4ade80">94%</div>
+        <div style="font-size:9px;color:#4a5280;margin-top:2px;line-height:1.4">Authentic followers (Orbit verified)</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff">6.2</div>
+        <div style="font-size:9px;color:#4a5280;margin-top:2px;line-height:1.4">Avg posts saved per follower per month</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brand partnership services -->
+  <div class="page-sec">
+    <div class="ps-eye">Partnership opportunities</div>
+    <div class="ps-title">Brand collaboration services</div>
+    <div class="div"></div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="sc-type">Content</div>
+        <div class="sc-name">Dedicated Reel / TikTok</div>
+        <div class="sc-desc">Full creative production — concept, film, edit. Brand integrated naturally into content style. Includes story amplification and caption copy.</div>
+        <div class="sc-price">From $3,500 <span>per post</span></div>
+      </div>
+      <div class="service-card">
+        <div class="sc-type">Content</div>
+        <div class="sc-name">Instagram Stories series</div>
+        <div class="sc-desc">3–5 story sequence with swipe-up link. High conversion format. Includes authentic product integration over 24-hour story arc.</div>
+        <div class="sc-price">From $1,800 <span>per series</span></div>
+      </div>
+      <div class="service-card">
+        <div class="sc-type">Content</div>
+        <div class="sc-name">Content bundle</div>
+        <div class="sc-desc">1 dedicated Reel + 1 story series + 1 carousel post. Best value for launch campaigns or sustained brand presence over 2–3 weeks.</div>
+        <div class="sc-price">From $7,500 <span>per bundle</span></div>
+      </div>
+      <div class="service-card">
+        <div class="sc-type">Long-term</div>
+        <div class="sc-name">Brand ambassador</div>
+        <div class="sc-desc">Monthly content retainer — 2 Reels and 4 stories per month. Exclusive brand integration, co-creation opportunities, and event appearances.</div>
+        <div class="sc-price">From $6,000 <span>per month</span></div>
+      </div>
+      <div class="service-card">
+        <div class="sc-type">Repurposing</div>
+        <div class="sc-name">Usage rights</div>
+        <div class="sc-desc">License created content for use in brand's own paid advertising, website, and marketing materials. Priced separately from organic content.</div>
+        <div class="sc-price">From $1,500 <span>per 6 months</span></div>
+      </div>
+      <div class="service-card">
+        <div class="sc-type">Custom</div>
+        <div class="sc-name">Custom campaigns</div>
+        <div class="sc-desc">Product launches, event coverage, gifting unboxings, and multi-creator campaigns via agency roster. Scope and pricing on request.</div>
+        <div class="sc-price">On request</div>
+      </div>
+    </div>
+
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;font-size:10px;color:#6b7ab5;line-height:1.7;margin-top:4px">
+      <strong style="color:#e8f0ff">Content deliverables include:</strong> Concept development and creative brief · Professional filming and editing · Brand approval round · Organic posting at optimal time (Orbit-verified) · 28-day performance report powered by Orbit analytics · Usage rights as specified above.
+      <br/><br/>
+      <strong style="color:#e8f0ff">Note on pricing:</strong> Rates reflect Gravity Score of <span id="kit-gs-note">78</span> and verified audience quality. Pricing reviewed quarterly based on Orbit performance data.
+    </div>
+  </div>
+
+  <!-- Previous brand work -->
+  <div class="page-sec">
+    <div class="ps-eye">Track record</div>
+    <div class="ps-title">Previous brand partners</div>
+    <div class="div"></div>
+    <div class="brands-row">
+      <div class="brand-pill">Nike Training</div>
+      <div class="brand-pill">Lululemon</div>
+      <div class="brand-pill">Myprotein</div>
+      <div class="brand-pill">Gymshark</div>
+      <div class="brand-pill">Whoop</div>
+      <div class="brand-pill">Oura Ring</div>
+      <div class="brand-pill">AG1</div>
+      <div class="brand-pill">Momentous</div>
+    </div>
+    <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:16px;margin-top:4px">
+      <div style="font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:10px">Campaign performance highlights</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div style="text-align:center;padding:10px;background:#0a0e1e;border-radius:8px">
+          <div style="font-family:Georgia,serif;font-size:18px;color:#4ade80">4.2%</div>
+          <div style="font-size:9px;color:#4a5280;margin-top:2px">Avg click-through rate on swipe-up links</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#0a0e1e;border-radius:8px">
+          <div style="font-family:Georgia,serif;font-size:18px;color:#4ade80">2.8×</div>
+          <div style="font-size:9px;color:#4a5280;margin-top:2px">Average ROAS reported by brand partners</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#0a0e1e;border-radius:8px">
+          <div style="font-family:Georgia,serif;font-size:18px;color:#4ade80">92%</div>
+          <div style="font-size:9px;color:#4a5280;margin-top:2px">Brand renewal rate after first campaign</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="page-sec" style="border-bottom:none">
+    <div class="ps-eye">Get in touch</div>
+    <div class="ps-title">Let's work together</div>
+    <div class="div"></div>
+    <div class="contact-sec">
+      <div class="cs-left">
+        <div class="cs-name" id="kit-contact-name">Jessica Lee</div>
+        <div class="cs-sub">Fitness & lifestyle creator · Instagram & TikTok</div>
+        <div class="cs-contacts">
+          <div class="cs-contact">
+            <span class="cs-contact-label">Email</span>
+            <span class="cs-contact-val" id="kit-email">hi@jessicalee.co</span>
+          </div>
+          <div class="cs-contact">
+            <span class="cs-contact-label">Instagram</span>
+            <span class="cs-contact-val" id="kit-ig-contact">@jessicalee</span>
+          </div>
+          <div class="cs-contact">
+            <span class="cs-contact-label">TikTok</span>
+            <span class="cs-contact-val" id="kit-tt-contact">@jessicalee</span>
+          </div>
+        </div>
+      </div>
+      <div class="cs-right">
+        <div class="cs-orbit-badge">
+          <svg width="14" height="14" viewBox="0 0 96 96">
+            <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+            <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+          </svg>
+          <span class="cs-orbit-name">ORBIT</span>
+        </div>
+        <div style="font-size:9px;color:#4a5280;line-height:1.6;max-width:200px;text-align:right">Data verified by Orbit · Creator Intelligence Platform · Updated March 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-footer">
+    <div class="kf-brand">
+      <svg width="12" height="12" viewBox="0 0 96 96">
+        <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+      </svg>
+      <span class="kf-text">Powered by Orbit · orbitapp.io · Data accuracy guaranteed</span>
+    </div>
+    <span class="kf-date" id="kit-footer-date">Generated March 2026</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+function update(){
+  const name = document.getElementById('in-name').value||'Creator';
+  const handle = document.getElementById('in-handle').value||'@creator';
+  const gs = document.getElementById('in-gs').value||'—';
+  const rank = document.getElementById('in-rank').value||'—';
+  const pool = document.getElementById('in-pool').value||'—';
+  const igFol = document.getElementById('in-ig-fol').value||'—';
+  const ttFol = document.getElementById('in-tt-fol').value||'—';
+  const email = document.getElementById('in-email').value||'—';
+
+  // Initials for avatar
+  const parts = name.trim().split(' ');
+  const initials = parts.map(p=>p[0]||'').join('').toUpperCase().slice(0,2);
+
+  document.getElementById('kit-avatar').textContent = initials;
+  document.getElementById('kit-name').textContent = name;
+  document.getElementById('kit-handle').textContent = handle;
+  document.getElementById('kit-ig-fol').textContent = igFol;
+  document.getElementById('kit-tt-fol').textContent = ttFol;
+  document.getElementById('kit-gs-cover').textContent = gs;
+  document.getElementById('kit-gs').textContent = gs;
+  document.getElementById('kit-rank').textContent = 'Niche rank ' + rank;
+  document.getElementById('kit-rank-display').textContent = rank;
+  document.getElementById('kit-pool').textContent = 'of ' + pool + ' similar creators';
+  document.getElementById('kit-pool2').textContent = pool;
+  document.getElementById('kit-ig-fol2').textContent = igFol;
+  document.getElementById('kit-tt-fol2').textContent = ttFol;
+  document.getElementById('kit-ig-handle').innerHTML = handle + ' · <span>' + igFol + '</span> followers';
+  document.getElementById('kit-tt-handle').innerHTML = handle + ' · <span>' + ttFol + '</span> followers';
+  document.getElementById('kit-contact-name').textContent = name;
+  document.getElementById('kit-email').textContent = email;
+  document.getElementById('kit-ig-contact').textContent = handle;
+  document.getElementById('kit-tt-contact').textContent = handle;
+  document.getElementById('kit-gs-note').textContent = gs;
+}
+</script>
+</body>
+</html>
