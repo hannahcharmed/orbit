@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Onboarding Flow</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:980px;margin:0 auto}
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+.toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:10px 36px;display:flex;gap:6px;flex-wrap:wrap}
+.toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;text-decoration:none;letter-spacing:.04em}
+.toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+.sec{padding:32px 36px;border-bottom:1px solid #1a2150}
+.sec:last-child{border-bottom:none}
+.sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.sec-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+.div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+h3:first-child{margin-top:0}
+h4{font-size:9px;font-weight:500;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin:14px 0 6px}
+p{font-size:11px;color:#8892b0;line-height:1.75;margin-bottom:8px}
+p:last-child{margin-bottom:0}
+strong{color:#c4b5fd;font-weight:500}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.card.accent{border-color:#2d3260}
+.card-eye{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.card-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:5px}
+.card-body{font-size:10px;color:#6b7ab5;line-height:1.6}
+.callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0}
+.callout.v{border-left-color:#a78bfa}
+.callout.g{border-left-color:#4ade80}
+.callout.r{border-left-color:#f09595}
+.callout.a{border-left-color:#EF9F27}
+.cl-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+.callout.v .cl-label{color:#a78bfa}
+.callout.g .cl-label{color:#4ade80}
+.callout.r .cl-label{color:#f09595}
+.callout.a .cl-label{color:#EF9F27}
+.cl-text{font-size:11px;color:#8892b0;line-height:1.6}
+.cl-text strong{color:#e8f0ff;font-weight:500}
+.bullet{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.bullet:last-child{margin-bottom:0}
+.bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:5px;flex-shrink:0}
+.bdot.v{background:#a78bfa}
+.bdot.g{background:#4ade80}
+.btext{font-size:11px;color:#8892b0;line-height:1.55}
+.btext strong{color:#c4b5fd;font-weight:500}
+
+/* Step flow */
+.step-flow{display:flex;flex-direction:column;gap:0}
+.step-item{display:flex;gap:0}
+.step-left{display:flex;flex-direction:column;align-items:center;width:56px;flex-shrink:0}
+.step-num-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:14px;flex-shrink:0;z-index:1}
+.step-connector{width:2px;flex:1;min-height:16px}
+.step-content{flex:1;padding:0 0 28px 16px}
+.step-eye{font-size:8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+.step-title{font-family:Georgia,serif;font-size:16px;color:#e8f0ff;margin-bottom:4px}
+.step-time{font-size:9px;color:#4a5280;margin-bottom:10px}
+.step-body{font-size:11px;color:#8892b0;line-height:1.7;margin-bottom:10px}
+
+/* Screen mockups */
+.screen{background:#080b14;border:1px solid #1a2150;border-radius:12px;overflow:hidden;margin-bottom:10px}
+.screen-bar{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:8px 14px;display:flex;align-items:center;gap:6px}
+.screen-dot{width:6px;height:6px;border-radius:50%}
+.screen-title{font-size:9px;color:#4a5280;margin-left:6px;letter-spacing:.04em}
+.screen-body{padding:16px}
+
+/* Form elements mockup */
+.mock-input{background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:8px 12px;font-size:11px;color:#6b7ab5;margin-bottom:8px;width:100%}
+.mock-input.focus{border-color:#6C63FF;color:#e8f0ff}
+.mock-btn{background:#6C63FF;border-radius:6px;padding:9px 20px;font-size:11px;font-weight:500;color:#fff;text-align:center;cursor:pointer;margin-top:4px}
+.mock-btn.ghost{background:transparent;border:1px solid #2d3260;color:#a0aec0}
+.mock-label{font-size:9px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.mock-eye{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;text-align:center}
+.mock-h1{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:4px;text-align:center}
+.mock-sub{font-size:10px;color:#6b7ab5;text-align:center;margin-bottom:16px;line-height:1.5}
+.mock-divider{height:1px;background:#1a2150;margin:12px 0;position:relative}
+.mock-divider span{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:#080b14;padding:0 8px;font-size:9px;color:#4a5280}
+.mock-platform-btn{background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:9px 14px;display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer}
+.mock-platform-btn.connected{border-color:#173404;background:#0a1a10}
+.mpb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mpb-name{font-size:11px;color:#e8f0ff;flex:1}
+.mpb-status{font-size:9px}
+.mpb-connected{color:#4ade80}
+.mpb-action{color:#6C63FF}
+.mock-gravity{background:#0d1228;border:1px solid #2d3260;border-radius:10px;padding:16px;text-align:center;margin-bottom:8px}
+.mg-eye{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.mg-score{font-family:Georgia,serif;font-size:48px;color:#e8f0ff;line-height:1}
+.mg-label{font-size:10px;color:#a78bfa;margin-top:4px}
+.mock-insight{background:#0a0818;border:1px solid #2d1a5e;border-radius:8px;padding:10px 12px;margin-bottom:6px}
+.mi-badge{display:inline-block;background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:1px 7px;font-size:8px;color:#a78bfa;margin-bottom:5px}
+.mi-text{font-size:10px;color:#8892b0;line-height:1.6}
+.mi-text strong{color:#c4b5fd;font-weight:500}
+.mock-progress{display:flex;gap:4px;margin-bottom:12px}
+.mp-dot{flex:1;height:3px;border-radius:2px}
+.mp-done{background:#6C63FF}
+.mp-active{background:#a78bfa}
+.mp-todo{background:#1a2150}
+.niche-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.niche-btn{background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:8px 10px;font-size:10px;color:#8892b0;cursor:pointer;text-align:center}
+.niche-btn.selected{border-color:#6C63FF;color:#e8f0ff;background:#1a1f35}
+.consent-box{background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
+.cb-check{width:14px;height:14px;border-radius:3px;border:1px solid #2d3260;flex-shrink:0;margin-top:1px}
+.cb-check.checked{background:#6C63FF;border-color:#6C63FF}
+.cb-text{font-size:10px;color:#8892b0;line-height:1.5}
+.cb-text strong{color:#c4b5fd}
+
+/* Email sequence */
+.email-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;overflow:hidden;margin-bottom:10px}
+.email-card:last-child{margin-bottom:0}
+.ec-head{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.ec-day{font-size:9px;color:#a78bfa;letter-spacing:.06em}
+.ec-subject{font-size:11px;font-weight:500;color:#e8f0ff}
+.ec-goal{font-size:9px;color:#4a5280}
+.ec-body{padding:12px 14px}
+.ec-preview{font-size:10px;color:#6b7ab5;line-height:1.6;margin-bottom:8px}
+.ec-cta{font-size:9px;color:#6C63FF;font-weight:500}
+
+/* Metrics */
+.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.metric-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;text-align:center}
+.mc-num{font-family:Georgia,serif;font-size:22px;color:#e8f0ff;margin-bottom:3px}
+.mc-label{font-size:9px;color:#4a5280;line-height:1.4;text-transform:uppercase;letter-spacing:.05em}
+.mc-target{font-size:9px;color:#a78bfa;margin-top:3px}
+
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:7px 10px;border-bottom:1px solid #1a2150;background:#090d1c}
+.tbl td{font-size:10px;color:#8892b0;padding:8px 10px;border-bottom:1px solid #090d1c;vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td strong{color:#c4b5fd}
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase">Onboarding Flow</span>
+    <span class="ver">v1.0 · 2026</span>
+  </div>
+</div>
+
+<div class="toc">
+  <a class="toc-item" href="#principles">Principles</a>
+  <a class="toc-item" href="#flow">Step-by-step flow</a>
+  <a class="toc-item" href="#screens">Screen specs</a>
+  <a class="toc-item" href="#emails">Email sequence</a>
+  <a class="toc-item" href="#empty">Empty states</a>
+  <a class="toc-item" href="#manager">Manager flow</a>
+  <a class="toc-item" href="#metrics">Success metrics</a>
+</div>
+
+<!-- Principles -->
+<div class="sec" id="principles">
+  <div class="sec-num">Section 01</div>
+  <div class="sec-title">Onboarding principles</div>
+  <div class="div"></div>
+  <div class="callout v">
+    <div class="cl-label">The single most important moment</div>
+    <div class="cl-text">The onboarding flow is the product's most important conversion moment. A creator who sees their Gravity Score for the first time and thinks <strong>"I didn't know that"</strong> is a retained user. A creator who connects their account and sees a blank dashboard is gone. Every design decision in onboarding must serve one goal: <strong>time to first insight under 3 minutes.</strong></div>
+  </div>
+
+  <h3>Design principles</h3>
+  <div class="g3" style="margin-top:8px">
+    <div class="card accent">
+      <div class="card-eye">Principle 1</div>
+      <div class="card-title">Value before friction</div>
+      <div class="card-body">Show the creator something genuinely useful before asking for anything beyond basic signup. The Gravity Score appears the moment the first platform connects — no waiting screen, no "we're crunching your data" delay over 60 seconds.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Principle 2</div>
+      <div class="card-title">One ask at a time</div>
+      <div class="card-body">Never present multiple decisions simultaneously. Each screen has exactly one primary action. Progress indicators show creators where they are — never more than 5 steps to the first insight.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Principle 3</div>
+      <div class="card-title">Every empty state teaches</div>
+      <div class="card-body">Empty states are not failures — they're opportunities. Every metric that can't yet be calculated gets a plain-English explanation of what it is and what will populate it. No blank boxes.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Principle 4</div>
+      <div class="card-title">The wow moment is non-negotiable</div>
+      <div class="card-body">Every creator must experience at least one "I didn't know that" moment during onboarding. For most creators, this is seeing their Gravity Score for the first time and their niche rank. Design explicitly for this reaction.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Principle 5</div>
+      <div class="card-title">Consent is respected, not buried</div>
+      <div class="card-body">The benchmarking opt-in is presented clearly and honestly — not buried in settings or pre-checked. Creators who opt in knowingly are more trusting users. Creators who feel tricked churn and leave bad reviews.</div>
+    </div>
+    <div class="card accent">
+      <div class="card-eye">Principle 6</div>
+      <div class="card-title">Mobile-first, always</div>
+      <div class="card-body">Creators will onboard on their phones. Every screen is designed for mobile first — large touch targets, thumb-friendly layouts, no horizontal scrolling. Desktop is a secondary consideration.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Step-by-step flow -->
+<div class="sec" id="flow">
+  <div class="sec-num">Section 02</div>
+  <div class="sec-title">Step-by-step onboarding flow</div>
+  <div class="div"></div>
+
+  <div class="step-flow">
+
+    <!-- Step 1 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#1a1f35;border:1px solid #3D3A9E;color:#a78bfa">1</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#3D3A9E">Landing / acquisition</div>
+        <div class="step-title">The hook — "Get your free Gravity Score"</div>
+        <div class="step-time">0 seconds — before signup</div>
+        <div class="step-body">The primary CTA on the landing page is not "Sign up" or "Try Orbit" — it's <strong>"Get your free Gravity Score."</strong> This is specific, personal, and outcome-oriented. A creator doesn't know what Orbit is but they immediately want to know what their Gravity Score is.</div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-eye">Landing page copy</div>
+            <div class="card-body" style="font-family:Georgia,serif;font-size:12px;color:#e8f0ff;font-style:italic;line-height:1.6">"Every creator has a gravitational pull. Yours is a number. Get it free in 60 seconds."</div>
+          </div>
+          <div class="card">
+            <div class="card-eye">Supporting copy</div>
+            <div class="card-body">Connect Instagram → see your Gravity Score, niche rank, and first AI insight. No credit card. Takes 60 seconds. Used by 800+ fitness and lifestyle creators.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#1a1f35;border:1px solid #6C63FF;color:#6C63FF">2</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#6C63FF">Screen 1 of 4</div>
+        <div class="step-title">Account creation</div>
+        <div class="step-time">Target: under 30 seconds</div>
+        <div class="step-body">Email + password only. No name, no phone, no credit card. The lighter the signup form, the higher the completion rate. Name and profile details collected later — after the creator has seen value. Google/Apple OAuth available as one-tap alternatives.</div>
+        <div class="callout">
+          <div class="cl-label">Copy principle</div>
+          <div class="cl-text">The page title is <strong>"Your Gravity Score is waiting."</strong> Not "Create your account." The framing keeps the promise of value front and center throughout the friction of signup.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#1a1f35;border:1px solid #6C63FF;color:#6C63FF">3</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#6C63FF">Screen 2 of 4</div>
+        <div class="step-title">Niche selection</div>
+        <div class="step-time">Target: under 15 seconds</div>
+        <div class="step-body">A single question: <strong>"What kind of creator are you?"</strong> Six large tap targets. This is not just UX — it's the data that makes benchmarking meaningful. A creator who selects "fitness" immediately gets relevant peer comparisons. No niche = generic benchmarks = less value.</div>
+        <div class="g2">
+          <div class="card">
+            <div class="card-eye">Design spec</div>
+            <div class="card-body">Large grid of 6 niche options with icon and label. Single select. Selected state uses Orbit Blue border. One tap — no confirm button needed. Auto-advances to next screen after 600ms delay.</div>
+          </div>
+          <div class="card">
+            <div class="card-eye">Sub-niche (optional)</div>
+            <div class="card-body">After selecting "Fitness", a secondary row appears: strength training, yoga, running, HIIT, nutrition, general. Optional — can skip. The sub-niche improves Constellation matching but isn't required.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#1a1035;border:1px solid #a78bfa;color:#a78bfa">4</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#a78bfa">Screen 3 of 4 — critical moment</div>
+        <div class="step-title">Connect Instagram</div>
+        <div class="step-time">Target: under 60 seconds</div>
+        <div class="step-body">The most important screen in the entire flow. This is where creators either commit or abandon. The frame is not "grant us permissions" — it's <strong>"let us calculate your score."</strong> Everything on this screen is building toward that specific outcome.</div>
+        <div class="callout a">
+          <div class="cl-label">Drop-off risk</div>
+          <div class="cl-text">The OAuth consent screen is where most onboarding flows lose creators. The Meta OAuth screen looks alarming — it lists all permissions in technical language. <strong>Brief the creator before they hit the OAuth screen</strong> with a plain-English explanation of exactly what Orbit accesses and why. Reduce surprise = reduce abandonment.</div>
+        </div>
+        <div class="g2" style="margin-top:10px">
+          <div class="card">
+            <div class="card-eye">Pre-OAuth screen copy</div>
+            <div class="card-body" style="line-height:1.7">
+              "To calculate your Gravity Score, Orbit reads:<br/>
+              ✓ Your post performance (likes, reach, saves)<br/>
+              ✓ Your follower count and growth<br/>
+              ✓ Your audience demographics<br/><br/>
+              We never access your messages, passwords, or payment info. You can disconnect at any time."
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-eye">If they hesitate</div>
+            <div class="card-body">Show a small callout: <strong>"Used by 800+ fitness creators."</strong> Social proof at the moment of hesitation is the most effective conversion tool. Also show a link to the Privacy Policy for those who want detail — don't hide it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 — THE WOW -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#1a1035;border:2px solid #a78bfa;color:#a78bfa">5</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#a78bfa">Screen 4 of 4 — the wow moment</div>
+        <div class="step-title">Gravity Score reveal</div>
+        <div class="step-time">Target: under 90 seconds from connect</div>
+        <div class="step-body">This is the moment the entire onboarding has been building toward. The Gravity Score animates in — counting up from 0 to the creator's actual score over 1.5 seconds. Below it: niche rank, one benchmark comparison, and a single AI insight. No dashboard clutter. Just the score and what it means.</div>
+        <div class="callout g">
+          <div class="cl-label">Animation spec</div>
+          <div class="cl-text">Score counts up from 0 over 1.5s with an easing curve. Concentric pulse rings radiate from the score as it settles. Niche rank fades in 500ms after score settles. AI insight fades in 800ms after that. <strong>Never show a loading spinner on this screen.</strong> Pre-calculate in the background while the creator is on the OAuth screen so the reveal is instant.</div>
+        </div>
+        <div class="g2" style="margin-top:10px">
+          <div class="card accent">
+            <div class="card-eye">Score reveal copy</div>
+            <div class="card-body" style="font-family:Georgia,serif;font-size:12px;color:#e8f0ff;font-style:italic">"Your Gravity Score is 72. That puts you in the top 18% of fitness creators at your tier. Here's what's driving it — and what would push it higher."</div>
+          </div>
+          <div class="card accent">
+            <div class="card-eye">First AI insight</div>
+            <div class="card-body">One specific, data-grounded insight. Never generic. Example: "Your Tuesday posts get 2.1× the engagement of your weekend posts. Your audience is most active on weekday mornings." This is the "I didn't know that" moment.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#0d1228;border:1px solid #1a2150;color:#4a5280">6</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#3D3A9E">Post-reveal</div>
+        <div class="step-title">Benchmarking consent</div>
+        <div class="step-time">30 seconds</div>
+        <div class="step-body">After the wow moment — and only after — ask for benchmarking opt-in. The creator is now in a positive emotional state having seen value. The ask is honest and clear. This is not pre-checked.</div>
+        <div class="card" style="max-width:380px">
+          <div class="card-eye">Consent screen copy</div>
+          <div style="margin-top:8px">
+            <div class="consent-box">
+              <div class="cb-check"></div>
+              <div class="cb-text"><strong>Help improve benchmarking for all creators.</strong> Your anonymized performance data can be included in our niche benchmarking pool. We never share your individual data — only aggregates. You can opt out any time in Settings.</div>
+            </div>
+            <div style="font-size:9px;color:#4a5280;margin-top:6px">This is optional. Orbit works fully without it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#0d1228;border:1px solid #1a2150;color:#4a5280">7</div>
+        <div class="step-connector" style="background:#1a2150"></div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#3D3A9E">Post-reveal</div>
+        <div class="step-title">Connect second platform (optional)</div>
+        <div class="step-time">Optional — skippable</div>
+        <div class="step-body">Prompt to connect TikTok if Instagram was primary, or vice versa. Framed as value-add: <strong>"See how your content performs differently across platforms."</strong> Skip option is prominent — never trap a creator in a multi-step connection flow they didn't ask for.</div>
+      </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step-item">
+      <div class="step-left">
+        <div class="step-num-circle" style="background:#0a1a10;border:1px solid #173404;color:#4ade80">8</div>
+      </div>
+      <div class="step-content">
+        <div class="step-eye" style="color:#4ade80">Activation complete</div>
+        <div class="step-title">Welcome to the dashboard</div>
+        <div class="step-time">Creator is now activated</div>
+        <div class="step-body">Land on the dashboard — not a "setup complete" screen. The creator's data is already populated. A single coach tip floats in the bottom right with the week's top recommended action. First Dark Matter briefing email scheduled for the following Monday morning.</div>
+        <div class="callout g">
+          <div class="cl-label">Activation definition</div>
+          <div class="cl-text">A creator is <strong>activated</strong> when they have: connected at least one platform, seen their Gravity Score, and viewed at least one AI insight. This is the metric to optimize — not account creation. Target: <strong>60% of signups reach activation within 24 hours.</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen specs -->
+<div class="sec" id="screens">
+  <div class="sec-num">Section 03</div>
+  <div class="sec-title">Screen mockups</div>
+  <div class="div"></div>
+
+  <div class="g2">
+
+    <!-- Screen 1: Signup -->
+    <div>
+      <h4>Screen 1 — Account creation</h4>
+      <div class="screen">
+        <div class="screen-bar">
+          <div class="screen-dot" style="background:#f09595"></div>
+          <div class="screen-dot" style="background:#EF9F27"></div>
+          <div class="screen-dot" style="background:#4ade80"></div>
+          <span class="screen-title">orbitapp.io/signup</span>
+        </div>
+        <div class="screen-body">
+          <div class="mock-progress" style="margin-bottom:16px">
+            <div class="mp-dot mp-active"></div>
+            <div class="mp-dot mp-todo"></div>
+            <div class="mp-dot mp-todo"></div>
+            <div class="mp-dot mp-todo"></div>
+          </div>
+          <div class="mock-eye">Your Gravity Score is waiting</div>
+          <div class="mock-h1">Create your account</div>
+          <div class="mock-sub">Free forever · no credit card · 60 seconds</div>
+          <div class="mock-btn" style="background:#0d1228;border:1px solid #1a2150;color:#e8f0ff;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Continue with Google
+          </div>
+          <div class="mock-divider"><span>or</span></div>
+          <div class="mock-label">Email</div>
+          <div class="mock-input focus">jessica@example.com</div>
+          <div class="mock-label">Password</div>
+          <div class="mock-input">••••••••••••</div>
+          <div class="mock-btn">Create account →</div>
+          <div style="text-align:center;margin-top:10px;font-size:9px;color:#4a5280">By signing up you agree to our <span style="color:#6C63FF">Terms</span> and <span style="color:#6C63FF">Privacy Policy</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Niche -->
+    <div>
+      <h4>Screen 2 — Niche selection</h4>
+      <div class="screen">
+        <div class="screen-bar">
+          <div class="screen-dot" style="background:#f09595"></div>
+          <div class="screen-dot" style="background:#EF9F27"></div>
+          <div class="screen-dot" style="background:#4ade80"></div>
+          <span class="screen-title">orbitapp.io/onboarding/niche</span>
+        </div>
+        <div class="screen-body">
+          <div class="mock-progress">
+            <div class="mp-dot mp-done"></div>
+            <div class="mp-dot mp-active"></div>
+            <div class="mp-dot mp-todo"></div>
+            <div class="mp-dot mp-todo"></div>
+          </div>
+          <div style="margin:14px 0 6px;font-family:Georgia,serif;font-size:16px;color:#e8f0ff">What kind of creator are you?</div>
+          <div style="font-size:10px;color:#6b7ab5;margin-bottom:14px">This helps us find your true peer group for benchmarking.</div>
+          <div class="niche-grid">
+            <div class="niche-btn selected">Fitness</div>
+            <div class="niche-btn">Lifestyle</div>
+            <div class="niche-btn">Wellness</div>
+            <div class="niche-btn">Nutrition</div>
+            <div class="niche-btn">Beauty</div>
+            <div class="niche-btn">Travel</div>
+          </div>
+          <div style="font-size:9px;color:#3D3A9E;margin-bottom:8px">Sub-category (optional)</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <div class="niche-btn selected" style="font-size:9px;padding:5px 8px">Strength training</div>
+            <div class="niche-btn" style="font-size:9px;padding:5px 8px">Yoga</div>
+            <div class="niche-btn" style="font-size:9px;padding:5px 8px">Running</div>
+            <div class="niche-btn" style="font-size:9px;padding:5px 8px">HIIT</div>
+            <div class="niche-btn" style="font-size:9px;padding:5px 8px">General</div>
+          </div>
+          <div class="mock-btn" style="margin-top:14px">Continue →</div>
+          <div style="text-align:center;font-size:9px;color:#4a5280;margin-top:6px">You can change this in settings anytime</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Connect -->
+    <div>
+      <h4>Screen 3 — Connect platform</h4>
+      <div class="screen">
+        <div class="screen-bar">
+          <div class="screen-dot" style="background:#f09595"></div>
+          <div class="screen-dot" style="background:#EF9F27"></div>
+          <div class="screen-dot" style="background:#4ade80"></div>
+          <span class="screen-title">orbitapp.io/onboarding/connect</span>
+        </div>
+        <div class="screen-body">
+          <div class="mock-progress">
+            <div class="mp-dot mp-done"></div>
+            <div class="mp-dot mp-done"></div>
+            <div class="mp-dot mp-active"></div>
+            <div class="mp-dot mp-todo"></div>
+          </div>
+          <div style="margin:14px 0 4px;font-family:Georgia,serif;font-size:16px;color:#e8f0ff">Connect your first platform</div>
+          <div style="font-size:10px;color:#6b7ab5;margin-bottom:14px">Orbit reads your analytics — it doesn't post, message, or change anything.</div>
+          <div class="mock-platform-btn">
+            <div class="mpb-dot" style="background:#e1306c"></div>
+            <span class="mpb-name">Connect Instagram</span>
+            <span class="mpb-action">Connect →</span>
+          </div>
+          <div class="mock-platform-btn">
+            <div class="mpb-dot" style="background:#69c9d0"></div>
+            <span class="mpb-name">Connect TikTok</span>
+            <span class="mpb-action">Connect →</span>
+          </div>
+          <div style="background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:10px;margin-top:10px">
+            <div style="font-size:9px;color:#3D3A9E;margin-bottom:5px;letter-spacing:.08em;text-transform:uppercase">What Orbit accesses</div>
+            <div style="font-size:9px;color:#6b7ab5;line-height:1.7">
+              ✓ Post performance (likes, reach, saves, shares)<br/>
+              ✓ Follower count and growth rate<br/>
+              ✓ Audience demographics<br/>
+              ✗ Private messages · passwords · payment info
+            </div>
+          </div>
+          <div style="text-align:center;font-size:9px;color:#4a5280;margin-top:10px">🔒 Read-only access · disconnect any time · <span style="color:#6C63FF">Privacy Policy</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Gravity Score reveal -->
+    <div>
+      <h4>Screen 4 — Gravity Score reveal</h4>
+      <div class="screen">
+        <div class="screen-bar">
+          <div class="screen-dot" style="background:#f09595"></div>
+          <div class="screen-dot" style="background:#EF9F27"></div>
+          <div class="screen-dot" style="background:#4ade80"></div>
+          <span class="screen-title">orbitapp.io/onboarding/score</span>
+        </div>
+        <div class="screen-body">
+          <div class="mock-progress">
+            <div class="mp-dot mp-done"></div>
+            <div class="mp-dot mp-done"></div>
+            <div class="mp-dot mp-done"></div>
+            <div class="mp-dot mp-active"></div>
+          </div>
+          <div class="mock-gravity">
+            <div class="mg-eye">Your Gravity Score</div>
+            <div class="mg-score">72</div>
+            <div class="mg-label">Top 18% of fitness creators · #14 of 840</div>
+            <div style="display:flex;gap:6px;justify-content:center;margin-top:10px">
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:6px 12px;text-align:center">
+                <div style="font-family:Georgia,serif;font-size:16px;color:#e8f0ff">6.8%</div>
+                <div style="font-size:8px;color:#4a5280">Engagement rate</div>
+              </div>
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:6px 12px;text-align:center">
+                <div style="font-family:Georgia,serif;font-size:16px;color:#4ade80">+2.1K</div>
+                <div style="font-size:8px;color:#4a5280">Followers this month</div>
+              </div>
+            </div>
+          </div>
+          <div class="mock-insight">
+            <div class="mi-badge">Orbit AI · first insight</div>
+            <div class="mi-text"><strong>Your Tuesday posts get 2.1× the engagement of your weekend posts.</strong> Your audience is most active weekday mornings 6–9am. You posted 4 of your last 5 posts on weekends.</div>
+          </div>
+          <div class="mock-btn">Go to my dashboard →</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Email sequence -->
+<div class="sec" id="emails">
+  <div class="sec-num">Section 04</div>
+  <div class="sec-title">Post-signup email sequence</div>
+  <div class="div"></div>
+  <p>Seven emails over 21 days. Each email has one job: move the creator one step closer to the behaviour that drives retention. After day 21, creators receive only the weekly Dark Matter briefing.</p>
+
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Immediately on signup</span>
+        <span class="ec-subject">Your Gravity Score is ready</span>
+        <span class="ec-goal">Goal: activation</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">Triggered the moment the score is calculated. Subject line uses the actual score: "Your Gravity Score is 72 — here's what it means." Body shows the score, niche rank, and links directly to the dashboard. One CTA only: "See your full breakdown →"</div>
+        <div class="ec-cta">CTA: See your full breakdown →</div>
+      </div>
+    </div>
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Day 1</span>
+        <span class="ec-subject">The one thing to change this week</span>
+        <span class="ec-goal">Goal: first action taken</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">One specific, actionable recommendation based on their data. Not a feature tour — a real coaching moment. Example: "Your data shows posting Tuesday at 7am would likely increase your reach by 30%. Here's why." Reinforces the "intelligent coach" brand position.</div>
+        <div class="ec-cta">CTA: See your posting analysis →</div>
+      </div>
+    </div>
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Day 3</span>
+        <span class="ec-subject">Your Dark Matter signals this week</span>
+        <span class="ec-goal">Goal: Dark Matter habit formation</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">First taste of the Dark Matter briefing — top 3 trending signals in their niche. Teases the weekly briefing as a product they'll want to keep receiving. Shows the value of the Pro tier without mentioning pricing yet.</div>
+        <div class="ec-cta">CTA: See all 10 signals this week →</div>
+      </div>
+    </div>
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Day 7</span>
+        <span class="ec-subject">How you compare to the top 10% in your niche</span>
+        <span class="ec-goal">Goal: Constellation feature discovery</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">Show the creator their benchmark position with a teaser — they can see their rank but the detailed gap analysis requires Pro. Framed as: "You're #14 of 840. Here's the one thing that separates the top 10 from everyone else." The gap analysis is behind the paywall.</div>
+        <div class="ec-cta">CTA: See what top creators do differently →</div>
+      </div>
+    </div>
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Day 10</span>
+        <span class="ec-subject">Connect TikTok — see the full picture</span>
+        <span class="ec-goal">Goal: second platform connection</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">If only one platform connected, prompt the second. Framed as value: "Your Instagram Gravity Score is 72. Creators who connect TikTok typically see their overall score shift by ±8 points. What's yours?" Not a push — a question that creates curiosity.</div>
+        <div class="ec-cta">CTA: Connect TikTok in 30 seconds →</div>
+      </div>
+    </div>
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Day 14</span>
+        <span class="ec-subject">Your Gravity Score this week: 74 (+2)</span>
+        <span class="ec-goal">Goal: score improvement reinforcement</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">A personalised weekly score update. If the score went up — celebrate it and explain why. If it went down — explain what changed and what to do. This email trains creators to check their score regularly and associate Orbit with growth progress.</div>
+        <div class="ec-cta">CTA: See what moved your score →</div>
+      </div>
+    </div>
+    <div class="email-card">
+      <div class="ec-head">
+        <span class="ec-day">Day 21</span>
+        <span class="ec-subject">You've been on Orbit 3 weeks — here's your progress</span>
+        <span class="ec-goal">Goal: Pro upgrade conversion</span>
+      </div>
+      <div class="ec-body">
+        <div class="ec-preview">A mini performance report showing their progress since joining. What changed. What's still locked on free tier. The upgrade pitch is here — but framed as unlocking more of their own data, not as a sales message. "Your Gravity Score breakdown, full gap analysis, and Escape Velocity alerts are waiting."</div>
+        <div class="ec-cta">CTA: Unlock Pro — $29/month →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Empty states -->
+<div class="sec" id="empty">
+  <div class="sec-num">Section 05</div>
+  <div class="sec-title">Empty state specifications</div>
+  <div class="div"></div>
+  <p>Every empty state is an opportunity to educate, not a failure to display. Each one must explain what the feature is, what data will populate it, and what action to take.</p>
+
+  <table class="tbl">
+    <tr><th>Feature</th><th>Condition</th><th>Headline</th><th>Body</th><th>CTA</th></tr>
+    <tr>
+      <td><strong>Gravity Score</strong></td>
+      <td>No platform connected</td>
+      <td>"Your score is waiting"</td>
+      <td>Connect Instagram or TikTok to calculate your Gravity Score — the measure of your true audience pull. Takes 60 seconds.</td>
+      <td>Connect a platform</td>
+    </tr>
+    <tr>
+      <td><strong>Escape Velocity</strong></td>
+      <td>No breakout posts yet</td>
+      <td>"No breakout posts yet"</td>
+      <td>When one of your posts performs 2.5× above your baseline, Orbit flags it instantly and gives you a 48-hour playbook to capitalize. Keep posting — it's coming.</td>
+      <td>See how it works</td>
+    </tr>
+    <tr>
+      <td><strong>Constellation</strong></td>
+      <td>Fewer than 30 posts</td>
+      <td>"Building your constellation"</td>
+      <td>We need at least 30 posts of history to find your true peer group. You have [X] posts so far. [30−X] more posts and your niche rank will appear.</td>
+      <td>See what benchmarking shows</td>
+    </tr>
+    <tr>
+      <td><strong>Orbit Path</strong></td>
+      <td>Fewer than 14 days of data</td>
+      <td>"Your trajectory is forming"</td>
+      <td>Orbit Path shows where your growth is headed in the next 90 days. We need 2 weeks of data to build your projection. Come back on [date].</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td><strong>Dark Matter</strong></td>
+      <td>No niche selected</td>
+      <td>"Tell us your niche"</td>
+      <td>Dark Matter trend signals are filtered specifically to your creator category. Select your niche to see what's building momentum in your space right now.</td>
+      <td>Select niche</td>
+    </tr>
+    <tr>
+      <td><strong>AI insights</strong></td>
+      <td>Processing (under 60s)</td>
+      <td>"Analysing your content"</td>
+      <td>Orbit is reading your last 90 days of performance data. Your first insight will be ready in about [X] seconds. This only happens once.</td>
+      <td>— (auto-updates)</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Manager onboarding -->
+<div class="sec" id="manager">
+  <div class="sec-num">Section 06</div>
+  <div class="sec-title">Talent manager onboarding flow</div>
+  <div class="div"></div>
+  <p>The manager onboarding is a distinct flow from the creator flow. Managers don't connect their own social accounts — they invite creators to join their roster. The flow must establish trust on both sides: the manager trusts Orbit with sensitive roster data; creators trust that their manager's access is appropriate.</p>
+
+  <div class="g2">
+    <div>
+      <h4>Manager onboarding steps</h4>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="card">
+          <div class="card-eye">Step 1</div>
+          <div class="card-title">Agency account creation</div>
+          <div class="card-body">Same signup as creators but role selection is "Talent manager / agency." Requires agency name and business email domain. Unlocks the Agency pricing tier and Mission Control.</div>
+        </div>
+        <div class="card">
+          <div class="card-eye">Step 2</div>
+          <div class="card-title">Agency profile setup</div>
+          <div class="card-body">Agency name, logo upload, primary niche focus (fitness/lifestyle), and roster size estimate. This data is used to configure Mission Control defaults and for benchmarking pool weighting.</div>
+        </div>
+        <div class="card">
+          <div class="card-eye">Step 3</div>
+          <div class="card-title">Invite first creator</div>
+          <div class="card-body">Enter creator's email → they receive an invitation to join Orbit under the agency's roster. Creator accepts and completes their own onboarding flow. Manager can see their data once the creator connects a platform and grants access.</div>
+        </div>
+        <div class="card">
+          <div class="card-eye">Step 4</div>
+          <div class="card-title">Mission Control reveal</div>
+          <div class="card-body">Once the first creator is onboarded, Mission Control shows the roster overview. Empty state explains what each column shows and what will populate as more creators join. Manager tutorial tooltip sequence walks through the key views.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Creator consent for manager access</h4>
+      <div class="callout r">
+        <div class="cl-label">Critical trust requirement</div>
+        <div class="cl-text">Creators must explicitly consent to their manager seeing their data. This cannot be assumed or bypassed. The consent screen must clearly state <strong>exactly what the manager can see</strong> — and what they cannot.</div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <div class="card-eye">Creator consent screen copy</div>
+        <div class="card-body" style="line-height:1.7;margin-top:6px">
+          <strong>Your manager [Name] at [Agency] is inviting you to connect on Orbit.</strong><br/><br/>
+          If you accept, they will be able to see:<br/>
+          ✓ Your Gravity Score and history<br/>
+          ✓ Your performance metrics and trends<br/>
+          ✓ Your benchmark position<br/>
+          ✓ Escape velocity alerts<br/><br/>
+          They cannot see:<br/>
+          ✗ Your private messages<br/>
+          ✗ Your account password<br/>
+          ✗ Your billing information<br/><br/>
+          You can revoke access at any time in Settings.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success metrics -->
+<div class="sec" id="metrics">
+  <div class="sec-num">Section 07</div>
+  <div class="sec-title">Onboarding success metrics</div>
+  <div class="div"></div>
+
+  <div class="metric-row" style="margin-bottom:16px">
+    <div class="metric-card">
+      <div class="mc-num">60%</div>
+      <div class="mc-label">Signup → activation rate</div>
+      <div class="mc-target">Target within 24hrs</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-num">&lt;3min</div>
+      <div class="mc-label">Time to first insight</div>
+      <div class="mc-target">From platform connect</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-num">40%</div>
+      <div class="mc-label">Day 7 retention</div>
+      <div class="mc-target">Return visit within 7 days</div>
+    </div>
+    <div class="metric-card">
+      <div class="mc-num">25%</div>
+      <div class="mc-label">Free → paid M1 conv.</div>
+      <div class="mc-target">Within 30 days of signup</div>
+    </div>
+  </div>
+
+  <table class="tbl">
+    <tr><th>Metric</th><th>Definition</th><th>Target</th><th>Failure signal</th></tr>
+    <tr><td><strong>Signup completion rate</strong></td><td>% who complete account creation after landing on signup page</td><td>55%+</td><td>Below 35% — form is too long or trust signals missing</td></tr>
+    <tr><td><strong>Platform connection rate</strong></td><td>% of signups who connect at least one platform</td><td>70%+</td><td>Below 50% — OAuth consent screen is too alarming</td></tr>
+    <tr><td><strong>Activation rate</strong></td><td>% who see Gravity Score + at least one AI insight</td><td>60%+ within 24hrs</td><td>Below 40% — sync is too slow or insight quality is poor</td></tr>
+    <tr><td><strong>Wow moment rate</strong></td><td>% who spend 30+ seconds on the score reveal screen</td><td>75%+</td><td>Below 50% — score reveal is not compelling enough</td></tr>
+    <tr><td><strong>Second session rate</strong></td><td>% who return within 7 days</td><td>40%+</td><td>Below 25% — first session didn't deliver enough ongoing value</td></tr>
+    <tr><td><strong>Benchmarking opt-in rate</strong></td><td>% who opt in to benchmarking pool</td><td>55%+</td><td>Below 30% — consent language is unclear or alarming</td></tr>
+    <tr><td><strong>Email open rate</strong></td><td>Open rate on day 1 "score is ready" email</td><td>65%+</td><td>Below 45% — subject line not personalised enough</td></tr>
+  </table>
+
+  <div class="callout v" style="margin-top:14px">
+    <div class="cl-label">The single metric that predicts everything</div>
+    <div class="cl-text"><strong>If a creator returns to Orbit within 7 days of signup, they have an 80%+ chance of becoming a paying user.</strong> If they don't return within 7 days, that probability drops to under 15%. The entire onboarding strategy — the email sequence, the push notifications, the weekly briefing — is designed around driving that day-7 return visit.</div>
+  </div>
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Onboarding Flow v1.0 · 2026</span>
+    <span class="ftr-link">Confidential</span>
+    <span class="ftr-link">product@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Legal & Compliance Framework</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:980px;margin:0 auto}
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 36px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+.toc{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:10px 36px;display:flex;gap:6px;flex-wrap:wrap}
+.toc-item{background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 12px;font-size:9px;color:#6b7ab5;text-decoration:none;letter-spacing:.04em;cursor:pointer}
+.toc-item:hover{border-color:#3D3A9E;color:#a78bfa}
+.sec{padding:32px 36px;border-bottom:1px solid #1a2150}
+.sec:last-child{border-bottom:none}
+.sec-num{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.sec-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:6px}
+.sec-desc{font-size:12px;color:#6b7ab5;line-height:1.7;max-width:640px;margin-bottom:16px}
+.div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:16px}
+h3{font-family:Georgia,serif;font-size:15px;font-weight:400;color:#e8f0ff;margin:20px 0 8px}
+h3:first-child{margin-top:0}
+h4{font-size:9px;font-weight:500;color:#a78bfa;letter-spacing:.1em;text-transform:uppercase;margin:14px 0 6px}
+p{font-size:11px;color:#8892b0;line-height:1.75;margin-bottom:8px}
+p:last-child{margin-bottom:0}
+strong{color:#c4b5fd;font-weight:500}
+code{font-family:'Courier New',monospace;font-size:10px;background:#0d1228;border:1px solid #1a2150;border-radius:4px;padding:1px 5px;color:#a78bfa}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.card.accent{border-color:#2d3260}
+.card.ok{border-color:#173404}
+.card.warn{border-color:#412402}
+.card.danger{border-color:#501313}
+.card-eye{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.card-title{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:5px}
+.card-body{font-size:10px;color:#6b7ab5;line-height:1.6}
+.callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:12px 16px;margin:10px 0}
+.callout.v{border-left-color:#a78bfa}
+.callout.g{border-left-color:#4ade80}
+.callout.r{border-left-color:#f09595}
+.callout.a{border-left-color:#EF9F27}
+.cl-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+.callout.v .cl-label{color:#a78bfa}
+.callout.g .cl-label{color:#4ade80}
+.callout.r .cl-label{color:#f09595}
+.callout.a .cl-label{color:#EF9F27}
+.cl-text{font-size:11px;color:#8892b0;line-height:1.6}
+.cl-text strong{color:#e8f0ff;font-weight:500}
+.bullet{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
+.bullet:last-child{margin-bottom:0}
+.bdot{width:4px;height:4px;border-radius:50%;background:#6C63FF;margin-top:5px;flex-shrink:0}
+.bdot.v{background:#a78bfa}
+.bdot.g{background:#4ade80}
+.bdot.r{background:#f09595}
+.bdot.a{background:#EF9F27}
+.btext{font-size:11px;color:#8892b0;line-height:1.55}
+.btext strong{color:#c4b5fd;font-weight:500}
+.checklist{display:flex;flex-direction:column;gap:6px}
+.check-item{display:flex;gap:10px;align-items:flex-start;background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 12px}
+.check-item.done{border-color:#173404}
+.check-item.todo{border-color:#2d3260}
+.check-item.urgent{border-color:#501313}
+.check-box{width:16px;height:16px;border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.cb-done{background:#0a1a10;border:1px solid #173404}
+.cb-todo{background:#1a1f35;border:1px solid #2d3260}
+.cb-urgent{background:#1a0a0a;border:1px solid #501313}
+.check-title{font-size:11px;font-weight:500;color:#e8f0ff;margin-bottom:2px}
+.check-body{font-size:10px;color:#6b7ab5;line-height:1.5}
+.check-tag{font-size:8px;padding:1px 7px;border-radius:20px;display:inline-block;margin-top:4px}
+.tag-before{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.tag-launch{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+.tag-post{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;text-align:left;padding:7px 10px;border-bottom:1px solid #1a2150;background:#090d1c}
+.tbl td{font-size:10px;color:#8892b0;padding:8px 10px;border-bottom:1px solid #090d1c;vertical-align:top;line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#0a0e1e}
+.tbl td strong{color:#c4b5fd}
+.risk-high{color:#f09595}
+.risk-med{color:#EF9F27}
+.risk-low{color:#4ade80}
+.policy-block{background:#040608;border:1px solid #1a2150;border-radius:8px;padding:14px 16px;font-size:10px;color:#8892b0;line-height:1.75;font-family:'Courier New',monospace}
+.policy-block strong{color:#a78bfa;font-family:'Helvetica Neue',Arial,sans-serif}
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase">Legal & Compliance</span>
+    <span class="ver">v1.0 · 2026</span>
+  </div>
+</div>
+
+<div class="toc">
+  <a class="toc-item" href="#overview">Overview</a>
+  <a class="toc-item" href="#checklist">Launch checklist</a>
+  <a class="toc-item" href="#privacy">Privacy policy</a>
+  <a class="toc-item" href="#terms">Terms of service</a>
+  <a class="toc-item" href="#data">Data processing</a>
+  <a class="toc-item" href="#oauth">OAuth & platform</a>
+  <a class="toc-item" href="#gdpr">GDPR & CCPA</a>
+  <a class="toc-item" href="#security">Security standards</a>
+  <a class="toc-item" href="#risks">Risk register</a>
+</div>
+
+<!-- Overview -->
+<div class="sec" id="overview">
+  <div class="sec-num">Section 01</div>
+  <div class="sec-title">Legal overview</div>
+  <div class="div"></div>
+  <div class="callout r">
+    <div class="cl-label">Critical requirement</div>
+    <div class="cl-text">Legal and compliance infrastructure must be in place <strong>before any creator connects their social media account</strong>. Once you touch real OAuth tokens and personal data, you are legally obligated under GDPR, CCPA, and each platform's developer terms. None of this can be retroactively applied.</div>
+  </div>
+  <h3>Legal entity requirements</h3>
+  <div class="g3" style="margin-top:8px">
+    <div class="card ok">
+      <div class="card-eye">Immediate</div>
+      <div class="card-title">Incorporate as LLC or C-Corp</div>
+      <div class="card-body">Separate personal liability from business liability. C-Corp preferred if you plan to raise investment. Delaware C-Corp is the US standard for VC-backed companies.</div>
+    </div>
+    <div class="card ok">
+      <div class="card-eye">Immediate</div>
+      <div class="card-title">EIN & business bank account</div>
+      <div class="card-body">Separate business finances from personal from day one. Required for Stripe integration, contractor payments, and any investor due diligence.</div>
+    </div>
+    <div class="card warn">
+      <div class="card-eye">Before launch</div>
+      <div class="card-title">IP assignment agreements</div>
+      <div class="card-body">All engineers and contractors must sign IP assignment agreements confirming all work product belongs to Orbit. Critical before any fundraising conversation.</div>
+    </div>
+  </div>
+  <h3>Document priority matrix</h3>
+  <div class="g2" style="margin-top:8px">
+    <div>
+      <h4>Must have before first user</h4>
+      <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Privacy Policy</strong> — legally required under GDPR, CCPA, and all platform developer agreements</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Terms of Service</strong> — governs the relationship between Orbit and every user</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Data Processing Agreement (DPA)</strong> — required for EU users under GDPR Article 28</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>Cookie Policy</strong> — required in EU/UK for any analytics or tracking</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>OAuth consent screens</strong> — each platform requires specific consent language</div></div>
+    </div>
+    <div>
+      <h4>Must have within 30 days of launch</h4>
+      <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>Subscription agreement</strong> — governs paid tier billing, cancellation, and refunds</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>Agency agreement template</strong> — covers the Mission Control multi-creator access relationship</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>Acceptable use policy</strong> — defines prohibited uses of Orbit and creator data</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>DMCA policy</strong> — required if your platform hosts any creator content thumbnails</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>Bug bounty / vulnerability disclosure policy</strong> — security researcher safe harbour</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Launch checklist -->
+<div class="sec" id="checklist">
+  <div class="sec-num">Section 02</div>
+  <div class="sec-title">Pre-launch compliance checklist</div>
+  <div class="div"></div>
+  <div class="checklist">
+    <div class="check-item urgent">
+      <div class="check-box cb-urgent"><div style="width:6px;height:6px;border-radius:50%;background:#f09595"></div></div>
+      <div>
+        <div class="check-title">Register legal entity (LLC or C-Corp)</div>
+        <div class="check-body">Delaware C-Corp recommended if raising capital. Use Stripe Atlas, Clerky, or a startup attorney. Cost: ~$500–$1,500.</div>
+        <span class="check-tag tag-before">Before any development</span>
+      </div>
+    </div>
+    <div class="check-item urgent">
+      <div class="check-box cb-urgent"><div style="width:6px;height:6px;border-radius:50%;background:#f09595"></div></div>
+      <div>
+        <div class="check-title">Draft and publish Privacy Policy</div>
+        <div class="check-body">Must cover: data collected, how it's used, third-party sharing, retention periods, user rights (access, deletion, portability), and contact information. Must be accessible at <code>/privacy</code> before any OAuth flow.</div>
+        <span class="check-tag tag-before">Before first OAuth connection</span>
+      </div>
+    </div>
+    <div class="check-item urgent">
+      <div class="check-box cb-urgent"><div style="width:6px;height:6px;border-radius:50%;background:#f09595"></div></div>
+      <div>
+        <div class="check-title">Draft and publish Terms of Service</div>
+        <div class="check-body">Covers user obligations, IP ownership, prohibited uses, limitation of liability, dispute resolution, and governing law. Users must actively accept (checkbox, not just browsing).</div>
+        <span class="check-tag tag-before">Before account creation</span>
+      </div>
+    </div>
+    <div class="check-item urgent">
+      <div class="check-box cb-urgent"><div style="width:6px;height:6px;border-radius:50%;background:#f09595"></div></div>
+      <div>
+        <div class="check-title">Apply for platform developer access</div>
+        <div class="check-body">Meta Graph API (Instagram), TikTok for Developers — both require app review and approval before production access. Instagram requires Business Verification. TikTok requires a detailed use case review. Timeline: 2–6 weeks each. Start immediately.</div>
+        <span class="check-tag tag-before">Start now — long lead time</span>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">Implement OAuth consent screens with correct language</div>
+        <div class="check-body">Each platform requires specific consent language in the OAuth flow explaining exactly what data Orbit will access and why. Must match exactly what your Privacy Policy states. Mismatches = platform ban.</div>
+        <span class="check-tag tag-launch">Before beta</span>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">Implement explicit benchmarking consent</div>
+        <div class="check-body">Creators must actively opt in to the anonymized benchmarking pool — this cannot be a default. Requires a separate, clearly worded consent checkbox with a plain-English explanation of what their data is used for in aggregate.</div>
+        <span class="check-tag tag-launch">Before Constellation feature</span>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">Encrypt all OAuth tokens at rest</div>
+        <div class="check-body">AES-256 encryption for all stored access and refresh tokens. Tokens must never appear in logs, error messages, or API responses. Use AWS Secrets Manager or equivalent for key management.</div>
+        <span class="check-tag tag-launch">Before any OAuth storage</span>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">Build data deletion pipeline</div>
+        <div class="check-body">Users must be able to delete their account and all associated data. GDPR requires deletion within 30 days of request. Build the pipeline before launch — retrofitting deletion is painful. Facebook also requires a Data Deletion Callback URL for any Instagram integration.</div>
+        <span class="check-tag tag-launch">Required by Meta for Instagram API</span>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">Set up Stripe and publish billing terms</div>
+        <div class="check-body">Subscription terms must state: pricing, billing cycle, what happens at cancellation, refund policy, and how price changes are communicated. Stripe requires these be visible before checkout.</div>
+        <span class="check-tag tag-launch">Before paid tier</span>
+      </div>
+    </div>
+    <div class="check-item todo">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">GDPR consent management (EU users)</div>
+        <div class="check-body">Cookie consent banner, consent records for data processing, clear mechanism for users to exercise rights (access, portability, erasure, restriction). Even if targeting US creators initially, UK/EU creators will sign up and you must be compliant.</div>
+        <span class="check-tag tag-launch">Before any EU user</span>
+      </div>
+    </div>
+    <div class="check-item">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#6C63FF"></div></div>
+      <div>
+        <div class="check-title">IP assignment agreements for all engineers</div>
+        <div class="check-body">Every person who writes code must sign an IP assignment agreement before their first commit. This is non-negotiable for any future fundraising, acquisition, or partnership.</div>
+        <span class="check-tag tag-launch">Before first line of code</span>
+      </div>
+    </div>
+    <div class="check-item">
+      <div class="check-box cb-todo"><div style="width:6px;height;6px;border-radius:50%;background:#4ade80"></div></div>
+      <div>
+        <div class="check-title">Cyber liability insurance</div>
+        <div class="check-body">Given the sensitivity of OAuth tokens and creator data, cyber liability insurance is strongly recommended. Cost: ~$1,200–$2,500/year for a startup. Covers breach response, legal costs, and notification requirements.</div>
+        <span class="check-tag tag-post">Within 60 days of launch</span>
+      </div>
+    </div>
+    <div class="check-item">
+      <div class="check-box cb-todo"><div style="width:6px;height:6px;border-radius:50%;background:#4ade80"></div></div>
+      <div>
+        <div class="check-title">SOC 2 Type II — begin preparation</div>
+        <div class="check-body">Not required at launch but will be asked for by enterprise agencies and brand partners. Begin implementing the control framework from day one — it's far easier than retrofitting. Target certification within 18 months.</div>
+        <span class="check-tag tag-post">Month 6–18</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy Policy -->
+<div class="sec" id="privacy">
+  <div class="sec-num">Section 03</div>
+  <div class="sec-title">Privacy policy — key clauses</div>
+  <div class="div"></div>
+  <p>This section outlines the required clauses for Orbit's Privacy Policy. Each clause must be written in plain English, not legalese. GDPR requires policies be "concise, transparent, intelligible and easily accessible."</p>
+
+  <h3>Required sections</h3>
+  <div class="g2">
+    <div>
+      <h4>Data we collect</h4>
+      <div class="policy-block">
+        <strong>Account data:</strong> Name, email, profile photo, timezone.<br/><br/>
+        <strong>Connected platform data:</strong> When you connect Instagram or TikTok, we access: your public profile information, follower count, post metadata (captions, hashtags, timestamps), post performance metrics (reach, impressions, likes, comments, saves, shares). We do not access your private messages, payment information, or the content of direct messages.<br/><br/>
+        <strong>Usage data:</strong> How you interact with Orbit — features used, session duration, click patterns. Used to improve the product.<br/><br/>
+        <strong>Benchmarking data (opt-in only):</strong> If you explicitly consent, anonymized and aggregated performance metrics may be included in our benchmarking pool. Your individual data is never exposed to other users.
+      </div>
+
+      <h4>How we use your data</h4>
+      <div class="policy-block">
+        We use your data to:<br/>
+        — Provide the Orbit analytics service<br/>
+        — Calculate your Gravity Score<br/>
+        — Generate AI-powered coaching insights<br/>
+        — Detect Escape Velocity events and send alerts<br/>
+        — Generate trend intelligence relevant to your niche<br/>
+        — Produce benchmarking reports (with your consent)<br/>
+        — Send product notifications and weekly briefings<br/><br/>
+        We do <strong>not</strong> sell your data. We do not use your data for advertising. We do not share your individual data with third parties except as required to operate the service (Anthropic AI, AWS infrastructure).
+      </div>
+    </div>
+    <div>
+      <h4>Data retention</h4>
+      <div class="policy-block">
+        <strong>Active accounts:</strong> Data retained for the duration of your account plus 30 days after deletion request.<br/><br/>
+        <strong>Performance metrics:</strong> Up to 24 months of historical data. Older data is aggregated and anonymized.<br/><br/>
+        <strong>Benchmarking pool data:</strong> Anonymized aggregate data may be retained indefinitely. Your individual contribution is removed within 30 days of opt-out or account deletion.<br/><br/>
+        <strong>Backups:</strong> Backup snapshots retained for 7 days. Deleted account data is purged from backups within 30 days.
+      </div>
+
+      <h4>Your rights (GDPR / CCPA)</h4>
+      <div class="policy-block">
+        You have the right to:<br/>
+        — <strong>Access</strong> all data we hold about you (export within 30 days)<br/>
+        — <strong>Correct</strong> inaccurate data<br/>
+        — <strong>Delete</strong> your account and all associated data<br/>
+        — <strong>Port</strong> your data in machine-readable format<br/>
+        — <strong>Restrict</strong> how we process your data<br/>
+        — <strong>Withdraw consent</strong> for benchmarking at any time<br/>
+        — <strong>Object</strong> to processing for direct marketing<br/><br/>
+        To exercise any right: privacy@orbitapp.io<br/>
+        Response time: within 30 days.
+      </div>
+    </div>
+  </div>
+
+  <h3>Third-party data processors</h3>
+  <div class="callout a">
+    <div class="cl-label">Disclosure requirement</div>
+    <div class="cl-text">Every third-party service that touches creator data must be disclosed in your Privacy Policy and covered by a Data Processing Agreement. This includes <strong>Anthropic (AI insights)</strong>, <strong>AWS (infrastructure)</strong>, <strong>Stripe (billing)</strong>, <strong>Auth0/Supabase (authentication)</strong>, and any analytics tools.</div>
+  </div>
+  <table class="tbl" style="margin-top:10px">
+    <tr><th>Processor</th><th>Purpose</th><th>Data shared</th><th>Location</th><th>DPA required</th></tr>
+    <tr><td><strong>Anthropic</strong></td><td>AI insight generation</td><td>Creator performance data (anonymized in prompts)</td><td>US</td><td>Yes — via API ToS</td></tr>
+    <tr><td><strong>AWS</strong></td><td>Infrastructure, storage, database</td><td>All platform data</td><td>US / EU</td><td>Yes — AWS DPA available</td></tr>
+    <tr><td><strong>Stripe</strong></td><td>Payment processing</td><td>Name, email, billing info</td><td>US</td><td>Yes — Stripe DPA available</td></tr>
+    <tr><td><strong>Auth0 / Supabase</strong></td><td>Authentication</td><td>Email, hashed password, session tokens</td><td>US</td><td>Yes</td></tr>
+    <tr><td><strong>Datadog</strong></td><td>Infrastructure monitoring</td><td>System logs (must be scrubbed of PII)</td><td>US</td><td>Yes</td></tr>
+    <tr><td><strong>FCM / APNs</strong></td><td>Push notifications</td><td>Device token, notification payload</td><td>US</td><td>Yes</td></tr>
+  </table>
+</div>
+
+<!-- Terms of Service -->
+<div class="sec" id="terms">
+  <div class="sec-num">Section 04</div>
+  <div class="sec-title">Terms of service — key clauses</div>
+  <div class="div"></div>
+
+  <div class="g2">
+    <div>
+      <h4>Acceptable use</h4>
+      <div class="policy-block">
+        You may not use Orbit to:<br/>
+        — Scrape, harvest, or export data for use outside the platform<br/>
+        — Share your account credentials with others<br/>
+        — Attempt to reverse-engineer or extract the benchmarking algorithm<br/>
+        — Use Orbit data to build competing products<br/>
+        — Misrepresent your Gravity Score or benchmark rank to third parties in a materially misleading way<br/>
+        — Circumvent the platform's rate limits or access controls
+      </div>
+
+      <h4>Intellectual property</h4>
+      <div class="policy-block">
+        <strong>Your data:</strong> You own your content and performance data. You grant Orbit a limited licence to process it to provide the service.<br/><br/>
+        <strong>Benchmarking pool:</strong> By opting in, you grant Orbit a licence to use your anonymized, aggregated data indefinitely for benchmarking. You can withdraw this consent at any time.<br/><br/>
+        <strong>Orbit IP:</strong> The Gravity Score algorithm, Orbit Path model, Escape Velocity detection system, and all product features are proprietary to Orbit. You may not reproduce or commercialise them.
+      </div>
+
+      <h4>AI-generated content</h4>
+      <div class="policy-block">
+        Orbit's AI insights are for informational purposes only. They do not constitute professional business, financial, or legal advice. Results are based on historical data and are not guarantees of future performance. Orbit is not liable for decisions made based on AI coaching outputs.
+      </div>
+    </div>
+    <div>
+      <h4>Limitation of liability</h4>
+      <div class="policy-block">
+        Orbit's maximum liability to any user is limited to the fees paid in the 12 months preceding the claim. Orbit is not liable for: indirect or consequential losses, loss of revenue or profits, data loss from third-party platform API outages, or decisions made based on Orbit's analytics or AI outputs.<br/><br/>
+        Orbit does not guarantee platform uptime or data freshness. Platform API outages (Instagram, TikTok, etc.) are outside Orbit's control.
+      </div>
+
+      <h4>Subscription & billing</h4>
+      <div class="policy-block">
+        Subscriptions auto-renew monthly. You may cancel at any time — cancellation takes effect at the end of the current billing period. No refunds for partial months.<br/><br/>
+        Price changes will be communicated 30 days in advance by email. Continued use after the effective date constitutes acceptance of the new price.<br/><br/>
+        Downgrading to a lower tier is effective immediately. Upgrading is effective immediately and prorated.
+      </div>
+
+      <h4>Termination</h4>
+      <div class="policy-block">
+        Orbit may terminate or suspend accounts that violate these terms, engage in fraudulent activity, or abuse the platform. We will provide 7 days notice except in cases of fraud or security breach.<br/><br/>
+        Upon termination, you may request a data export within 30 days. After 30 days, all data will be deleted in accordance with the Privacy Policy.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Data Processing -->
+<div class="sec" id="data">
+  <div class="sec-num">Section 05</div>
+  <div class="sec-title">Data processing framework</div>
+  <div class="div"></div>
+
+  <h3>Data classification</h3>
+  <table class="tbl">
+    <tr><th>Data type</th><th>Classification</th><th>Storage</th><th>Encryption</th><th>Retention</th><th>Access</th></tr>
+    <tr><td><strong>OAuth tokens</strong></td><td><span class="risk-high">Critical</span></td><td>PostgreSQL (encrypted column)</td><td>AES-256 at rest + TLS in transit</td><td>Duration of connection</td><td>Ingestion service only</td></tr>
+    <tr><td><strong>Creator PII</strong> (name, email)</td><td><span class="risk-high">Sensitive</span></td><td>PostgreSQL (RLS enforced)</td><td>TLS + encrypted backups</td><td>Account lifetime + 30d</td><td>Auth service + user only</td></tr>
+    <tr><td><strong>Performance metrics</strong></td><td><span class="risk-med">Internal</span></td><td>PostgreSQL + TimescaleDB</td><td>TLS + encrypted backups</td><td>24 months</td><td>Creator + their manager</td></tr>
+    <tr><td><strong>AI prompts & responses</strong></td><td><span class="risk-med">Internal</span></td><td>PostgreSQL (ai_insights table)</td><td>TLS + encrypted backups</td><td>12 months</td><td>Creator only</td></tr>
+    <tr><td><strong>Benchmarking pool</strong></td><td><span class="risk-low">Aggregate only</span></td><td>Elasticsearch (aggregated)</td><td>TLS</td><td>Indefinite (aggregated)</td><td>No individual access</td></tr>
+    <tr><td><strong>System logs</strong></td><td><span class="risk-med">Internal</span></td><td>Datadog (PII scrubbed)</td><td>TLS</td><td>90 days</td><td>Engineering team</td></tr>
+  </table>
+
+  <h3>Data minimisation rules</h3>
+  <div class="g2" style="margin-top:8px">
+    <div class="callout g">
+      <div class="cl-label">What to collect</div>
+      <div class="cl-text">Only collect what the product actively uses. If a metric isn't displayed or used in a calculation, don't store it. Every data point stored is a liability — both legally and in terms of storage costs and security surface area.</div>
+    </div>
+    <div class="callout r">
+      <div class="cl-label">Never collect or store</div>
+      <div class="cl-text"><strong>Private messages</strong> from any platform · <strong>Password credentials</strong> in plain text · <strong>Payment card details</strong> (Stripe handles this) · <strong>Government IDs</strong> · <strong>Precise location data</strong> · <strong>Data on minors</strong> under 18</div>
+    </div>
+  </div>
+
+  <h3>Data subject request process</h3>
+  <p>Every data subject request (access, deletion, portability, correction) must be fulfilled within 30 days. Build these workflows before launch.</p>
+  <div class="g3" style="margin-top:8px">
+    <div class="card">
+      <div class="card-eye">Access request</div>
+      <div class="card-title">Data export</div>
+      <div class="card-body">Generate a JSON/CSV export of all data held: account info, performance metrics, AI insights, consent records. Available in-app via Settings → Privacy → Export my data.</div>
+    </div>
+    <div class="card">
+      <div class="card-eye">Deletion request</div>
+      <div class="card-title">Right to erasure</div>
+      <div class="card-body">Soft delete immediately (account inactive), hard delete within 30 days. Remove from benchmarking pool. Purge from backups within 30 days. Meta requires a Data Deletion Callback URL — must be implemented.</div>
+    </div>
+    <div class="card">
+      <div class="card-eye">Portability request</div>
+      <div class="card-title">Data portability</div>
+      <div class="card-body">Export in machine-readable format (JSON). Includes all performance data, Gravity Score history, AI insights, and consent records. Must not include third-party platform data (that belongs to the platform).</div>
+    </div>
+  </div>
+</div>
+
+<!-- OAuth & Platform -->
+<div class="sec" id="oauth">
+  <div class="sec-num">Section 06</div>
+  <div class="sec-title">OAuth & platform compliance</div>
+  <div class="div"></div>
+  <p>Each social platform has its own developer terms that must be followed independently of GDPR/CCPA. Violating platform terms results in immediate API access revocation — a catastrophic business risk.</p>
+
+  <h3>Platform-specific requirements</h3>
+  <table class="tbl">
+    <tr><th>Platform</th><th>Key requirement</th><th>Prohibited uses</th><th>Review process</th><th>Risk level</th></tr>
+    <tr>
+      <td><strong>Instagram (Meta)</strong></td>
+      <td>Business verification required. Data Deletion Callback URL mandatory. 60-day data retention limit on some metrics.</td>
+      <td>Cannot store user content (images/videos) beyond 90 days. Cannot use data to build competing products. Cannot sell or transfer data.</td>
+      <td>App review 2–4 weeks. Must demonstrate legitimate use case with working demo.</td>
+      <td><span class="risk-high">High</span> — Meta reserves right to revoke access at any time</td>
+    </tr>
+    <tr>
+      <td><strong>TikTok</strong></td>
+      <td>Most restrictive API. Limited analytics data without Partner Program approval. Must apply for Research API separately.</td>
+      <td>Cannot store TikTok video content. Cannot use data for ad targeting. Cannot share data with third parties.</td>
+      <td>Developer review 4–6 weeks. Partner Program review is additional and may take months.</td>
+      <td><span class="risk-high">Very high</span> — API access is fragile and frequently restricted</td>
+    </tr>
+    <tr>
+      <td><strong>YouTube (Google)</strong></td>
+      <td>Must comply with Google API Services User Data Policy. Limited quota (10,000 units/day by default — request increase).</td>
+      <td>Cannot store YouTube user data beyond what's needed for the service. Must delete data when user revokes access.</td>
+      <td>Google OAuth verification required for sensitive scopes. 4–6 weeks.</td>
+      <td><span class="risk-med">Medium</span> — well-documented, more stable than TikTok</td>
+    </tr>
+  </table>
+
+  <div class="callout r" style="margin-top:12px">
+    <div class="cl-label">TikTok API risk</div>
+    <div class="cl-text">TikTok's API is the most restrictive and unstable of all platforms. They have a history of suddenly restricting access, changing terms, and limiting data availability. <strong>Build Orbit's architecture so it degrades gracefully if TikTok API access is lost</strong> — the platform should still function fully for Instagram users. Never let a single platform API failure break the product.</div>
+  </div>
+
+  <h3>OAuth implementation requirements</h3>
+  <div class="g2" style="margin-top:8px">
+    <div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Request minimum scopes only</strong> — only request the specific OAuth permissions you actively use. Requesting more than needed is a Terms violation and a red flag in App Review.</div></div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Token rotation</strong> — implement automatic refresh token rotation. Never let tokens expire silently — alert creators when re-authentication is needed.</div></div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Revocation handling</strong> — when a user revokes access at the platform level, handle the webhook gracefully. Mark the connection as revoked, stop data collection, do not attempt to re-authenticate without user action.</div></div>
+    </div>
+    <div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Webhook verification</strong> — verify all incoming platform webhooks using the platform-provided signature. Reject unsigned or incorrectly signed requests.</div></div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Rate limit compliance</strong> — implement exponential backoff and respect platform rate limits strictly. Exceeding limits results in temporary bans; repeated violations result in permanent revocation.</div></div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Data deletion callback</strong> — Meta requires a publicly accessible endpoint that processes data deletion requests when a user deletes their Facebook/Instagram account. This is mandatory and tested during App Review.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- GDPR & CCPA -->
+<div class="sec" id="gdpr">
+  <div class="sec-num">Section 07</div>
+  <div class="sec-title">GDPR & CCPA compliance</div>
+  <div class="div"></div>
+
+  <div class="g2">
+    <div>
+      <h3>GDPR (EU/UK)</h3>
+      <p>Applies to any EU or UK resident who uses Orbit, regardless of where Orbit is incorporated. Fines up to €20M or 4% of annual global turnover.</p>
+      <h4>Legal basis for processing</h4>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Contract performance</strong> — processing required to provide the analytics service (primary basis)</div></div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Legitimate interests</strong> — product improvement, security monitoring, fraud prevention</div></div>
+      <div class="bullet"><div class="bdot v"></div><div class="btext"><strong>Consent</strong> — benchmarking pool participation, marketing emails, non-essential cookies</div></div>
+      <h4>Required implementations</h4>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Cookie consent banner with granular controls (necessary, functional, analytics)</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Consent records stored with timestamp and version of policy accepted</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Data Processing Agreements with all processors (see Section 03)</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">EU data residency option for EU users (AWS eu-west-1)</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">Designated Data Protection contact (can be founder initially)</div></div>
+      <div class="bullet"><div class="bdot r"></div><div class="btext">72-hour breach notification to supervisory authority</div></div>
+    </div>
+    <div>
+      <h3>CCPA (California)</h3>
+      <p>Applies to California residents. Applies if Orbit has >$25M revenue, >50K California users, or derives >50% of revenue from selling California consumer data. Even below thresholds, good practice to comply.</p>
+      <h4>Required disclosures</h4>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Categories of personal information collected</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Purposes for which personal information is used</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Categories of third parties data is shared with</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">"Do Not Sell My Personal Information" link (even if you don't sell)</div></div>
+      <h4>User rights under CCPA</h4>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Right to know what data is collected</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Right to delete personal information</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Right to opt out of sale (Orbit does not sell data)</div></div>
+      <div class="bullet"><div class="bdot a"></div><div class="btext">Right to non-discrimination for exercising rights</div></div>
+      <h4>Practical steps</h4>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">Add "Do Not Sell" link to footer even if not legally required — signals good faith</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">Ensure Privacy Policy covers all CCPA disclosure categories</div></div>
+      <div class="bullet"><div class="bdot g"></div><div class="btext">CCPA and GDPR rights overlap significantly — one data subject request process covers both</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Security Standards -->
+<div class="sec" id="security">
+  <div class="sec-num">Section 08</div>
+  <div class="sec-title">Security standards</div>
+  <div class="div"></div>
+
+  <div class="g2">
+    <div>
+      <h4>Minimum security requirements (pre-launch)</h4>
+      <div class="checklist">
+        <div class="check-item todo" style="margin-bottom:6px">
+          <div class="check-box cb-todo"><div style="width:5px;height:5px;border-radius:50%;background:#6C63FF"></div></div>
+          <div><div class="check-title">TLS 1.3 on all endpoints</div><div class="check-body">No unencrypted HTTP anywhere. Redirect all HTTP to HTTPS.</div></div>
+        </div>
+        <div class="check-item todo" style="margin-bottom:6px">
+          <div class="check-box cb-todo"><div style="width:5px;height:5px;border-radius:50%;background:#6C63FF"></div></div>
+          <div><div class="check-title">AES-256 encryption at rest</div><div class="check-body">Database encryption, S3 server-side encryption, encrypted backups.</div></div>
+        </div>
+        <div class="check-item todo" style="margin-bottom:6px">
+          <div class="check-box cb-todo"><div style="width:5px;height:5px;border-radius:50%;background:#6C63FF"></div></div>
+          <div><div class="check-title">VPC with private subnets</div><div class="check-body">All databases in private subnets. No direct internet access to RDS.</div></div>
+        </div>
+        <div class="check-item todo" style="margin-bottom:6px">
+          <div class="check-box cb-todo"><div style="width:5px;height:5px;border-radius:50%;background:#6C63FF"></div></div>
+          <div><div class="check-title">MFA for all admin access</div><div class="check-body">AWS console, database access, and Orbit admin panel all require MFA.</div></div>
+        </div>
+        <div class="check-item todo">
+          <div class="check-box cb-todo"><div style="width:5px;height:5px;border-radius:50%;background:#6C63FF"></div></div>
+          <div><div class="check-title">Secrets management</div><div class="check-body">All API keys, OAuth secrets, and credentials in AWS Secrets Manager. Never in code or environment variables in plain text.</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4>Incident response plan</h4>
+      <div class="card" style="margin-bottom:10px">
+        <div class="card-eye">If a breach occurs</div>
+        <div class="card-body" style="line-height:1.8">
+          <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>0–1 hour:</strong> Contain the breach. Revoke compromised credentials. Take affected systems offline if necessary.</div></div>
+          <div class="bullet"><div class="bdot r"></div><div class="btext"><strong>1–4 hours:</strong> Assess scope. What data was accessed? How many users affected?</div></div>
+          <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>4–24 hours:</strong> Notify legal counsel. Begin GDPR 72-hour notification clock if EU users affected.</div></div>
+          <div class="bullet"><div class="bdot a"></div><div class="btext"><strong>24–72 hours:</strong> Notify supervisory authority (GDPR). Prepare user notification.</div></div>
+          <div class="bullet"><div class="bdot g"></div><div class="btext"><strong>72hr+:</strong> Notify affected users. Post-incident review. Remediation.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Risk Register -->
+<div class="sec" id="risks">
+  <div class="sec-num">Section 09</div>
+  <div class="sec-title">Legal risk register</div>
+  <div class="div"></div>
+  <table class="tbl">
+    <tr><th>Risk</th><th>Severity</th><th>Likelihood</th><th>Mitigation</th></tr>
+    <tr>
+      <td><strong>Meta revokes Instagram API access</strong></td>
+      <td><span class="risk-high">Critical</span></td>
+      <td><span class="risk-med">Medium</span></td>
+      <td>Architecture degrades gracefully — TikTok-only mode. Maintain compliance strictly. Never request more scopes than needed. Build TikTok integration in parallel.</td>
+    </tr>
+    <tr>
+      <td><strong>GDPR enforcement action</strong></td>
+      <td><span class="risk-high">High</span></td>
+      <td><span class="risk-low">Low</span></td>
+      <td>Implement full GDPR compliance framework pre-launch. Appoint DPO. Maintain processing records. Respond promptly to all data subject requests.</td>
+    </tr>
+    <tr>
+      <td><strong>Creator data breach</strong></td>
+      <td><span class="risk-high">High</span></td>
+      <td><span class="risk-low">Low</span></td>
+      <td>Encryption at rest and transit. VPC isolation. MFA everywhere. Cyber liability insurance. Incident response plan documented and rehearsed annually.</td>
+    </tr>
+    <tr>
+      <td><strong>Creator disputes AI insight accuracy</strong></td>
+      <td><span class="risk-med">Medium</span></td>
+      <td><span class="risk-med">Medium</span></td>
+      <td>ToS explicitly states AI insights are informational only, not professional advice. Limitation of liability clause caps Orbit's exposure to fees paid.</td>
+    </tr>
+    <tr>
+      <td><strong>Competitor claims IP infringement on Gravity Score</strong></td>
+      <td><span class="risk-med">Medium</span></td>
+      <td><span class="risk-low">Low</span></td>
+      <td>File trademark for "Gravity Score" in relevant classes. Document proprietary methodology. Ensure no prior art conflicts before launch.</td>
+    </tr>
+    <tr>
+      <td><strong>Platform terms change restricting data use</strong></td>
+      <td><span class="risk-high">High</span></td>
+      <td><span class="risk-med">Medium</span></td>
+      <td>Monitor all platform developer newsletters and terms change notifications. Assign someone to review platform terms quarterly. Build abstraction layers so data model changes don't cascade.</td>
+    </tr>
+    <tr>
+      <td><strong>Employee / contractor IP dispute</strong></td>
+      <td><span class="risk-high">High</span></td>
+      <td><span class="risk-low">Low</span></td>
+      <td>IP assignment agreements signed before first commit. All contractors on written agreements with IP clauses. Document invention disclosures.</td>
+    </tr>
+  </table>
+
+  <div class="callout v" style="margin-top:16px">
+    <div class="cl-label">Recommended next steps</div>
+    <div class="cl-text">
+      <strong>1.</strong> Engage a startup-focused attorney to draft the Privacy Policy, ToS, and IP assignment agreements. Budget $3,000–$6,000. Services like Clerky or Stripe Atlas include basic templates. Don't rely solely on templates — Orbit's data model is complex enough to warrant custom drafting.<br/><br/>
+      <strong>2.</strong> Apply for Instagram and TikTok API access immediately — both have multi-week review timelines and you need them before beta.<br/><br/>
+      <strong>3.</strong> Implement the Data Deletion Callback URL for Meta as part of the initial build — it's required for Instagram App Review approval.
+    </div>
+  </div>
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Legal & Compliance v1.0 · 2026</span>
+    <span class="ftr-link">Confidential — not legal advice · consult qualified counsel</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Financial Model</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:1100px;margin:0 auto}
+
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.hdr-right{display:flex;align-items:center;gap:12px}
+.hdr-tag{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+/* Scenario tabs */
+.scenario-bar{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;gap:8px}
+.scenario-label{font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;margin-right:4px}
+.sc-btn{padding:5px 14px;border-radius:20px;font-size:10px;cursor:pointer;border:1px solid #1a2150;background:#0d1228;color:#4a5280;transition:all .15s}
+.sc-btn.active{color:#e8f0ff;border-color:#6C63FF;background:#1a1f35}
+.sc-btn:hover:not(.active){color:#a0aec0;border-color:#2d3260}
+
+/* Main layout */
+.main{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 110px)}
+
+/* Assumptions sidebar */
+.sidebar{background:#0a0e1e;border-right:1px solid #1a2150;padding:20px;overflow-y:auto}
+.sidebar-title{font-family:Georgia,serif;font-size:14px;color:#e8f0ff;margin-bottom:16px}
+.assumption-group{margin-bottom:18px}
+.ag-label{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#3D3A9E;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #1a2150}
+.assumption{margin-bottom:10px}
+.a-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.a-name{font-size:10px;color:#8892b0}
+.a-val{font-size:10px;font-weight:500;color:#a78bfa;min-width:52px;text-align:right;font-family:'Courier New',monospace}
+input[type=range]{width:100%;height:3px;accent-color:#6C63FF;cursor:pointer}
+
+/* Content area */
+.content{padding:24px 28px;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
+
+/* KPI cards */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.kpi-eye{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:5px}
+.kpi-val{font-family:Georgia,serif;font-size:22px;color:#e8f0ff;margin-bottom:2px}
+.kpi-sub{font-size:9px}
+.kpi-sub.up{color:#4ade80}
+.kpi-sub.down{color:#f09595}
+.kpi-sub.neutral{color:#4a5280}
+.kpi-card.highlight{border-color:#2d3260}
+
+/* Chart areas */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-panel{background:#0d1228;border:1px solid #1a2150;border-radius:12px;padding:16px}
+.chart-title{font-size:11px;font-weight:500;color:#e8f0ff;margin-bottom:2px}
+.chart-sub{font-size:9px;color:#4a5280;margin-bottom:12px}
+.bar-chart{display:flex;align-items:flex-end;gap:3px;height:120px}
+.bar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar-seg{width:100%;border-radius:2px 2px 0 0;transition:height .3s}
+.bar-lbl{font-size:8px;color:#4a5280;white-space:nowrap}
+.line-chart{position:relative;height:120px}
+
+/* Revenue table */
+.rev-table{width:100%;border-collapse:collapse}
+.rev-table th{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#3D3A9E;text-align:right;padding:7px 10px;border-bottom:1px solid #1a2150;background:#090d1c}
+.rev-table th:first-child{text-align:left}
+.rev-table td{font-size:10px;color:#8892b0;padding:7px 10px;border-bottom:1px solid #090d1c;text-align:right;font-family:'Courier New',monospace}
+.rev-table td:first-child{text-align:left;font-family:'Helvetica Neue',Arial,sans-serif;color:#a0aec0}
+.rev-table tr:hover td{background:#0a0e1e}
+.rev-table .section-row td{background:#090d1c;color:#3D3A9E;font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;font-family:'Helvetica Neue',Arial,sans-serif}
+.rev-table .total-row td{color:#e8f0ff;font-weight:500;border-top:1px solid #2d3260}
+.rev-table .profit-row td{color:#4ade80}
+.rev-table .loss-row td{color:#f09595}
+.pos{color:#4ade80!important}
+.neg{color:#f09595!important}
+
+/* Unit economics */
+.ue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ue-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px}
+.ue-title{font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:8px}
+.ue-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.ue-row:last-child{margin-bottom:0;padding-top:4px;border-top:1px solid #1a2150;margin-top:4px}
+.ue-label{font-size:10px;color:#6b7ab5}
+.ue-num{font-size:10px;font-weight:500;font-family:'Courier New',monospace}
+.ue-num.good{color:#4ade80}
+.ue-num.warn{color:#EF9F27}
+.ue-num.bad{color:#f09595}
+.ue-num.neutral{color:#a78bfa}
+
+/* Runway viz */
+.runway-bar{height:16px;background:#0d1228;border:1px solid #1a2150;border-radius:20px;overflow:hidden;margin-top:8px}
+.runway-fill{height:100%;border-radius:20px;transition:width .4s}
+
+/* Callout */
+.callout{border-left:3px solid #6C63FF;background:#0d1228;border-radius:0 8px 8px 0;padding:10px 14px}
+.callout.v{border-left-color:#a78bfa}
+.callout.g{border-left-color:#4ade80}
+.callout.r{border-left-color:#f09595}
+.callout.a{border-left-color:#EF9F27}
+.cl-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6C63FF;margin-bottom:3px}
+.callout.v .cl-label{color:#a78bfa}
+.callout.g .cl-label{color:#4ade80}
+.callout.r .cl-label{color:#f09595}
+.callout.a .cl-label{color:#EF9F27}
+.cl-text{font-size:11px;color:#8892b0;line-height:1.6}
+.cl-text strong{color:#e8f0ff;font-weight:500}
+
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-tag">Financial Model</span>
+    <span class="ver">v1.0 · Bootstrapped</span>
+  </div>
+</div>
+
+<!-- Scenario bar -->
+<div class="scenario-bar">
+  <span class="scenario-label">Scenario</span>
+  <button class="sc-btn" onclick="setScenario('conservative')">Conservative</button>
+  <button class="sc-btn active" onclick="setScenario('base')">Base case</button>
+  <button class="sc-btn" onclick="setScenario('optimistic')">Optimistic</button>
+  <span style="margin-left:auto;font-size:9px;color:#3D3A9E">Adjust assumptions in sidebar · all figures update live</span>
+</div>
+
+<div class="main">
+
+<!-- Sidebar: Assumptions -->
+<div class="sidebar">
+  <div class="sidebar-title">Assumptions</div>
+
+  <div class="assumption-group">
+    <div class="ag-label">Team & costs</div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Engineering headcount</span><span class="a-val" id="v-eng">2</span></div>
+      <input type="range" min="1" max="6" step="1" value="2" oninput="setVal('eng',this.value);recalc()">
+
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Avg eng salary / mo</span><span class="a-val" id="v-sal">$8,500</span></div>
+      <input type="range" min="5000" max="15000" step="500" value="8500" oninput="setVal('sal',this.value,'$',0,true);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Founder salary / mo</span><span class="a-val" id="v-founder">$5,000</span></div>
+      <input type="range" min="0" max="12000" step="500" value="5000" oninput="setVal('founder',this.value,'$',0,true);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Infra cost / mo (base)</span><span class="a-val" id="v-infra">$800</span></div>
+      <input type="range" min="200" max="3000" step="100" value="800" oninput="setVal('infra',this.value,'$',0,true);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">AI API cost / user / mo</span><span class="a-val" id="v-ai">$1.20</span></div>
+      <input type="range" min="0.20" max="4.00" step="0.10" value="1.20" oninput="setVal('ai',this.value,'$',2);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Marketing spend / mo</span><span class="a-val" id="v-mkt">$2,000</span></div>
+      <input type="range" min="0" max="15000" step="500" value="2000" oninput="setVal('mkt',this.value,'$',0,true);recalc()">
+    </div>
+  </div>
+
+  <div class="assumption-group">
+    <div class="ag-label">Pricing</div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Creator tier price</span><span class="a-val" id="v-p1">$29</span></div>
+      <input type="range" min="19" max="49" step="1" value="29" oninput="setVal('p1',this.value,'$',0);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Pro tier price</span><span class="a-val" id="v-p2">$79</span></div>
+      <input type="range" min="49" max="149" step="5" value="79" oninput="setVal('p2',this.value,'$',0);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Agency tier price</span><span class="a-val" id="v-p3">$499</span></div>
+      <input type="range" min="299" max="999" step="50" value="499" oninput="setVal('p3',this.value,'$',0);recalc()">
+    </div>
+  </div>
+
+  <div class="assumption-group">
+    <div class="ag-label">Growth & conversion</div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">New free signups / mo</span><span class="a-val" id="v-leads">40</span></div>
+      <input type="range" min="10" max="300" step="10" value="40" oninput="setVal('leads',this.value);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Free → paid conv. %</span><span class="a-val" id="v-conv">22%</span></div>
+      <input type="range" min="5" max="50" step="1" value="22" oninput="setVal('conv',this.value,'',0,'','%');recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Creator → Pro upgrade %</span><span class="a-val" id="v-upg">30%</span></div>
+      <input type="range" min="5" max="60" step="5" value="30" oninput="setVal('upg',this.value,'',0,'','%');recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">New agency accounts / mo</span><span class="a-val" id="v-agc">0.5</span></div>
+      <input type="range" min="0" max="4" step="0.5" value="0.5" oninput="setVal('agc',this.value);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Monthly churn %</span><span class="a-val" id="v-churn">4%</span></div>
+      <input type="range" min="1" max="15" step="0.5" value="4" oninput="setVal('churn',this.value,'',1,'','%');recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Lead growth rate / mo</span><span class="a-val" id="v-lgr">12%</span></div>
+      <input type="range" min="0" max="40" step="1" value="12" oninput="setVal('lgr',this.value,'',0,'','%');recalc()">
+    </div>
+  </div>
+
+  <div class="assumption-group">
+    <div class="ag-label">Starting position</div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Existing agency creators</span><span class="a-val" id="v-existing">35</span></div>
+      <input type="range" min="10" max="100" step="5" value="35" oninput="setVal('existing',this.value);recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Starting cash ($K)</span><span class="a-val" id="v-cash">$80K</span></div>
+      <input type="range" min="10" max="500" step="10" value="80" oninput="setVal('cash',this.value,'$',0,'K');recalc()">
+    </div>
+    <div class="assumption">
+      <div class="a-row"><span class="a-name">Agency revenue / mo</span><span class="a-val" id="v-agrev">$18,000</span></div>
+      <input type="range" min="0" max="80000" step="1000" value="18000" oninput="setVal('agrev',this.value,'$',0,true);recalc()">
+    </div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="content">
+
+  <!-- KPI summary -->
+  <div class="kpi-row" id="kpi-row">
+    <div class="kpi-card highlight">
+      <div class="kpi-eye">ARR at month 24</div>
+      <div class="kpi-val" id="kpi-arr">—</div>
+      <div class="kpi-sub neutral" id="kpi-arr-sub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-eye">Break-even month</div>
+      <div class="kpi-val" id="kpi-be">—</div>
+      <div class="kpi-sub neutral">from product launch</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-eye">Total paying accounts M12</div>
+      <div class="kpi-val" id="kpi-accounts">—</div>
+      <div class="kpi-sub neutral" id="kpi-accounts-sub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-eye">Runway (months)</div>
+      <div class="kpi-val" id="kpi-runway">—</div>
+      <div class="kpi-sub neutral" id="kpi-runway-sub">—</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-eye">LTV : CAC ratio</div>
+      <div class="kpi-val" id="kpi-ltvcac">—</div>
+      <div class="kpi-sub neutral">blended across tiers</div>
+    </div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="chart-grid">
+    <div class="chart-panel">
+      <div class="chart-title">Monthly revenue & burn</div>
+      <div class="chart-sub">Revenue (blue) vs total costs (red) — 24 months</div>
+      <div class="bar-chart" id="rev-chart"></div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-title">Cumulative cash position</div>
+      <div class="chart-sub">Starting cash + agency revenue + Orbit revenue − costs</div>
+      <div class="bar-chart" id="cash-chart"></div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-title">Account growth by tier</div>
+      <div class="chart-sub">Creator (blue) · Pro (violet) · Agency (amber) — monthly paying</div>
+      <div class="bar-chart" id="acct-chart"></div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-title">Revenue mix</div>
+      <div class="chart-sub">% of MRR by tier at months 6, 12, 18, 24</div>
+      <div class="bar-chart" id="mix-chart"></div>
+    </div>
+  </div>
+
+  <!-- Monthly P&L table -->
+  <div style="background:#0d1228;border:1px solid #1a2150;border-radius:12px;overflow:hidden">
+    <div style="padding:14px 16px;border-bottom:1px solid #1a2150;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:12px;font-weight:500;color:#e8f0ff">Monthly P&L</div>
+        <div style="font-size:9px;color:#4a5280;margin-top:2px">All figures in USD · months 1–24 from product launch</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;background:#6C63FF;border-radius:2px"></div><span style="font-size:9px;color:#4a5280">Creator</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;background:#a78bfa;border-radius:2px"></div><span style="font-size:9px;color:#4a5280">Pro</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;background:#EF9F27;border-radius:2px"></div><span style="font-size:9px;color:#4a5280">Agency</span></div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="rev-table" id="pl-table"></table>
+    </div>
+  </div>
+
+  <!-- Unit economics -->
+  <div>
+    <div style="font-size:11px;font-weight:500;color:#e8f0ff;margin-bottom:10px">Unit economics</div>
+    <div class="ue-grid" id="ue-grid"></div>
+  </div>
+
+  <!-- Key insights callouts -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="callouts"></div>
+
+  <!-- Cost breakdown -->
+  <div style="background:#0d1228;border:1px solid #1a2150;border-radius:12px;overflow:hidden">
+    <div style="padding:12px 16px;border-bottom:1px solid #1a2150">
+      <div style="font-size:12px;font-weight:500;color:#e8f0ff">Monthly cost structure</div>
+      <div style="font-size:9px;color:#4a5280;margin-top:2px">Fixed vs variable at different ARR milestones</div>
+    </div>
+    <table class="rev-table" id="cost-table"></table>
+  </div>
+
+</div>
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Financial Model v1.0 · Bootstrapped · March 2026</span>
+    <span class="ftr-link">Confidential — not for distribution</span>
+  </div>
+</div>
+
+</div>
+
+<script>
+const A = {
+  eng:2,sal:8500,founder:5000,infra:800,ai:1.20,mkt:2000,
+  p1:29,p2:79,p3:499,
+  leads:40,conv:22,upg:30,agc:0.5,churn:4,lgr:12,
+  existing:35,cash:80,agrev:18000
+};
+
+const SCENARIOS = {
+  conservative:{leads:25,conv:15,upg:20,agc:0.3,churn:6,lgr:8,mkt:1000},
+  base:        {leads:40,conv:22,upg:30,agc:0.5,churn:4,lgr:12,mkt:2000},
+  optimistic:  {leads:80,conv:30,upg:40,agc:1.0,churn:3,lgr:18,mkt:4000}
+};
+
+function setScenario(s){
+  document.querySelectorAll('.sc-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const sc = SCENARIOS[s];
+  Object.keys(sc).forEach(k=>{
+    A[k]=sc[k];
+    const el = document.querySelector(`input[oninput*="'${k}'"]`);
+    if(el){el.value=sc[k];el.dispatchEvent(new Event('input'));}
+  });
+}
+
+function setVal(k,v,pre='',dec=0,comma=false,suf=''){
+  A[k]=parseFloat(v);
+  let display = parseFloat(v);
+  let str;
+  if(comma) str = pre + Math.round(display).toLocaleString() + suf;
+  else if(dec>0) str = pre + display.toFixed(dec) + suf;
+  else str = pre + Math.round(display) + suf;
+  const el = document.getElementById('v-'+k);
+  if(el) el.textContent = str;
+}
+
+function fmt(n,pre='$'){
+  if(Math.abs(n)>=1000000) return pre+(n/1000000).toFixed(2)+'M';
+  if(Math.abs(n)>=1000) return pre+(n/1000).toFixed(1)+'K';
+  return pre+Math.round(n);
+}
+function fmtN(n){return n>=0?fmt(n):'('+fmt(Math.abs(n))+')';}
+
+function buildModel(){
+  const months = 24;
+  let c1=0,c2=0,c3=0; // paying accounts per tier
+  let leads = A.leads;
+  let cumCash = A.cash*1000;
+  const rows=[];
+
+  // Seed with existing agency creators on Pro (they get Pro free for 6mo then convert)
+  const agencyCreators = Math.round(A.existing * 0.7); // 70% activate
+
+  for(let m=1;m<=months;m++){
+    // New leads grow month over month
+    if(m>1) leads = leads*(1+A.lgr/100);
+    const newPaid = Math.round(leads*(A.conv/100));
+    const newC1 = Math.round(newPaid*(1-A.upg/100));
+    const newC2 = newPaid - newC1;
+    const newC3 = m>=3 ? A.agc : 0; // agency sales start month 3
+
+    // Agency roster effect: month 1-6 free, month 7+ convert at 60%
+    const agencyConvert = (m===7) ? Math.round(agencyCreators*0.6) : 0;
+
+    // Apply churn
+    c1 = Math.max(0, Math.round(c1*(1-A.churn/100)) + newC1 + (m===1?0:0));
+    c2 = Math.max(0, Math.round(c2*(1-A.churn/100)) + newC2 + agencyConvert);
+    c3 = Math.max(0, c3 + newC3);
+
+    // Revenue
+    const r1 = c1*A.p1;
+    const r2 = c2*A.p2;
+    const r3 = c3*A.p3;
+    const orbitRev = r1+r2+r3;
+    const totalRev = orbitRev + A.agrev;
+
+    // Costs
+    const fixedCosts = (A.eng*A.sal) + A.founder + A.infra + A.mkt;
+    const aiCost = (c1+c2+c3)*A.ai;
+    const paymentFees = orbitRev*0.029;
+    const totalCosts = fixedCosts + aiCost + paymentFees;
+
+    // P&L
+    const grossProfit = totalRev - aiCost - paymentFees;
+    const netProfit = totalRev - totalCosts;
+    const orbitNetProfit = orbitRev - totalCosts;
+
+    cumCash += netProfit;
+
+    rows.push({m,c1,c2,c3,r1,r2,r3,orbitRev,totalRev,
+      fixedCosts,aiCost,paymentFees,totalCosts,
+      grossProfit,netProfit,orbitNetProfit,cumCash,
+      leads:Math.round(leads), newPaid});
+  }
+  return rows;
+}
+
+function recalc(){
+  const data = buildModel();
+  updateKPIs(data);
+  updateCharts(data);
+  updateTable(data);
+  updateUE(data);
+  updateCallouts(data);
+  updateCostTable(data);
+}
+
+function updateKPIs(data){
+  const m24 = data[23];
+  const m12 = data[11];
+  const arr = m24.orbitRev*12;
+  document.getElementById('kpi-arr').textContent = fmt(arr);
+  document.getElementById('kpi-arr-sub').textContent = 'MRR: '+fmt(m24.orbitRev)+' at mo 24';
+
+  const be = data.findIndex(r=>r.netProfit>=0);
+  const beEl = document.getElementById('kpi-be');
+  if(be>=0){beEl.textContent='Mo '+(be+1);beEl.nextElementSibling.className='kpi-sub up';}
+  else{beEl.textContent='24mo+';beEl.nextElementSibling.className='kpi-sub down';}
+
+  const totalAccts = m12.c1+m12.c2+m12.c3;
+  document.getElementById('kpi-accounts').textContent = totalAccts;
+  document.getElementById('kpi-accounts-sub').textContent = m12.c1+'C · '+m12.c2+'P · '+m12.c3+'A';
+
+  const cashPos = data[data.length-1].cumCash;
+  const runwayMonths = data.findIndex(r=>r.cumCash<0);
+  const rwEl = document.getElementById('kpi-runway');
+  const rwSub = document.getElementById('kpi-runway-sub');
+  if(runwayMonths<0){rwEl.textContent='24mo+';rwEl.style.color='#4ade80';rwSub.textContent='Cash positive throughout';}
+  else{rwEl.textContent='Mo '+runwayMonths;rwEl.style.color=runwayMonths<6?'#f09595':'#EF9F27';rwSub.textContent='Before cash runs out';}
+
+  // LTV:CAC — blended
+  const blendedARPU = (A.p1*0.5 + A.p2*0.35 + A.p3*0.15);
+  const ltv = (blendedARPU*(1-0.05)) / (A.churn/100);
+  const cac = A.mkt / Math.max(1, data[5]?.newPaid||1);
+  const ratio = ltv/Math.max(1,cac);
+  const ltvEl = document.getElementById('kpi-ltvcac');
+  ltvEl.textContent = ratio.toFixed(1)+':1';
+  ltvEl.style.color = ratio>3?'#4ade80':ratio>1.5?'#EF9F27':'#f09595';
+}
+
+function updateCharts(data){
+  // Revenue vs burn chart
+  const rc = document.getElementById('rev-chart');
+  rc.innerHTML='';
+  const maxRev = Math.max(...data.map(r=>Math.max(r.totalRev,r.totalCosts)));
+  data.forEach((r,i)=>{
+    if((i+1)%2!==0&&i!==0) return; // show every 2nd month + first
+    const h1 = Math.max(2,(r.totalRev/maxRev)*110);
+    const h2 = Math.max(2,(r.totalCosts/maxRev)*110);
+    rc.innerHTML+=`<div class="bar-wrap">
+      <div style="display:flex;gap:1px;align-items:flex-end;height:110px">
+        <div class="bar-seg" style="height:${h1}px;background:#6C63FF;opacity:.8;width:8px"></div>
+        <div class="bar-seg" style="height:${h2}px;background:#f09595;opacity:.6;width:8px"></div>
+      </div>
+      <div class="bar-lbl">M${i+1}</div>
+    </div>`;
+  });
+
+  // Cash position
+  const cc = document.getElementById('cash-chart');
+  cc.innerHTML='';
+  const maxCash = Math.max(...data.map(r=>Math.abs(r.cumCash)));
+  data.forEach((r,i)=>{
+    if((i+1)%2!==0&&i!==0) return;
+    const isPos = r.cumCash>=0;
+    const h = Math.max(2,(Math.abs(r.cumCash)/maxCash)*110);
+    const col = isPos?'#4ade80':'#f09595';
+    cc.innerHTML+=`<div class="bar-wrap">
+      <div style="height:110px;display:flex;align-items:${isPos?'flex-end':'flex-start'}">
+        <div class="bar-seg" style="height:${h}px;background:${col};opacity:.7;width:16px;${!isPos?'border-radius:0 0 2px 2px':''}"></div>
+      </div>
+      <div class="bar-lbl">M${i+1}</div>
+    </div>`;
+  });
+
+  // Account growth
+  const ac = document.getElementById('acct-chart');
+  ac.innerHTML='';
+  const maxA = Math.max(...data.map(r=>r.c1+r.c2+r.c3));
+  data.forEach((r,i)=>{
+    if((i+1)%2!==0&&i!==0) return;
+    const total = r.c1+r.c2+r.c3;
+    const h1=(r.c1/Math.max(1,maxA))*110;
+    const h2=(r.c2/Math.max(1,maxA))*110;
+    const h3=(r.c3/Math.max(1,maxA))*110;
+    ac.innerHTML+=`<div class="bar-wrap">
+      <div style="display:flex;flex-direction:column-reverse;height:110px;justify-content:flex-start;gap:0">
+        <div style="height:${Math.max(1,h1)}px;background:#6C63FF;opacity:.8;width:16px;border-radius:0"></div>
+        <div style="height:${Math.max(h2>0?1:0,h2)}px;background:#a78bfa;opacity:.8;width:16px"></div>
+        <div style="height:${Math.max(h3>0?1:0,h3)}px;background:#EF9F27;opacity:.8;width:16px;border-radius:2px 2px 0 0"></div>
+      </div>
+      <div class="bar-lbl">M${i+1}</div>
+    </div>`;
+  });
+
+  // Revenue mix at snapshots
+  const mx = document.getElementById('mix-chart');
+  mx.innerHTML='';
+  [5,11,17,23].forEach(mi=>{
+    const r=data[mi];
+    const tot=Math.max(1,r.orbitRev);
+    const p1=(r.r1/tot)*110;
+    const p2=(r.r2/tot)*110;
+    const p3=(r.r3/tot)*110;
+    mx.innerHTML+=`<div class="bar-wrap" style="flex:1">
+      <div style="display:flex;flex-direction:column-reverse;height:110px;width:32px">
+        <div style="height:${Math.max(1,p1)}px;background:#6C63FF;opacity:.8;width:100%"></div>
+        <div style="height:${Math.max(p2>0?1:0,p2)}px;background:#a78bfa;opacity:.8;width:100%"></div>
+        <div style="height:${Math.max(p3>0?1:0,p3)}px;background:#EF9F27;opacity:.8;width:100%;border-radius:2px 2px 0 0"></div>
+      </div>
+      <div class="bar-lbl">Mo ${mi+1}</div>
+    </div>`;
+  });
+}
+
+function updateTable(data){
+  const t = document.getElementById('pl-table');
+  const months = [0,1,2,3,4,5,8,11,14,17,20,23];
+  let h = `<thead><tr><th>Line item</th>`;
+  months.forEach(i=>h+=`<th>Mo ${i+1}</th>`);
+  h+=`</tr></thead><tbody>`;
+
+  const rows = [
+    {label:'REVENUE',type:'section'},
+    {label:'Creator tier MRR',key:'r1',pre:'$'},
+    {label:'Pro tier MRR',key:'r2',pre:'$'},
+    {label:'Agency tier MRR',key:'r3',pre:'$'},
+    {label:'Orbit MRR',key:'orbitRev',pre:'$',bold:true},
+    {label:'Agency business rev.',key:'agrev',pre:'$',fixed:true},
+    {label:'Total revenue',key:'totalRev',pre:'$',total:true},
+    {label:'COSTS',type:'section'},
+    {label:'Engineering salaries',key:'engSal',computed:true,pre:'$'},
+    {label:'Founder salary',key:'founder',computed:true,pre:'$'},
+    {label:'Infrastructure',key:'infra',computed:true,pre:'$'},
+    {label:'AI API costs',key:'aiCost',pre:'$'},
+    {label:'Payment fees (2.9%)',key:'paymentFees',pre:'$'},
+    {label:'Marketing',key:'mktCost',computed:true,pre:'$'},
+    {label:'Total costs',key:'totalCosts',pre:'$',total:true},
+    {label:'P&L',type:'section'},
+    {label:'Gross profit',key:'grossProfit',pre:'$',bold:true},
+    {label:'Gross margin %',key:'gm',computed:true,suf:'%'},
+    {label:'Net profit / loss',key:'netProfit',pre:'',profit:true},
+    {label:'Cumulative cash',key:'cumCash',pre:'',cash:true},
+    {label:'ACCOUNTS',type:'section'},
+    {label:'Creator tier',key:'c1'},
+    {label:'Pro tier',key:'c2'},
+    {label:'Agency tier',key:'c3'},
+    {label:'Total paying',key:'totalAccts',computed:true,bold:true},
+  ];
+
+  rows.forEach(row=>{
+    if(row.type==='section'){h+=`<tr class="section-row"><td colspan="${months.length+1}">${row.label}</td></tr>`;return;}
+    h+=`<tr class="${row.total?'total-row':''}">`;
+    h+=`<td>${row.label}</td>`;
+    months.forEach(i=>{
+      const d=data[i];
+      let val;
+      if(row.fixed) val=A.agrev;
+      else if(row.computed){
+        if(row.key==='engSal') val=A.eng*A.sal;
+        else if(row.key==='founder') val=A.founder;
+        else if(row.key==='infra') val=A.infra*(1+i*0.02);
+        else if(row.key==='mktCost') val=A.mkt*(1+Math.min(i*0.05,1));
+        else if(row.key==='gm') val=Math.round((d.grossProfit/Math.max(1,d.totalRev))*100);
+        else if(row.key==='totalAccts') val=d.c1+d.c2+d.c3;
+      } else val=d[row.key];
+
+      let str;
+      if(row.suf==='%') str=Math.round(val)+'%';
+      else if(row.pre==='$') str=fmt(val);
+      else if(row.cash){
+        str=val>=0?fmt(val):'('+fmt(Math.abs(val))+')';
+      } else if(row.profit){
+        str=val>=0?fmt(val):'('+fmt(Math.abs(val))+')';
+      } else str=Math.round(val||0).toLocaleString();
+
+      const cls = row.profit?(val>=0?' class="pos"':' class="neg"'):
+                  row.cash?(val>=0?' class="pos"':' class="neg"'):'';
+      h+=`<td${cls}>${str}</td>`;
+    });
+    h+='</tr>';
+  });
+  h+='</tbody>';
+  t.innerHTML=h;
+}
+
+function updateUE(data){
+  const m12=data[11];
+  const m6=data[5];
+
+  // CAC
+  const paidM6 = data.slice(0,6).reduce((s,r)=>s+r.newPaid,0);
+  const mktSpend6 = A.mkt*6;
+  const cac = paidM6>0?Math.round(mktSpend6/paidM6):999;
+
+  // LTV per tier
+  const ltv1 = Math.round((A.p1*(1-0.05))/(A.churn/100));
+  const ltv2 = Math.round((A.p2*(1-0.05))/(A.churn/100));
+  const ltv3 = Math.round((A.p3*(1-0.03))/(Math.max(1,A.churn*0.5)/100));
+
+  // Gross margin at M12
+  const gm = Math.round((m12.grossProfit/Math.max(1,m12.totalRev))*100);
+
+  // Payback period
+  const payback = cac>0?Math.round(cac/((A.p1*0.5+A.p2*0.35)*1)):0;
+
+  const g=document.getElementById('ue-grid');
+  g.innerHTML=`
+  <div class="ue-card">
+    <div class="ue-title">Creator tier ($${A.p1}/mo)</div>
+    <div class="ue-row"><span class="ue-label">Monthly revenue</span><span class="ue-num neutral">$${A.p1}</span></div>
+    <div class="ue-row"><span class="ue-label">AI cost / user</span><span class="ue-num warn">$${A.ai.toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">Payment fees</span><span class="ue-num warn">$${(A.p1*0.029).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">Net contribution</span><span class="ue-num good">$${(A.p1-A.ai-A.p1*0.029).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">LTV (at ${A.churn}% churn)</span><span class="ue-num good">$${ltv1.toLocaleString()}</span></div>
+    <div class="ue-row"><span class="ue-label">Contribution margin</span><span class="ue-num good">${Math.round(((A.p1-A.ai-A.p1*0.029)/A.p1)*100)}%</span></div>
+  </div>
+  <div class="ue-card">
+    <div class="ue-title">Pro tier ($${A.p2}/mo)</div>
+    <div class="ue-row"><span class="ue-label">Monthly revenue</span><span class="ue-num neutral">$${A.p2}</span></div>
+    <div class="ue-row"><span class="ue-label">AI cost / user</span><span class="ue-num warn">$${(A.ai*1.8).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">Payment fees</span><span class="ue-num warn">$${(A.p2*0.029).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">Net contribution</span><span class="ue-num good">$${(A.p2-A.ai*1.8-A.p2*0.029).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">LTV (at ${A.churn}% churn)</span><span class="ue-num good">$${ltv2.toLocaleString()}</span></div>
+    <div class="ue-row"><span class="ue-label">Contribution margin</span><span class="ue-num good">${Math.round(((A.p2-A.ai*1.8-A.p2*0.029)/A.p2)*100)}%</span></div>
+  </div>
+  <div class="ue-card">
+    <div class="ue-title">Agency tier ($${A.p3}/mo)</div>
+    <div class="ue-row"><span class="ue-label">Monthly revenue</span><span class="ue-num neutral">$${A.p3}</span></div>
+    <div class="ue-row"><span class="ue-label">AI cost / account</span><span class="ue-num warn">$${(A.ai*15).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">Payment fees</span><span class="ue-num warn">$${(A.p3*0.029).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">Net contribution</span><span class="ue-num good">$${(A.p3-A.ai*15-A.p3*0.029).toFixed(2)}</span></div>
+    <div class="ue-row"><span class="ue-label">LTV (at ${(A.churn*0.5).toFixed(1)}% churn)</span><span class="ue-num good">$${ltv3.toLocaleString()}</span></div>
+    <div class="ue-row"><span class="ue-label">Contribution margin</span><span class="ue-num good">${Math.round(((A.p3-A.ai*15-A.p3*0.029)/A.p3)*100)}%</span></div>
+  </div>
+  <div class="ue-card">
+    <div class="ue-title">Acquisition economics</div>
+    <div class="ue-row"><span class="ue-label">Blended CAC</span><span class="ue-num ${cac<100?'good':cac<200?'warn':'bad'}">$${cac}</span></div>
+    <div class="ue-row"><span class="ue-label">Organic CAC (est.)</span><span class="ue-num good">$${Math.round(cac*0.3)}</span></div>
+    <div class="ue-row"><span class="ue-label">Paid CAC (est.)</span><span class="ue-num warn">$${Math.round(cac*2.2)}</span></div>
+    <div class="ue-row"><span class="ue-label">LTV:CAC (Creator)</span><span class="ue-num ${ltv1/Math.max(1,cac)>3?'good':'warn'}">${(ltv1/Math.max(1,cac)).toFixed(1)}:1</span></div>
+    <div class="ue-row"><span class="ue-label">CAC payback (mo)</span><span class="ue-num neutral">${payback} months</span></div>
+  </div>
+  <div class="ue-card">
+    <div class="ue-title">Margin profile at M12</div>
+    <div class="ue-row"><span class="ue-label">Total revenue</span><span class="ue-num neutral">${fmt(data[11].totalRev)}</span></div>
+    <div class="ue-row"><span class="ue-label">Gross profit</span><span class="ue-num good">${fmt(data[11].grossProfit)}</span></div>
+    <div class="ue-row"><span class="ue-label">Gross margin</span><span class="ue-num good">${gm}%</span></div>
+    <div class="ue-row"><span class="ue-label">Total costs</span><span class="ue-num warn">${fmt(data[11].totalCosts)}</span></div>
+    <div class="ue-row"><span class="ue-label">Net profit/loss</span><span class="ue-num ${data[11].netProfit>=0?'good':'bad'}">${data[11].netProfit>=0?fmt(data[11].netProfit):'('+fmt(Math.abs(data[11].netProfit))+')'}</span></div>
+  </div>
+  <div class="ue-card">
+    <div class="ue-title">Revenue concentration M12</div>
+    <div class="ue-row"><span class="ue-label">Creator tier</span><span class="ue-num neutral">${fmt(data[11].r1)} (${Math.round(data[11].r1/Math.max(1,data[11].orbitRev)*100)}%)</span></div>
+    <div class="ue-row"><span class="ue-label">Pro tier</span><span class="ue-num neutral">${fmt(data[11].r2)} (${Math.round(data[11].r2/Math.max(1,data[11].orbitRev)*100)}%)</span></div>
+    <div class="ue-row"><span class="ue-label">Agency tier</span><span class="ue-num neutral">${fmt(data[11].r3)} (${Math.round(data[11].r3/Math.max(1,data[11].orbitRev)*100)}%)</span></div>
+    <div class="ue-row"><span class="ue-label">Agency business</span><span class="ue-num neutral">${fmt(A.agrev)} (subsidy)</span></div>
+    <div class="ue-row"><span class="ue-label">Orbit MRR</span><span class="ue-num good">${fmt(data[11].orbitRev)}</span></div>
+  </div>`;
+}
+
+function updateCallouts(data){
+  const be = data.findIndex(r=>r.netProfit>=0);
+  const m12=data[11];
+  const runway = data.findIndex(r=>r.cumCash<0);
+  const gm=Math.round((m12.grossProfit/Math.max(1,m12.totalRev))*100);
+  const c=document.getElementById('callouts');
+
+  const insights = [
+    {type:'g',label:'Bootstrapped advantage',text:`Your agency revenue of <strong>${fmt(A.agrev)}/mo</strong> covers ${Math.round((A.agrev/(A.eng*A.sal+A.founder+A.infra+A.mkt))*100)}% of your fixed cost base. Orbit doesn't need to be profitable quickly — it needs to be good.`},
+    {type: runway<0?'g':'a', label:'Cash runway',text: runway<0?`Model stays cash positive throughout 24 months under base case assumptions. Your agency revenue is a powerful buffer.`:`Cash runs out at month <strong>${runway}</strong>. Consider reducing engineering headcount or increasing agency revenue before that point.`},
+    {type:'v',label:'Agency tier is your profit engine',text:`Each agency account contributes <strong>$${Math.round(A.p3-A.ai*15-A.p3*0.029)}/mo</strong> net after AI and payment costs — ${Math.round(((A.p3-A.ai*15-A.p3*0.029)/A.p3)*100)}% contribution margin. Two agency accounts covers your infrastructure and AI costs entirely.`},
+    {type: be>=0&&be<18?'g':'r', label:'Break-even timing',text: be>=0?`Break-even at month <strong>${be+1}</strong> on base case assumptions. At that point Orbit revenue alone covers all costs — agency revenue becomes pure profit.`:`Break-even is beyond 24 months on current assumptions. Reduce burn or increase conversion rate to accelerate.`},
+    {type:'a',label:'AI cost watch',text:`At <strong>$${A.ai.toFixed(2)}/user/mo</strong>, AI API costs are manageable but will scale with users. At 1,000 active users that's <strong>$${fmt(A.ai*1000)}/mo</strong>. Batch processing and caching AI outputs will reduce this by ~40%.`},
+    {type:'g',label:'Agency roster conversion',text:`Your existing ${A.existing} managed creators converting to Pro at 60% adds <strong>${Math.round(A.existing*0.7*0.6)} immediate paying Pro accounts</strong> in month 7 — a meaningful revenue step with zero acquisition cost.`}
+  ];
+
+  c.innerHTML = insights.map(i=>`
+    <div class="callout ${i.type}">
+      <div class="cl-label">${i.label}</div>
+      <div class="cl-text">${i.text}</div>
+    </div>`).join('');
+}
+
+function updateCostTable(data){
+  const t=document.getElementById('cost-table');
+  const snapshots = [{label:'Launch (Mo 1)',i:0},{label:'Mo 6',i:5},{label:'Mo 12',i:11},{label:'Mo 18',i:17},{label:'Mo 24',i:23}];
+
+  let h=`<thead><tr><th>Cost line</th>`;
+  snapshots.forEach(s=>h+=`<th>${s.label}</th>`);
+  h+=`<th>Type</th></tr></thead><tbody>`;
+
+  const lines = [
+    {label:'Engineering salaries',fn:d=>A.eng*A.sal,type:'Fixed'},
+    {label:'Founder salary',fn:d=>A.founder,type:'Fixed'},
+    {label:'Infrastructure',fn:(d,i)=>Math.round(A.infra*(1+i*0.02)),type:'Semi-fixed'},
+    {label:'Marketing',fn:(d,i)=>Math.round(A.mkt*(1+Math.min(i*0.05,1))),type:'Semi-fixed'},
+    {label:'AI API costs',fn:d=>Math.round(d.aiCost),type:'Variable'},
+    {label:'Payment processing',fn:d=>Math.round(d.paymentFees),type:'Variable'},
+    {label:'Total costs',fn:d=>Math.round(d.totalCosts),type:'—',total:true},
+    {label:'Total revenue',fn:d=>Math.round(d.totalRev),type:'—',total:true},
+    {label:'Net profit / loss',fn:d=>Math.round(d.netProfit),type:'—',profit:true},
+  ];
+
+  lines.forEach(line=>{
+    h+=`<tr class="${line.total?'total-row':''}">`;
+    h+=`<td>${line.label}</td>`;
+    snapshots.forEach(s=>{
+      const val = line.fn(data[s.i],s.i);
+      const cls = line.profit?(val>=0?' class="pos"':' class="neg"'):'';
+      const str = line.profit?(val>=0?fmt(val):'('+fmt(Math.abs(val))+')'): fmt(Math.abs(val));
+      h+=`<td${cls}>${str}</td>`;
+    });
+    h+=`<td style="font-size:9px;color:#4a5280">${line.type}</td>`;
+    h+='</tr>';
+  });
+
+  h+='</tbody>';
+  t.innerHTML=h;
+}
+
+// Init
+recalc();
+</script>
+</body>
+</html>
