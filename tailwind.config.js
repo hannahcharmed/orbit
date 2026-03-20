@@ -42,14 +42,13 @@ module.exports = {
         'purple-bg': '#0C0820',
       },
       fontFamily: {
-        // Chakra Petch: angular, condensed, specifically designed for tech/sci-fi UI
-        display: ['Chakra Petch', 'system-ui', 'sans-serif'],
-        // IBM Plex Sans: precision technical body text
-        sans: ['IBM Plex Sans', 'system-ui', 'sans-serif'],
-        // Playfair Display: editorial serif contrast for headings
+        // Plus Jakarta Sans: modern geometric, clean and highly readable
+        display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        // Playfair Display: editorial serif for headings
         serif: ['Playfair Display', 'Georgia', 'serif'],
-        // Share Tech Mono: designed for radio/military/tech readouts
-        mono: ['Share Tech Mono', 'JetBrains Mono', 'monospace'],
+        // JetBrains Mono: excellent legibility for data/code readouts
+        mono: ['JetBrains Mono', 'Courier New', 'monospace'],
       },
       fontSize: {
         '2xs': '7px',
