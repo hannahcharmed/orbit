@@ -3,27 +3,92 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
+
+function HudCorner({ pos }: { pos: 'tl' | 'tr' | 'bl' | 'br' }) {
+  const size = 20;
+  const style: React.CSSProperties = {
+    position: 'absolute',
+    width: size,
+    height: size,
+    pointerEvents: 'none',
+    zIndex: 10,
+  };
+  if (pos === 'tl') { style.top = -1; style.left = -1; }
+  if (pos === 'tr') { style.top = -1; style.right = -1; }
+  if (pos === 'bl') { style.bottom = -1; style.left = -1; }
+  if (pos === 'br') { style.bottom = -1; style.right = -1; }
+
+  const border: React.CSSProperties = { position: 'absolute', background: 'rgba(0,229,255,0.65)' };
+  const h: React.CSSProperties = { ...border, height: 1, width: size };
+  const v: React.CSSProperties = { ...border, width: 1, height: size };
+
+  return (
+    <div style={style}>
+      {pos === 'tl' && <><div style={{ ...h, top: 0, left: 0 }} /><div style={{ ...v, top: 0, left: 0 }} /></>}
+      {pos === 'tr' && <><div style={{ ...h, top: 0, right: 0 }} /><div style={{ ...v, top: 0, right: 0 }} /></>}
+      {pos === 'bl' && <><div style={{ ...h, bottom: 0, left: 0 }} /><div style={{ ...v, bottom: 0, left: 0 }} /></>}
+      {pos === 'br' && <><div style={{ ...h, bottom: 0, right: 0 }} /><div style={{ ...v, bottom: 0, right: 0 }} /></>}
+    </div>
+  );
+}
 
 function OrbitMark() {
   return (
-    <svg
-      width="56" height="56"
-      viewBox="0 0 96 96"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <svg width="60" height="60" viewBox="0 0 96 96" fill="none"
       className="animate-float"
-      style={{ filter: 'drop-shadow(0 0 20px rgba(167,139,250,0.5))' }}
-    >
-      <circle cx="48" cy="48" r="34" stroke="#A78BFA" strokeWidth="3" strokeLinecap="round"
-        strokeDasharray="175 40" strokeDashoffset="20" fill="none" />
-      <circle cx="48" cy="48" r="34" stroke="#5B6EFF" strokeWidth="1.5" strokeLinecap="round"
-        strokeDasharray="145 65" strokeDashoffset="38" fill="none" opacity="0.55" />
-      <circle cx="48" cy="48" r="34" stroke="#00D4FF" strokeWidth="0.7"
-        fill="none" opacity="0.22" />
-      <circle cx="76" cy="48" r="5.5" fill="#A78BFA" />
-      <circle cx="76" cy="48" r="10" stroke="#A78BFA" strokeWidth="0.5" fill="none" opacity="0.3" />
+      style={{ filter: 'drop-shadow(0 0 24px rgba(0,229,255,0.55))' }}>
+      <circle cx="48" cy="48" r="34" stroke="#00E5FF" strokeWidth="2.5" strokeLinecap="round"
+        strokeDasharray="168 46" strokeDashoffset="20" fill="none" />
+      <circle cx="48" cy="48" r="34" stroke="#3D7AFF" strokeWidth="1.2" strokeLinecap="round"
+        strokeDasharray="135 75" strokeDashoffset="40" fill="none" opacity="0.55" />
+      <circle cx="48" cy="48" r="34" stroke="#9B7FFF" strokeWidth="0.5"
+        fill="none" opacity="0.2" />
+      <circle cx="76" cy="48" r="5" fill="#00E5FF"
+        style={{ filter: 'drop-shadow(0 0 8px rgba(0,229,255,1))' }} />
+      <circle cx="76" cy="48" r="10" stroke="#00E5FF" strokeWidth="0.5" fill="none" opacity="0.35" />
     </svg>
+  );
+}
+
+function InputField({
+  type, value, onChange, placeholder, autoComplete, icon: Icon, rightSlot,
+}: {
+  type: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  autoComplete?: string;
+  icon: React.ElementType;
+  rightSlot?: React.ReactNode;
+}) {
+  const [focused, setFocused] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        type={type}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        required
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className="w-full pl-10 pr-10 py-3 text-sm font-sans text-starlight focus:outline-none"
+        style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: `1px solid ${focused ? 'rgba(0,229,255,0.45)' : 'rgba(255,255,255,0.06)'}`,
+          borderRadius: 6,
+          boxShadow: focused ? '0 0 0 1px rgba(0,229,255,0.12), 0 0 20px rgba(0,229,255,0.08)' : 'none',
+          transition: 'border-color 0.18s, box-shadow 0.18s',
+        }}
+      />
+      <Icon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2"
+        style={{ color: focused ? 'rgba(0,229,255,0.55)' : 'rgba(46,56,88,1)' }} />
+      {rightSlot && (
+        <div className="absolute right-3.5 top-1/2 -translate-y-1/2">{rightSlot}</div>
+      )}
+    </div>
   );
 }
 
@@ -31,13 +96,13 @@ export default function LoginPage() {
   const router = useRouter();
   const { login, loginWithOAuth, isAuthenticated } = useAuth();
 
-  const [tab, setTab] = useState<'signin' | 'signup'>('signin');
-  const [email, setEmail] = useState('');
+  const [tab, setTab]         = useState<'signin' | 'signup'>('signin');
+  const [email, setEmail]     = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+  const [name, setName]       = useState('');
   const [showPass, setShowPass] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError]     = useState('');
 
   useEffect(() => {
     if (isAuthenticated) router.push('/');
@@ -48,86 +113,109 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
     const result = await login(email, password);
-    if (!result.ok) {
-      setError(result.error || 'Login failed');
-    } else {
-      router.push('/');
-    }
+    if (!result.ok) setError(result.error || 'Login failed');
+    else router.push('/');
     setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#06080F' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#04060D' }}>
 
-      {/* Layered atmospheric background */}
+      {/* ── Layered atmosphere ── */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {/* Primary violet bloom — top center */}
-        <div className="absolute top-[-15%] left-[40%] w-[700px] h-[700px] rounded-full animate-glow-breathe"
-          style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 65%)', transform: 'translateX(-50%)' }} />
-        {/* Electric blue — lower right */}
-        <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(91,110,255,0.1) 0%, transparent 60%)' }} />
-        {/* Cyan accent — far left */}
-        <div className="absolute top-[40%] left-[-10%] w-[350px] h-[350px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 55%)' }} />
-        {/* Subtle horizontal scan line — purely decorative */}
-        <div className="absolute left-0 right-0 h-px opacity-[0.04]"
-          style={{ top: '35%', background: 'linear-gradient(90deg, transparent 0%, #5B6EFF 30%, #A78BFA 50%, #5B6EFF 70%, transparent 100%)' }} />
-        <div className="absolute left-0 right-0 h-px opacity-[0.03]"
-          style={{ top: '65%', background: 'linear-gradient(90deg, transparent 0%, #00D4FF 30%, #5B6EFF 50%, transparent 100%)' }} />
+        {/* Primary cyan bloom */}
+        <div className="absolute top-[-20%] left-[35%] w-[800px] h-[800px] rounded-full animate-glow-breathe"
+          style={{ background: 'radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 60%)', transform: 'translateX(-50%)' }} />
+        {/* Deep blue lower */}
+        <div className="absolute bottom-[-15%] right-[-8%] w-[600px] h-[600px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(61,122,255,0.1) 0%, transparent 60%)' }} />
+        {/* Violet accent */}
+        <div className="absolute top-[45%] left-[-12%] w-[400px] h-[400px] rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(155,127,255,0.07) 0%, transparent 55%)' }} />
+
+        {/* Horizontal HUD lines */}
+        {[22, 55, 78].map((pct, i) => (
+          <div key={i} className="absolute left-0 right-0 h-px"
+            style={{
+              top: `${pct}%`,
+              background: i === 1
+                ? 'linear-gradient(90deg, transparent, rgba(0,229,255,0.07) 30%, rgba(61,122,255,0.05) 70%, transparent)'
+                : 'linear-gradient(90deg, transparent, rgba(255,255,255,0.025) 50%, transparent)',
+            }}
+          />
+        ))}
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 relative z-10">
 
-        {/* Logo — animated float */}
+        {/* ── Coordinate display — top corners ── */}
+        <div className="fixed top-4 left-4 font-mono text-[8px] tracking-[0.15em]"
+          style={{ color: 'rgba(0,229,255,0.25)' }}>
+          SYS.AUTH.NODE<br />
+          <span className="animate-blink">█</span> READY
+        </div>
+        <div className="fixed top-4 right-4 font-mono text-[8px] text-right tracking-[0.1em]"
+          style={{ color: 'rgba(0,229,255,0.2)' }}>
+          ORBIT/v2.6<br />
+          2026.03.20
+        </div>
+
+        {/* ── Logo ── */}
         <div className="flex flex-col items-center gap-4 mb-10">
           <OrbitMark />
           <div className="text-center">
-            <span className="font-display text-starlight tracking-[6px] text-xl font-700 block"
-              style={{ textShadow: '0 0 40px rgba(167,139,250,0.4)' }}>
+            <div className="font-display font-700 text-starlight tracking-[7px] text-2xl"
+              style={{ textShadow: '0 0 40px rgba(0,229,255,0.4)' }}>
               ORBIT
-            </span>
-            <p className="font-display text-[9px] tracking-[0.22em] text-text-quaternary uppercase mt-1.5">
+            </div>
+            <div className="font-display text-[8px] tracking-[0.28em] uppercase mt-1.5"
+              style={{ color: 'rgba(0,229,255,0.45)' }}>
               Creator Intelligence Platform
-            </p>
+            </div>
           </div>
         </div>
 
-        {/* Auth card — glass morphism */}
+        {/* ── Auth card ── */}
         <div className="w-full max-w-sm">
-          <div className="card-glass p-6">
+          <div className="relative rounded-xl p-6"
+            style={{
+              background: 'rgba(255,255,255,0.018)',
+              border: '1px solid rgba(255,255,255,0.065)',
+              backdropFilter: 'blur(28px)',
+              WebkitBackdropFilter: 'blur(28px)',
+              boxShadow: '0 8px 48px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.04) inset',
+            }}>
+            {/* Corner brackets on form card */}
+            <HudCorner pos="tl" /><HudCorner pos="tr" />
+            <HudCorner pos="bl" /><HudCorner pos="br" />
 
             {/* Tab switcher */}
-            <div className="flex rounded-xl p-1 mb-6"
-              style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <div className="flex rounded p-0.5 mb-6"
+              style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.04)' }}>
               {(['signin', 'signup'] as const).map(t => (
-                <button
-                  key={t}
+                <button key={t}
                   onClick={() => { setTab(t); setError(''); }}
-                  className={`flex-1 py-2 rounded-lg font-display text-[10px] font-600 tracking-wide uppercase transition-all duration-200 ${
-                    tab === t
-                      ? 'text-starlight'
-                      : 'text-text-quaternary hover:text-text-secondary'
-                  }`}
+                  className="flex-1 py-2.5 rounded font-display text-[9px] font-600 tracking-[0.14em] uppercase transition-all duration-200"
                   style={tab === t ? {
-                    background: 'linear-gradient(135deg, rgba(91,110,255,0.25) 0%, rgba(167,139,250,0.15) 100%)',
-                    border: '1px solid rgba(91,110,255,0.25)',
-                    boxShadow: '0 0 20px rgba(91,110,255,0.15)',
-                  } : {}}
+                    background: 'linear-gradient(135deg, rgba(61,122,255,0.2), rgba(0,229,255,0.1))',
+                    border: '1px solid rgba(0,229,255,0.25)',
+                    color: '#00E5FF',
+                    boxShadow: '0 0 20px rgba(0,229,255,0.12)',
+                  } : { color: 'rgba(46,56,88,1)', border: '1px solid transparent' }}
                 >
-                  {t === 'signin' ? 'Sign in' : 'Create account'}
+                  {t === 'signin' ? 'Sign In' : 'Register'}
                 </button>
               ))}
             </div>
 
-            {/* OAuth buttons */}
+            {/* OAuth */}
             <div className="space-y-2.5 mb-5">
               {[
                 {
-                  label: 'Continue with Google',
+                  label: 'Google',
                   action: () => loginWithOAuth('google'),
                   icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24">
+                    <svg width="15" height="15" viewBox="0 0 24 24">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -136,171 +224,136 @@ export default function LoginPage() {
                   ),
                 },
                 {
-                  label: 'Continue with Apple',
+                  label: 'Apple',
                   action: () => loginWithOAuth('apple'),
                   icon: (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"/>
                     </svg>
                   ),
                 },
               ].map(({ label, action, icon }) => (
-                <button
-                  key={label}
-                  onClick={action}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-starlight transition-all duration-200 group"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                  }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.14)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.03)'; }}
+                <button key={label} onClick={action}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 rounded font-display text-[10px] font-500 tracking-[0.1em] uppercase text-text-secondary transition-all group"
+                  style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.055)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(0,229,255,0.25)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(0,229,255,0.04)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.055)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.025)'; }}
                 >
                   {icon}
-                  <span className="flex-1 text-left font-sans text-sm">{label}</span>
-                  <ArrowRight size={13} className="text-text-quaternary group-hover:text-text-secondary transition-colors" />
+                  <span className="flex-1 text-left">Continue with {label}</span>
+                  <span className="font-mono text-[8px]" style={{ color: 'rgba(0,229,255,0.3)' }}>›</span>
                 </button>
               ))}
             </div>
 
             {/* Divider */}
             <div className="flex items-center gap-3 mb-5">
-              <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
-              <span className="font-display text-[8px] tracking-[0.18em] text-text-faint uppercase">or</span>
-              <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.05)' }} />
+              <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.045)' }} />
+              <span className="font-display text-[7px] tracking-[0.2em] uppercase"
+                style={{ color: 'rgba(0,229,255,0.25)' }}>OR</span>
+              <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.045)' }} />
             </div>
 
             {/* Email form */}
             <form onSubmit={handleSubmit} className="space-y-3">
               {tab === 'signup' && (
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="Full name"
-                    required={tab === 'signup'}
-                    className="w-full rounded-xl px-4 py-3 text-sm text-starlight transition-all pl-10 focus:outline-none"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.07)',
-                    }}
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(91,110,255,0.4)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(91,110,255,0.1)'; }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
-                  />
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-quaternary">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <InputField
+                  type="text" value={name} onChange={setName}
+                  placeholder="Full name"
+                  icon={({ size, className, style }: React.SVGProps<SVGSVGElement> & { size?: number }) => (
+                    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className as string} style={style as React.CSSProperties}>
                       <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>
                     </svg>
-                  </span>
-                </div>
+                  )}
+                />
               )}
-
+              <InputField type="email" value={email} onChange={setEmail}
+                placeholder="Email address" autoComplete="email" icon={Mail} />
               <div className="relative">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Email address"
-                  required
-                  autoComplete="email"
-                  className="w-full rounded-xl px-4 py-3 text-sm text-starlight transition-all pl-10 focus:outline-none"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                  }}
-                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(91,110,255,0.4)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(91,110,255,0.1)'; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
-                />
-                <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-quaternary" />
-              </div>
-
-              <div className="relative">
-                <input
+                <InputField
                   type={showPass ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  value={password} onChange={setPassword}
                   placeholder="Password"
-                  required
                   autoComplete={tab === 'signin' ? 'current-password' : 'new-password'}
-                  className="w-full rounded-xl px-4 py-3 text-sm text-starlight transition-all pl-10 pr-10 focus:outline-none"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                  }}
-                  onFocus={e => { e.currentTarget.style.borderColor = 'rgba(91,110,255,0.4)'; e.currentTarget.style.boxShadow = '0 0 20px rgba(91,110,255,0.1)'; }}
-                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.boxShadow = 'none'; }}
+                  icon={Lock}
                 />
-                <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-quaternary" />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(s => !s)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-quaternary hover:text-text-secondary transition-colors"
+                <button type="button" onClick={() => setShowPass(s => !s)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
+                  style={{ color: 'rgba(46,56,88,1)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(0,229,255,0.6)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(46,56,88,1)'; }}
                 >
-                  {showPass ? <EyeOff size={14} /> : <Eye size={14} />}
+                  {showPass ? <EyeOff size={13} /> : <Eye size={13} />}
                 </button>
               </div>
 
               {error && (
-                <div className="flex items-center gap-2 p-3 rounded-lg"
-                  style={{ background: 'rgba(255,107,107,0.08)', border: '1px solid rgba(255,107,107,0.2)' }}>
-                  <AlertCircle size={13} className="text-alert-red flex-shrink-0" />
-                  <p className="text-[11px] text-alert-red font-sans">{error}</p>
+                <div className="flex items-center gap-2 p-3 rounded"
+                  style={{ background: 'rgba(255,62,108,0.07)', border: '1px solid rgba(255,62,108,0.2)' }}>
+                  <AlertCircle size={12} className="text-alert-red flex-shrink-0" />
+                  <p className="font-sans text-[11px] text-alert-red">{error}</p>
                 </div>
               )}
 
               {tab === 'signin' && (
                 <div className="flex justify-end">
-                  <button type="button" className="font-sans text-[11px] text-orbit-blue hover:text-nova-violet transition-colors">
-                    Forgot password?
+                  <button type="button"
+                    className="font-display text-[8px] tracking-[0.12em] uppercase transition-colors"
+                    style={{ color: 'rgba(61,122,255,0.7)' }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#00E5FF'; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(61,122,255,0.7)'; }}
+                  >
+                    Recover Access
                   </button>
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full btn-primary justify-center py-3 text-sm mt-1 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button type="submit" disabled={isLoading}
+                className="w-full btn-primary justify-center py-3 mt-1 disabled:opacity-40 disabled:cursor-not-allowed">
                 {isLoading ? (
                   <span className="flex items-center gap-2">
-                    <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3"/>
                       <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
                     </svg>
-                    {tab === 'signin' ? 'Signing in...' : 'Creating account...'}
+                    Authenticating...
                   </span>
                 ) : (
-                  tab === 'signin' ? 'Sign in' : 'Create account'
+                  tab === 'signin' ? 'Authenticate' : 'Create Account'
                 )}
               </button>
             </form>
 
-            {/* Demo hint */}
-            <div className="mt-5 p-3 rounded-xl text-center"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <p className="font-sans text-[10px] text-text-quaternary">
-                <span className="text-text-secondary font-medium">Demo:</span>{' '}
-                jordan@jordanfit.co · any password
+            {/* Demo hint — styled as system data readout */}
+            <div className="mt-5 p-3 rounded"
+              style={{ background: 'rgba(0,229,255,0.03)', border: '1px solid rgba(0,229,255,0.1)' }}>
+              <p className="font-mono text-[9px] text-center" style={{ color: 'rgba(0,229,255,0.45)' }}>
+                <span style={{ color: 'rgba(0,229,255,0.7)' }}>DEMO ACCESS //</span>{' '}
+                jordan@jordanfit.co
               </p>
             </div>
 
             {tab === 'signin' && (
-              <p className="text-center font-sans text-[11px] text-text-quaternary mt-4">
-                New to Orbit?{' '}
-                <button onClick={() => setTab('signup')} className="text-orbit-blue hover:text-nova-violet transition-colors">
-                  Create a free account
+              <p className="text-center font-sans text-[11px] mt-4" style={{ color: 'rgba(106,122,156,1)' }}>
+                No account?{' '}
+                <button onClick={() => setTab('signup')}
+                  className="transition-colors"
+                  style={{ color: '#3D7AFF' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#00E5FF'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = '#3D7AFF'; }}>
+                  Register
                 </button>
               </p>
             )}
           </div>
         </div>
 
-        <p className="mt-8 font-sans text-[10px] text-text-faint text-center max-w-sm">
-          By continuing, you agree to Orbit&apos;s{' '}
-          <span className="text-orbit-blue cursor-pointer hover:text-nova-violet transition-colors">Terms of Service</span>
-          {' '}and{' '}
-          <span className="text-orbit-blue cursor-pointer hover:text-nova-violet transition-colors">Privacy Policy</span>
+        <p className="mt-8 font-mono text-[8px] text-center max-w-sm tracking-wide"
+          style={{ color: 'rgba(46,56,88,1)' }}>
+          ACCESS GOVERNED BY{' '}
+          <span className="cursor-pointer transition-colors hover:text-cyan-pulse" style={{ color: 'rgba(61,122,255,0.55)' }}>TERMS OF SERVICE</span>
+          {' '}AND{' '}
+          <span className="cursor-pointer transition-colors hover:text-cyan-pulse" style={{ color: 'rgba(61,122,255,0.55)' }}>PRIVACY POLICY</span>
         </p>
       </div>
     </div>

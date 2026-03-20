@@ -37,32 +37,99 @@ const mobileNavItems = [
   { href: '/ai-coach', label: 'AI', icon: Brain },
 ];
 
+function SysLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="px-4 pt-5 pb-1.5 flex items-center gap-2">
+      <div className="w-3 h-px" style={{ background: 'rgba(0,229,255,0.4)' }} />
+      <span className="font-display text-[7px] tracking-[0.25em] uppercase"
+        style={{ color: 'rgba(0,229,255,0.35)' }}>
+        {children}
+      </span>
+    </div>
+  );
+}
+
 function OrbitLogo() {
   return (
-    <div className="flex items-center gap-3 px-5 py-5 border-b border-white/[0.05]">
-      {/* Orbit mark — three concentric arcs + planet dot */}
-      <div className="relative flex-shrink-0">
-        <svg width="30" height="30" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg"
-          className="animate-glow-breathe">
-          <circle cx="48" cy="48" r="34" stroke="#A78BFA" strokeWidth="3" strokeLinecap="round"
-            strokeDasharray="175 40" strokeDashoffset="20" fill="none" />
-          <circle cx="48" cy="48" r="34" stroke="#5B6EFF" strokeWidth="1.5" strokeLinecap="round"
-            strokeDasharray="150 60" strokeDashoffset="35" fill="none" opacity="0.5" />
-          <circle cx="48" cy="48" r="34" stroke="#00D4FF" strokeWidth="0.6"
-            fill="none" opacity="0.2" />
-          <circle cx="76" cy="48" r="5" fill="#A78BFA" />
-          <circle cx="76" cy="48" r="9" stroke="#A78BFA" strokeWidth="0.6" fill="none" opacity="0.35" />
-        </svg>
+    <div className="px-5 py-5 flex flex-col gap-2"
+      style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+      <div className="flex items-center gap-3">
+        {/* Orbit mark */}
+        <div className="relative flex-shrink-0">
+          <svg width="28" height="28" viewBox="0 0 96 96" fill="none"
+            className="animate-glow-breathe"
+            style={{ filter: 'drop-shadow(0 0 8px rgba(0,229,255,0.5))' }}>
+            <circle cx="48" cy="48" r="34" stroke="#00E5FF" strokeWidth="2.5" strokeLinecap="round"
+              strokeDasharray="170 44" strokeDashoffset="20" fill="none" />
+            <circle cx="48" cy="48" r="34" stroke="#3D7AFF" strokeWidth="1.2" strokeLinecap="round"
+              strokeDasharray="140 70" strokeDashoffset="38" fill="none" opacity="0.55" />
+            <circle cx="48" cy="48" r="34" stroke="#9B7FFF" strokeWidth="0.5"
+              fill="none" opacity="0.2" />
+            {/* Planet dot */}
+            <circle cx="76" cy="48" r="4.5" fill="#00E5FF"
+              style={{ filter: 'drop-shadow(0 0 6px rgba(0,229,255,0.9))' }} />
+            <circle cx="76" cy="48" r="9" stroke="#00E5FF" strokeWidth="0.5" fill="none" opacity="0.3" />
+          </svg>
+        </div>
+        <div>
+          <div className="font-display text-starlight tracking-[5px] text-sm font-700 leading-none"
+            style={{ textShadow: '0 0 20px rgba(0,229,255,0.3)' }}>
+            ORBIT
+          </div>
+          <div className="font-display text-[6.5px] tracking-[0.22em] uppercase mt-1"
+            style={{ color: 'rgba(0,229,255,0.45)' }}>
+            Intelligence
+          </div>
+        </div>
       </div>
-      <div>
-        <span className="font-display text-starlight tracking-[5px] text-sm font-700 opacity-95 block">
-          ORBIT
+      {/* System status row */}
+      <div className="flex items-center gap-1.5 pl-0.5">
+        <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"
+          style={{ boxShadow: '0 0 6px rgba(0,255,148,0.8)' }} />
+        <span className="font-mono text-[7px] tracking-[0.12em] uppercase"
+          style={{ color: 'rgba(0,255,148,0.6)' }}>
+          SYS ONLINE
         </span>
-        <span className="font-display text-[7px] tracking-[0.2em] text-text-quaternary uppercase">
-          Intelligence
+        <span className="ml-auto font-mono text-[7px]"
+          style={{ color: 'rgba(255,255,255,0.12)' }}>
+          v2.6
         </span>
       </div>
     </div>
+  );
+}
+
+function NavItem({ href, label, icon: Icon, isActive }: { href: string; label: string; icon: React.ElementType; isActive: boolean }) {
+  return (
+    <Link
+      href={href}
+      className={`relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200 group overflow-hidden`}
+      style={isActive ? {
+        background: 'linear-gradient(90deg, rgba(0,229,255,0.08) 0%, rgba(61,122,255,0.04) 80%, transparent 100%)',
+        borderLeft: '2px solid rgba(0,229,255,0.7)',
+      } : {
+        borderLeft: '2px solid transparent',
+      }}
+    >
+      {isActive && (
+        /* Active glow bloom */
+        <div className="absolute left-0 top-0 bottom-0 w-8 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse at left, rgba(0,229,255,0.08), transparent 70%)' }} />
+      )}
+      <Icon
+        size={14}
+        strokeWidth={isActive ? 2 : 1.5}
+        className="flex-shrink-0 transition-colors"
+        style={{ color: isActive ? '#00E5FF' : 'rgba(46,56,88,1)' }}
+      />
+      <span className="font-display text-[10px] font-500 tracking-[0.06em] transition-colors"
+        style={{ color: isActive ? '#00E5FF' : 'rgba(106,122,156,1)' }}>
+        {label}
+      </span>
+      {isActive && (
+        <span className="ml-auto font-mono text-[7px]" style={{ color: 'rgba(0,229,255,0.4)' }}>►</span>
+      )}
+    </Link>
   );
 }
 
@@ -75,114 +142,60 @@ export function Navigation() {
       {/* Desktop sidebar */}
       <nav className="hidden md:flex flex-col w-56 min-h-screen flex-shrink-0"
         style={{
-          background: 'linear-gradient(180deg, rgba(10,13,24,0.97) 0%, rgba(7,9,18,0.99) 100%)',
-          borderRight: '1px solid rgba(255,255,255,0.05)',
+          background: 'linear-gradient(180deg, rgba(6,9,18,0.98) 0%, rgba(4,6,14,0.99) 100%)',
+          borderRight: '1px solid rgba(255,255,255,0.04)',
         }}
       >
         <OrbitLogo />
 
-        <div className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ href, label, icon: Icon }, i) => {
-            const isActive = pathname === href;
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group overflow-hidden ${
-                  isActive ? '' : 'hover:bg-white/[0.04]'
-                }`}
-                style={isActive ? {
-                  background: 'linear-gradient(90deg, rgba(91,110,255,0.15) 0%, rgba(91,110,255,0.04) 100%)',
-                  borderLeft: '2px solid rgba(91,110,255,0.7)',
-                } : { borderLeft: '2px solid transparent' }}
-              >
-                {isActive && (
-                  <div className="absolute inset-0 pointer-events-none"
-                    style={{ boxShadow: 'inset 0 0 20px rgba(91,110,255,0.06)' }} />
-                )}
-                <Icon
-                  size={15}
-                  strokeWidth={isActive ? 2 : 1.5}
-                  className={isActive
-                    ? 'text-orbit-blue flex-shrink-0'
-                    : 'text-text-quaternary group-hover:text-text-secondary transition-colors flex-shrink-0'}
-                />
-                <span className={`font-display text-[10px] font-600 tracking-wide transition-colors ${
-                  isActive ? 'text-orbit-blue' : 'text-text-secondary group-hover:text-starlight'
-                }`}>
-                  {label}
-                </span>
-              </Link>
-            );
-          })}
+        <SysLabel>Navigation</SysLabel>
+
+        <div className="flex-1 px-2 pb-2 space-y-0 overflow-y-auto">
+          {navItems.map(({ href, label, icon }) => (
+            <NavItem key={href} href={href} label={label} icon={icon} isActive={pathname === href} />
+          ))}
         </div>
 
-        {/* Bottom section */}
-        <div className="p-3 space-y-0.5" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-          <Link
-            href="/notifications"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group overflow-hidden ${
-              pathname === '/notifications' ? '' : 'hover:bg-white/[0.04]'
-            }`}
-            style={pathname === '/notifications' ? {
-              background: 'linear-gradient(90deg, rgba(91,110,255,0.15) 0%, rgba(91,110,255,0.04) 100%)',
-              borderLeft: '2px solid rgba(91,110,255,0.7)',
-            } : { borderLeft: '2px solid transparent' }}
-          >
-            <Bell size={15} strokeWidth={1.5}
-              className={pathname === '/notifications' ? 'text-orbit-blue' : 'text-text-quaternary group-hover:text-text-secondary transition-colors'} />
-            <span className={`font-display text-[10px] font-600 tracking-wide transition-colors ${
-              pathname === '/notifications' ? 'text-orbit-blue' : 'text-text-secondary group-hover:text-starlight'
-            }`}>
-              Notifications
-            </span>
-            {unreadCount > 0 && (
-              <span className="ml-auto bg-amber text-deep-void text-[8px] font-display font-700 px-1.5 py-0.5 rounded-full min-w-[16px] text-center">
-                {unreadCount}
-              </span>
-            )}
-          </Link>
-          <Link
-            href="/settings"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group ${
-              pathname === '/settings' ? '' : 'hover:bg-white/[0.04]'
-            }`}
-            style={pathname === '/settings' ? {
-              background: 'linear-gradient(90deg, rgba(91,110,255,0.15) 0%, rgba(91,110,255,0.04) 100%)',
-              borderLeft: '2px solid rgba(91,110,255,0.7)',
-            } : { borderLeft: '2px solid transparent' }}
-          >
-            <Settings size={15} strokeWidth={1.5}
-              className={pathname === '/settings' ? 'text-orbit-blue' : 'text-text-quaternary group-hover:text-text-secondary transition-colors'} />
-            <span className={`font-display text-[10px] font-600 tracking-wide transition-colors ${
-              pathname === '/settings' ? 'text-orbit-blue' : 'text-text-secondary group-hover:text-starlight'
-            }`}>
-              Settings
-            </span>
-          </Link>
+        {/* System section */}
+        <div className="px-2 pb-2" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+          <SysLabel>System</SysLabel>
+          <NavItem href="/notifications" label="Notifications" icon={Bell} isActive={pathname === '/notifications'} />
+          {unreadCount > 0 && (
+            <div className="absolute right-3 font-mono text-[7px] bg-amber text-deep-void px-1 rounded-sm font-600">
+              {unreadCount}
+            </div>
+          )}
+          <NavItem href="/settings" label="Settings" icon={Settings} isActive={pathname === '/settings'} />
         </div>
 
-        {/* User profile */}
-        <div className="p-4 flex items-center gap-3" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        {/* Operator panel */}
+        <div className="p-4 flex items-center gap-3"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
           <Link href="/settings" className="flex items-center gap-3 flex-1 min-w-0 group">
-            <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-[11px] font-display font-700 text-white"
+            <div className="w-8 h-8 rounded-sm flex-shrink-0 flex items-center justify-center font-display text-[10px] font-700 text-white"
               style={{
-                background: 'linear-gradient(135deg, #5B6EFF 0%, #A78BFA 100%)',
-                boxShadow: '0 0 16px rgba(91,110,255,0.4)',
+                background: 'linear-gradient(135deg, #3D7AFF 0%, #9B7FFF 100%)',
+                boxShadow: '0 0 16px rgba(61,122,255,0.45)',
+                clipPath: 'polygon(0 10%, 10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%)',
               }}
             >
               {user?.avatarInitials ?? 'JA'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display text-[10px] font-600 text-starlight truncate group-hover:text-orbit-blue transition-colors">
+              <p className="font-display text-[9px] font-600 tracking-wide text-starlight truncate group-hover:text-cyan-pulse transition-colors">
                 {user?.name ?? 'Jordan Avery'}
               </p>
-              <p className="text-[8px] text-text-faint truncate">{user?.handle ?? '@jordan.fit'}</p>
+              <p className="font-mono text-[7px] truncate" style={{ color: 'rgba(0,229,255,0.35)' }}>
+                {user?.handle ?? '@jordan.fit'}
+              </p>
             </div>
           </Link>
           <button
             onClick={logout}
-            className="w-7 h-7 rounded-lg flex items-center justify-center text-text-faint hover:text-alert-red hover:bg-alert-red/10 transition-all flex-shrink-0"
+            className="w-7 h-7 rounded flex items-center justify-center transition-all flex-shrink-0"
+            style={{ color: 'rgba(46,56,88,1)', border: '1px solid rgba(255,255,255,0.05)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#FF3E6C'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,62,108,0.3)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(46,56,88,1)'; (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.05)'; }}
             title="Sign out"
           >
             <LogOut size={12} strokeWidth={1.5} />
@@ -193,42 +206,38 @@ export function Navigation() {
       {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl"
         style={{
-          background: 'rgba(8,10,20,0.92)',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(4,6,14,0.94)',
+          borderTop: '1px solid rgba(0,229,255,0.1)',
+          boxShadow: '0 -4px 30px rgba(0,0,0,0.5)',
         }}
       >
         <div className="flex items-center justify-around px-2 py-2">
           {mobileNavItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href;
             return (
-              <Link
-                key={href}
-                href={href}
-                className="flex flex-col items-center gap-1 px-3 py-1.5 min-w-[44px] relative"
-              >
-                <Icon
-                  size={19}
-                  strokeWidth={isActive ? 2 : 1.5}
-                  className={isActive ? 'text-orbit-blue' : 'text-text-quaternary'}
-                />
+              <Link key={href} href={href}
+                className="flex flex-col items-center gap-1 px-3 py-1.5 min-w-[44px]">
+                <Icon size={18} strokeWidth={isActive ? 2 : 1.5}
+                  style={{ color: isActive ? '#00E5FF' : 'rgba(46,56,88,1)',
+                    filter: isActive ? 'drop-shadow(0 0 6px rgba(0,229,255,0.7))' : 'none' }} />
                 {isActive
-                  ? <div className="w-1 h-1 rounded-full bg-orbit-blue" style={{ boxShadow: '0 0 6px rgba(91,110,255,0.8)' }} />
-                  : <span className="font-display text-[7px] tracking-wide text-text-quaternary">{label}</span>
+                  ? <div className="w-1 h-1 bg-cyan-pulse rounded-full"
+                      style={{ boxShadow: '0 0 6px rgba(0,229,255,0.9)' }} />
+                  : <span className="font-display text-[7px] tracking-wide"
+                      style={{ color: 'rgba(46,56,88,1)' }}>{label}</span>
                 }
               </Link>
             );
           })}
           <Link href="/notifications" className="flex flex-col items-center gap-1 px-3 py-1.5 min-w-[44px] relative">
-            <MoreHorizontal
-              size={19}
-              strokeWidth={1.5}
-              className={pathname === '/notifications' ? 'text-orbit-blue' : 'text-text-quaternary'}
-            />
+            <MoreHorizontal size={18} strokeWidth={1.5}
+              style={{ color: pathname === '/notifications' ? '#00E5FF' : 'rgba(46,56,88,1)' }} />
             {unreadCount > 0 && (
               <span className="absolute top-0.5 right-2 w-1.5 h-1.5 bg-amber rounded-full"
-                style={{ boxShadow: '0 0 6px rgba(245,166,35,0.7)' }} />
+                style={{ boxShadow: '0 0 6px rgba(255,176,32,0.8)' }} />
             )}
-            <span className="font-display text-[7px] tracking-wide text-text-quaternary">More</span>
+            <span className="font-display text-[7px] tracking-wide"
+              style={{ color: 'rgba(46,56,88,1)' }}>More</span>
           </Link>
         </div>
       </nav>
