@@ -2,8 +2,13 @@
 
 import { PageHeader } from '@/components/PageHeader';
 import { AIInsightCard } from '@/components/AIInsightCard';
-import { Brain, ThumbsUp, ThumbsDown, Send, Star, Clock, TrendingUp } from 'lucide-react';
-import { useState } from 'react';
+import { Brain, ThumbsUp, ThumbsDown, Send, Star, Clock, TrendingUp, AlertCircle } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 const weeklyDigest = [
   {
@@ -57,6 +62,46 @@ const typeColors: Record<string, string> = {
 export default function AICoach() {
   const [question, setQuestion] = useState('');
   const [feedback, setFeedback] = useState<Record<number, 'up' | 'down'>>({});
+  const [conversation, setConversation] = useState<Message[]>([]);
+  const [isAsking, setIsAsking] = useState(false);
+  const [askError, setAskError] = useState('');
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [conversation]);
+
+  const askCoach = async (q: string) => {
+    if (!q.trim() || isAsking) return;
+    setAskError('');
+    setQuestion('');
+
+    const userMsg: Message = { role: 'user', content: q };
+    setConversation(prev => [...prev, userMsg]);
+    setIsAsking(true);
+
+    try {
+      const res = await fetch('/api/insights/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question: q,
+          conversationHistory: conversation.slice(-6).map(m => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      setConversation(prev => [...prev, { role: 'assistant', content: data.answer }]);
+    } catch (err: any) {
+      setAskError(err.message || 'Something went wrong — please try again');
+      setConversation(prev => prev.slice(0, -1)); // Remove the user message on error
+    } finally {
+      setIsAsking(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-deep-void">
@@ -169,41 +214,103 @@ export default function AICoach() {
           </div>
         </div>
 
-        {/* Ask the coach */}
-        <div className="card-ai p-5 rounded-xl">
-          <div className="flex items-center gap-2 mb-4">
+        {/* Ask the coach — live API */}
+        <div className="card-ai rounded-xl overflow-hidden">
+          <div className="flex items-center gap-2 p-5 pb-4 border-b border-border-purple/30">
             <Brain size={14} strokeWidth={1.5} className="text-nova-violet" />
             <span className="pill-violet">Ask the Coach</span>
+            <span className="ml-auto text-[9px] text-text-faint">Powered by Claude</span>
           </div>
-          <p className="text-[10px] text-text-secondary mb-4 leading-relaxed">
-            Ask anything about your content strategy. Orbit AI will answer using only your data — no generic advice.
-          </p>
-          <div className="space-y-2 mb-4">
-            {[
-              'Why did my follower growth slow last month?',
-              'What content should I post this week?',
-              'How do I improve my save rate?',
-            ].map((q) => (
+
+          {/* Conversation thread */}
+          {conversation.length > 0 && (
+            <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
+              {conversation.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {msg.role === 'assistant' && (
+                    <div className="w-6 h-6 rounded-full bg-nova-violet/20 border border-nova-violet/30 flex items-center justify-center flex-shrink-0 mr-2 mt-0.5">
+                      <Brain size={10} className="text-nova-violet" />
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[85%] px-3 py-2.5 rounded-xl text-[11px] leading-relaxed whitespace-pre-wrap ${
+                      msg.role === 'user'
+                        ? 'bg-orbit-blue/20 border border-orbit-blue/30 text-starlight rounded-br-sm'
+                        : 'bg-space-black border border-border-purple/30 text-text-secondary rounded-bl-sm'
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              {isAsking && (
+                <div className="flex justify-start">
+                  <div className="w-6 h-6 rounded-full bg-nova-violet/20 border border-nova-violet/30 flex items-center justify-center flex-shrink-0 mr-2">
+                    <Brain size={10} className="text-nova-violet animate-pulse" />
+                  </div>
+                  <div className="bg-space-black border border-border-purple/30 px-3 py-2.5 rounded-xl rounded-bl-sm">
+                    <div className="flex gap-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-nova-violet/60 animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-nova-violet/60 animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-nova-violet/60 animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+          )}
+
+          {/* Starter questions — shown when no conversation yet */}
+          {conversation.length === 0 && (
+            <div className="p-4 space-y-2">
+              <p className="text-[10px] text-text-secondary mb-3 leading-relaxed">
+                Ask anything about your content strategy. Every answer references your actual data.
+              </p>
+              {[
+                'Why did my follower growth slow last month?',
+                'What content should I post this week?',
+                'How do I improve my save rate?',
+              ].map((q) => (
+                <button
+                  key={q}
+                  className="w-full text-left text-[10px] text-text-secondary hover:text-starlight p-3 rounded-lg border border-border-purple/30 hover:border-nova-violet/30 bg-deep-void transition-all"
+                  onClick={() => askCoach(q)}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Error */}
+          {askError && (
+            <div className="mx-4 mb-3 flex items-center gap-2 p-2.5 rounded-lg bg-error-alert-bg border border-border-error/40">
+              <AlertCircle size={12} className="text-alert-red flex-shrink-0" />
+              <p className="text-[10px] text-alert-red">{askError}</p>
+            </div>
+          )}
+
+          {/* Input */}
+          <div className="p-4 pt-0">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && !e.shiftKey && askCoach(question)}
+                placeholder="Ask about your content strategy..."
+                disabled={isAsking}
+                className="flex-1 bg-deep-void border border-border-purple/40 rounded-lg px-3 py-2.5 text-xs text-starlight placeholder:text-text-faint focus:outline-none focus:border-nova-violet/50 transition-all disabled:opacity-50"
+              />
               <button
-                key={q}
-                className="w-full text-left text-[10px] text-text-secondary hover:text-starlight p-3 rounded-lg border border-border-default hover:border-nebula-navy/80 bg-deep-void transition-all"
-                onClick={() => setQuestion(q)}
+                onClick={() => askCoach(question)}
+                disabled={!question.trim() || isAsking}
+                className="w-10 h-10 rounded-lg bg-orbit-blue flex items-center justify-center flex-shrink-0 hover:bg-orbit-blue/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {q}
+                <Send size={14} strokeWidth={1.5} className="text-white" />
               </button>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask about your content strategy..."
-              className="flex-1 bg-deep-void border border-border-default rounded-lg px-3 py-2.5 text-xs text-starlight placeholder:text-text-faint focus:outline-none focus:border-orbit-blue/50 transition-all"
-            />
-            <button className="w-10 h-10 rounded-lg bg-orbit-blue flex items-center justify-center flex-shrink-0 hover:bg-orbit-blue/80 transition-all">
-              <Send size={14} strokeWidth={1.5} className="text-white" />
-            </button>
+            </div>
           </div>
         </div>
 
