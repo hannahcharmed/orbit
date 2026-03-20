@@ -1,90 +1,104 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { errorResponse } from '@/lib/api-helpers';
+import { ALLOWED_PLATFORMS, isAllowedPlatform } from '@/types/api';
+import type { Platform } from '@/types/api';
 
-// Platform OAuth configuration
-// In production, these come from environment variables
-const PLATFORM_CONFIG = {
+// Platform OAuth configuration — client IDs from environment variables only
+const PLATFORM_CONFIG: Record<Platform, {
+  name: string;
+  authUrl: string;
+  clientIdEnvKey: string;
+  scope: string;
+}> = {
   instagram: {
     name: 'Instagram',
     authUrl: 'https://api.instagram.com/oauth/authorize',
-    clientId: process.env.INSTAGRAM_CLIENT_ID || 'demo_instagram_client_id',
+    clientIdEnvKey: 'INSTAGRAM_CLIENT_ID',
     scope: 'user_profile,user_media',
-    redirectPath: '/api/platforms/callback',
   },
   tiktok: {
     name: 'TikTok',
     authUrl: 'https://www.tiktok.com/v2/auth/authorize',
-    clientId: process.env.TIKTOK_CLIENT_KEY || 'demo_tiktok_client_key',
+    clientIdEnvKey: 'TIKTOK_CLIENT_KEY',
     scope: 'user.info.basic,video.list,video.upload',
-    redirectPath: '/api/platforms/callback',
   },
   youtube: {
     name: 'YouTube',
     authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-    clientId: process.env.GOOGLE_CLIENT_ID || 'demo_google_client_id',
-    scope: 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly',
-    redirectPath: '/api/platforms/callback',
+    clientIdEnvKey: 'GOOGLE_CLIENT_ID',
+    scope: [
+      'https://www.googleapis.com/auth/youtube.readonly',
+      'https://www.googleapis.com/auth/yt-analytics.readonly',
+    ].join(' '),
   },
   snapchat: {
     name: 'Snapchat',
     authUrl: 'https://accounts.snapchat.com/login/oauth2/authorize',
-    clientId: process.env.SNAPCHAT_CLIENT_ID || 'demo_snapchat_client_id',
+    clientIdEnvKey: 'SNAPCHAT_CLIENT_ID',
     scope: 'snapchat-marketing-api',
-    redirectPath: '/api/platforms/callback',
   },
   twitch: {
     name: 'Twitch',
     authUrl: 'https://id.twitch.tv/oauth2/authorize',
-    clientId: process.env.TWITCH_CLIENT_ID || 'demo_twitch_client_id',
+    clientIdEnvKey: 'TWITCH_CLIENT_ID',
     scope: 'analytics:read:games channel:read:analytics',
-    redirectPath: '/api/platforms/callback',
   },
 };
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const platform = searchParams.get('platform') as keyof typeof PLATFORM_CONFIG;
+  const { searchParams, origin } = req.nextUrl;
 
-  if (!platform || !PLATFORM_CONFIG[platform]) {
-    return NextResponse.json({ error: 'Unknown platform' }, { status: 400 });
+  // --- Boundary validation --------------------------------------------------
+  const platform = searchParams.get('platform');
+
+  if (!platform) {
+    return errorResponse(
+      422, 'VALIDATION_ERROR', 'platform query parameter is required', 'platform',
+      { allowed: ALLOWED_PLATFORMS },
+    );
   }
 
-  const config = PLATFORM_CONFIG[platform];
-  const origin = req.nextUrl.origin;
-  const redirectUri = `${origin}${config.redirectPath}?platform=${platform}`;
+  if (!isAllowedPlatform(platform)) {
+    return errorResponse(
+      422, 'VALIDATION_ERROR',
+      `platform must be one of: ${ALLOWED_PLATFORMS.join(', ')}`, 'platform',
+      { allowed: ALLOWED_PLATFORMS, received: platform },
+    );
+  }
 
-  // Generate state token to prevent CSRF
+  // --- Build OAuth URL ------------------------------------------------------
+  const config = PLATFORM_CONFIG[platform];
+  const clientId = process.env[config.clientIdEnvKey];
+  const redirectUri = `${origin}/api/platforms/callback?platform=${platform}`;
+
+  // Generate CSRF-safe state token
   const state = Buffer.from(JSON.stringify({
     platform,
     ts: Date.now(),
-    nonce: Math.random().toString(36).slice(2),
+    nonce: crypto.randomUUID(),
   })).toString('base64url');
 
-  // Build OAuth URL
+  const isDemo = !clientId;
+  if (isDemo) {
+    // No real OAuth credentials configured — simulate a successful connect
+    return NextResponse.redirect(
+      `${origin}/settings?connected=${platform}&tab=platforms`,
+    );
+  }
+
   const params = new URLSearchParams({
-    client_id: config.clientId,
     redirect_uri: redirectUri,
     response_type: 'code',
     scope: config.scope,
     state,
   });
 
-  // TikTok uses client_key instead of client_id
+  // TikTok uses `client_key` instead of the standard `client_id`
   if (platform === 'tiktok') {
-    params.delete('client_id');
-    params.set('client_key', config.clientId);
+    params.set('client_key', clientId);
+  } else {
+    params.set('client_id', clientId);
   }
 
-  const authUrl = `${config.authUrl}?${params.toString()}`;
-
-  // In demo mode (no real client IDs configured), show a mock success
-  const isDemo = config.clientId.startsWith('demo_');
-  if (isDemo) {
-    // Redirect to settings with a success simulation
-    const response = NextResponse.redirect(
-      `${origin}/settings?connected=${platform}&demo=true`
-    );
-    return response;
-  }
-
-  return NextResponse.redirect(authUrl);
+  return NextResponse.redirect(`${config.authUrl}?${params.toString()}`);
 }

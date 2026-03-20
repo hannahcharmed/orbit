@@ -3,6 +3,7 @@
 import { PageHeader } from '@/components/PageHeader';
 import { AIInsightCard } from '@/components/AIInsightCard';
 import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle, ArrowUpRight } from 'lucide-react';
+import type { RechartsTooltipProps } from '@/types/charts';
 import {
   LineChart,
   Line,
@@ -49,16 +50,16 @@ const inflectionPoints = [
   { date: 'Mar 12', event: 'Dark Matter audio trend adoption', impact: '+31% reel views', positive: true },
 ];
 
-function CustomTooltip({ active, payload, label }: any) {
+function CustomTooltip({ active, payload, label }: RechartsTooltipProps) {
   if (active && payload && payload.length) {
     return (
       <div className="bg-card-bg border border-border-default rounded-lg p-3 text-xs">
         <p className="text-text-quaternary mb-1">{label}</p>
-        {payload.map((p: any) => p.value !== null && (
-          <p key={p.dataKey} style={{ color: p.color || '#E8F0FF' }}>
+        {payload.map((p) => p.value !== null && (
+          <p key={p.dataKey} style={{ color: p.color ?? '#E8F0FF' }}>
             {p.name === 'projected' ? '⟶ Projected: ' : '● Actual: '}
             {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}
-            {p.unit || ''}
+            {p.unit ?? ''}
           </p>
         ))}
       </div>

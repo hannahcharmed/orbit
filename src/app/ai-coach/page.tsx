@@ -92,11 +92,16 @@ export default function AICoach() {
           })),
         }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Request failed');
+      const json: unknown = await res.json();
+      if (!res.ok) {
+        const err = json as { message?: string; code?: string };
+        throw new Error(err.message ?? 'Request failed');
+      }
+      const { data } = json as { data: { answer: string } };
       setConversation(prev => [...prev, { role: 'assistant', content: data.answer }]);
-    } catch (err: any) {
-      setAskError(err.message || 'Something went wrong — please try again');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Something went wrong — please try again';
+      setAskError(message);
       setConversation(prev => prev.slice(0, -1)); // Remove the user message on error
     } finally {
       setIsAsking(false);

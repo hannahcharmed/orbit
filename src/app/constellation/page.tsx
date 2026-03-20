@@ -3,6 +3,7 @@
 import { PageHeader } from '@/components/PageHeader';
 import { AIInsightCard } from '@/components/AIInsightCard';
 import { Star, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import type { RechartsTooltipProps } from '@/types/charts';
 import {
   RadarChart,
   Radar,
@@ -46,12 +47,15 @@ const gapMetrics = [
   { metric: 'Multi-platform activity', you: 2, top10: 3, unit: ' platforms', gap: '+1 platform needed' },
 ];
 
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload }: RechartsTooltipProps) {
   if (active && payload && payload.length) {
-    const d = payload[0]?.payload;
+    const d = payload[0]?.payload as { isYou?: boolean } | undefined;
     return (
       <div className="bg-card-bg border border-border-default rounded-lg p-2 text-[10px]">
-        {d?.isYou ? <span className="text-orbit-blue font-medium">You</span> : <span className="text-text-secondary">Peer creator</span>}
+        {d?.isYou
+          ? <span className="text-orbit-blue font-medium">You</span>
+          : <span className="text-text-secondary">Peer creator</span>
+        }
       </div>
     );
   }
