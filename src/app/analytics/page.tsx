@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { StatCard } from '@/components/StatCard';
 import { MiniSparkline } from '@/components/MiniSparkline';
 import { TrendingUp, TrendingDown, Users, Heart, Bookmark, Eye } from 'lucide-react';
+import type { RechartsTooltipProps } from '@/types/charts';
 import {
   AreaChart,
   Area,
@@ -64,15 +65,15 @@ const customTooltipStyle = {
   color: '#E8F0FF',
 };
 
-function CustomTooltip({ active, payload, label }: any) {
+function CustomTooltip({ active, payload, label }: RechartsTooltipProps) {
   if (active && payload && payload.length) {
     return (
       <div style={customTooltipStyle}>
         <p className="text-text-quaternary text-[10px] mb-1">{label}</p>
-        {payload.map((p: any) => (
+        {payload.map((p) => (
           <p key={p.dataKey} style={{ color: p.color }}>
             {p.name}: {typeof p.value === 'number' ? p.value.toFixed(1) : p.value}
-            {p.unit || ''}
+            {p.unit ?? ''}
           </p>
         ))}
       </div>
