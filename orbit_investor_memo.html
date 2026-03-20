@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Investor Memo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact;line-height:1.7}
+.wrap{max-width:760px;margin:0 auto}
+
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 48px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+/* Cover */
+.cover{padding:64px 48px 48px;border-bottom:1px solid #1a2150;position:relative;overflow:hidden}
+.cover-bg{position:absolute;right:-100px;top:-100px;opacity:.03;pointer-events:none}
+.cover-eye{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#3D3A9E;margin-bottom:12px}
+.cover-title{font-family:Georgia,serif;font-size:48px;font-weight:400;color:#e8f0ff;line-height:1.05;margin-bottom:10px}
+.cover-title span{color:#a78bfa}
+.cover-sub{font-size:14px;color:#6b7ab5;line-height:1.7;max-width:520px;margin-bottom:32px}
+.cover-meta{display:flex;gap:0;border:1px solid #1a2150;border-radius:10px;overflow:hidden}
+.cm-item{flex:1;padding:14px 18px;border-right:1px solid #1a2150}
+.cm-item:last-child{border-right:none}
+.cm-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.cm-val{font-size:12px;color:#e8f0ff;font-weight:500}
+
+/* Body */
+.body{padding:0 48px}
+
+/* Section styles — editorial prose, not cards */
+.memo-sec{padding:40px 0;border-bottom:1px solid #1a2150}
+.memo-sec:last-child{border-bottom:none}
+.sec-num{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+.sec-title{font-family:Georgia,serif;font-size:24px;color:#e8f0ff;margin-bottom:20px;line-height:1.2}
+.div{width:28px;height:2px;background:#6C63FF;border-radius:2px;margin-bottom:20px}
+
+/* Typography */
+.lede{font-family:Georgia,serif;font-size:16px;color:#c4b5fd;line-height:1.7;margin-bottom:18px;font-style:italic}
+p{font-size:13px;color:#8892b0;line-height:1.85;margin-bottom:14px}
+p:last-child{margin-bottom:0}
+p strong{color:#e8f0ff;font-weight:500}
+p em{color:#a78bfa;font-style:italic}
+
+/* Pull quotes */
+.pull{background:#0d1228;border-left:3px solid #a78bfa;border-radius:0 10px 10px 0;padding:16px 20px;margin:20px 0;font-family:Georgia,serif;font-size:15px;color:#c4b5fd;line-height:1.6;font-style:italic}
+.pull span{color:#e8f0ff}
+
+/* Stat callouts — inline within prose */
+.inline-stats{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}
+.istat{background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:12px 16px;flex:1;min-width:120px}
+.istat-num{font-family:Georgia,serif;font-size:24px;color:#e8f0ff;line-height:1;margin-bottom:3px}
+.istat-label{font-size:9px;color:#4a5280;line-height:1.4}
+
+/* The ask box */
+.ask-box{background:#0d1228;border:1px solid #2d3260;border-radius:12px;padding:24px 28px;margin:20px 0}
+.ask-eye{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6C63FF;margin-bottom:8px}
+.ask-title{font-family:Georgia,serif;font-size:20px;color:#e8f0ff;margin-bottom:14px}
+.ask-row{display:flex;gap:0;border:1px solid #1a2150;border-radius:8px;overflow:hidden;margin-bottom:10px}
+.ask-item{flex:1;padding:12px 16px;border-right:1px solid #1a2150}
+.ask-item:last-child{border-right:none}
+.ask-item-label{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.ask-item-val{font-size:13px;font-weight:500;color:#e8f0ff}
+.ask-use{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.au-row{display:flex;align-items:center;gap:10px}
+.au-label{font-size:11px;color:#8892b0;flex:1}
+.au-bar-wrap{width:140px;height:5px;background:#1a2150;border-radius:3px}
+.au-bar{height:5px;border-radius:3px;background:#6C63FF}
+.au-pct{font-size:10px;color:#a78bfa;width:36px;text-align:right;font-family:'Courier New',monospace}
+
+/* Milestones */
+.milestone-row{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.ms-item{display:flex;gap:12px;align-items:flex-start}
+.ms-dot-col{display:flex;flex-direction:column;align-items:center;padding-top:3px}
+.ms-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ms-line{width:1px;flex:1;min-height:12px;margin:3px 0;background:#1a2150}
+.ms-content{flex:1;padding-bottom:4px}
+.ms-when{font-size:9px;color:#3D3A9E;letter-spacing:.06em;margin-bottom:2px}
+.ms-what{font-size:12px;color:#e8f0ff;font-weight:500;margin-bottom:2px}
+.ms-why{font-size:11px;color:#6b7ab5;line-height:1.5}
+
+/* Team */
+.team-row{display:flex;gap:12px;margin:16px 0;flex-wrap:wrap}
+.team-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:14px;flex:1;min-width:180px}
+.tc-avatar{width:36px;height:36px;border-radius:50%;background:#1a1f35;border:1px solid #2d3260;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:13px;color:#a78bfa;margin-bottom:8px}
+.tc-name{font-size:12px;font-weight:500;color:#e8f0ff;margin-bottom:2px}
+.tc-role{font-size:9px;color:#3D3A9E;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.tc-bio{font-size:10px;color:#6b7ab5;line-height:1.55}
+
+/* Risks -->
+.risk-row{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.risk-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:#0d1228;border:1px solid #1a2150;border-radius:8px}
+.risk-badge{font-size:8px;padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:2px}
+.rb-high{background:#1a0a0a;color:#f09595;border:1px solid #501313}
+.rb-med{background:#1a1200;color:#EF9F27;border:1px solid #412402}
+.risk-text{font-size:11px;color:#8892b0;line-height:1.55}
+.risk-text strong{color:#c4b5fd;font-weight:500}
+
+/* CTA footer */
+.cta{padding:40px 0;text-align:center}
+.cta-title{font-family:Georgia,serif;font-size:28px;color:#e8f0ff;margin-bottom:8px;line-height:1.2}
+.cta-title span{color:#a78bfa}
+.cta-sub{font-size:12px;color:#6b7ab5;margin-bottom:20px}
+.cta-contact{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cta-btn{background:#6C63FF;color:#fff;border-radius:8px;padding:10px 24px;font-size:12px;font-weight:500;text-decoration:none;cursor:pointer}
+.cta-btn.ghost{background:transparent;border:1px solid #2d3260;color:#a78bfa}
+
+/* Divider rule */
+hr{border:none;border-top:1px solid #1a2150;margin:0}
+
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:14px 48px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <span class="ver">Investor Memo · Confidential · March 2026</span>
+</div>
+
+<!-- Cover -->
+<div class="cover">
+  <svg class="cover-bg" width="500" height="500" viewBox="0 0 500 500">
+    <circle cx="250" cy="250" r="220" fill="none" stroke="#6C63FF" stroke-width="1"/>
+    <circle cx="250" cy="250" r="160" fill="none" stroke="#6C63FF" stroke-width=".7"/>
+    <circle cx="250" cy="250" r="100" fill="none" stroke="#6C63FF" stroke-width=".5"/>
+    <circle cx="250" cy="250" r="40" fill="none" stroke="#a78bfa" stroke-width=".4"/>
+  </svg>
+  <div class="cover-eye">Confidential investor memorandum</div>
+  <div class="cover-title">Every creator<br/>has a gravitational<br/>pull. <span>We measure it.</span></div>
+  <div class="cover-sub">Orbit is an AI-powered creator intelligence platform built for lifestyle and fitness influencers. We are seeking our first outside capital to accelerate what we've already built from the inside.</div>
+  <div class="cover-meta">
+    <div class="cm-item">
+      <div class="cm-label">Stage</div>
+      <div class="cm-val">Pre-seed / seed</div>
+    </div>
+    <div class="cm-item">
+      <div class="cm-label">Raise</div>
+      <div class="cm-val">$350K–$500K</div>
+    </div>
+    <div class="cm-item">
+      <div class="cm-label">Structure</div>
+      <div class="cm-val">SAFE · MFN</div>
+    </div>
+    <div class="cm-item">
+      <div class="cm-label">Use of funds</div>
+      <div class="cm-val">Engineering · GTM</div>
+    </div>
+    <div class="cm-item">
+      <div class="cm-label">Status</div>
+      <div class="cm-val">Already building</div>
+    </div>
+  </div>
+</div>
+
+<div class="body">
+
+<!-- 01 The opportunity -->
+<div class="memo-sec">
+  <div class="sec-num">01</div>
+  <div class="sec-title">The opportunity</div>
+  <div class="div"></div>
+
+  <div class="lede">The creator economy is a $500 billion market. The tools built to serve it were designed for someone else.</div>
+
+  <p>Two hundred million people worldwide now consider content creation their primary career. Collectively, they generate more cultural influence than any media network in history — and they are doing it largely blind. They know their follower count. They know their like counts. What almost none of them know is <strong>what any of it actually means</strong>, how they compare to their peers, or what to do next to grow.</p>
+
+  <p>Every analytics tool in the market was built for brands managing social channels, not creators building audiences. Later, Sprout Social, Metricool, Iconosquare — all of them treat analytics as a reporting function. They describe what happened. None of them tell you what to do about it.</p>
+
+  <p>The result is a gap that nobody has filled: <strong>a creator-native intelligence platform</strong> that combines cross-platform analytics, true niche benchmarking, and AI coaching grounded in a creator's own performance data. That is precisely what Orbit is.</p>
+
+  <div class="inline-stats">
+    <div class="istat"><div class="istat-num">$500B</div><div class="istat-label">Creator economy projected size by 2027</div></div>
+    <div class="istat"><div class="istat-num">200M+</div><div class="istat-label">Creators treating content as primary career</div></div>
+    <div class="istat"><div class="istat-num">$4.2B</div><div class="istat-label">Creator tools market, growing 26% annually</div></div>
+    <div class="istat"><div class="istat-num">86%</div><div class="istat-label">Creators who say existing tools don't meet their needs</div></div>
+  </div>
+
+  <p>We are not building a general-purpose analytics tool. We are going deep on one vertical — <strong>lifestyle and fitness</strong> — where we already have data, relationships, and trust. The fitness creator space is a $60 billion sub-market that is growing faster than any other content category. Being the definitive intelligence platform for fitness and lifestyle creators is a large, defensible, and highly monetisable business on its own before we consider adjacent verticals.</p>
+</div>
+
+<!-- 02 The product -->
+<div class="memo-sec">
+  <div class="sec-num">02</div>
+  <div class="sec-title">The product</div>
+  <div class="div"></div>
+
+  <div class="lede">Orbit is the first platform to tell creators not just what happened — but what it means, how they rank, and exactly what to do next.</div>
+
+  <p>The core product is built around five features that collectively define a new category. Each is named using the orbital mechanics metaphor that runs through the entire brand, and each solves a specific problem that no existing tool addresses.</p>
+
+  <p><strong>Gravity Score™</strong> is a proprietary composite metric — the first single number that captures a creator's true audience pull rather than vanity metrics. It combines return viewer rate, save and share depth, comment quality, cross-platform following overlap, and follower velocity into a 0–100 score. A creator with 200K followers and a Gravity Score of 84 is provably more valuable to a brand than one with 800K and a score of 31. Gravity Score becomes the number creators reference in brand pitch negotiations and the standard the industry starts asking about.</p>
+
+  <p><strong>Escape Velocity</strong> is Orbit's real-time breakout detection system. When a piece of content crosses 2.5× a creator's baseline engagement rate, Orbit flags it instantly, reverse-engineers why it happened — format, timing, audio, audience segment — and delivers a specific 48-hour replication playbook. The 48-hour window after a breakout post is the most valuable creative moment a creator has, and nobody else is helping them capitalise on it.</p>
+
+  <p><strong>Constellation View</strong> is niche-specific peer benchmarking. Not comparison against all creators — comparison against creators who match on niche, following tier, platform mix, and posting frequency. A fitness creator finally knows whether their 6.8% engagement rate is exceptional or average for someone at their tier. That context transforms raw data into strategic clarity.</p>
+
+  <p><strong>Dark Matter</strong> is trend intelligence filtered to the creator's niche. Trending audio, formats, and hashtags surfaced 2–3 weeks before they reach mainstream trending pages — when there is still time to be early. Delivered weekly as a briefing and in real time when a signal crosses a momentum threshold.</p>
+
+  <p><strong>Mission Control</strong> is the agency layer — a roster management dashboard giving talent managers a single screen view across every creator they manage, with escape velocity alerts, trajectory changes, and auto-generated brand deal performance reports. This is the feature that makes Orbit a B2B product as well as a creator tool, and it is the foundation of our highest-value revenue tier.</p>
+
+  <div class="pull">"Your audience doesn't follow you. <span>They orbit you.</span> Orbit measures the gravitational pull you have on them — and tells you how to strengthen it."</div>
+</div>
+
+<!-- 03 Why we win -->
+<div class="memo-sec">
+  <div class="sec-num">03</div>
+  <div class="sec-title">Why we win</div>
+  <div class="div"></div>
+
+  <div class="lede">Most analytics startups spend their first two years trying to acquire the data and relationships we already have.</div>
+
+  <p>Orbit is being built from within an existing talent agency that manages 20–50 lifestyle and fitness creators. This is not a small advantage. It is a structural moat that cannot be quickly replicated by any competitor, funded or otherwise, because it took years of relationship-building to create.</p>
+
+  <p>The benchmarking cold-start problem — the hardest challenge for any analytics platform — does not exist for us. We launch with real, first-party performance data from a real creator roster. Constellation benchmarking is meaningful on day one. Our AI models are trained on real niche data, not synthetic approximations. The Gravity Score is calibrated against actual fitness and lifestyle creators, not generic proxies.</p>
+
+  <p>The trust problem — the second hardest challenge for any tool asking creators to connect their social accounts — also does not exist for us. These creators already trust their talent managers. That trust transfers directly to Orbit. Our beta is not a cold acquisition funnel. It is a warm conversation with creators who already know us.</p>
+
+  <p>Beyond the founding advantage, Orbit's architecture creates a <strong>compounding data network effect</strong>. Every creator who opts into the benchmarking pool makes the Constellation rankings more precise. More precise rankings drive better AI recommendations. Better recommendations drive growth. Faster-growing creators refer other creators. Each turn of the flywheel widens the intelligence gap between Orbit and any competitor attempting to enter the space.</p>
+
+  <p>There is also a timing advantage that cannot be overstated. <strong>No AI-native creator analytics product exists</strong> at this price point for this vertical. The window to establish Gravity Score as the industry standard metric — before a well-funded competitor recognises the same opportunity — is measured in months, not years. We are already building.</p>
+</div>
+
+<!-- 04 Traction -->
+<div class="memo-sec">
+  <div class="sec-num">04</div>
+  <div class="sec-title">Traction & validation</div>
+  <div class="div"></div>
+
+  <div class="lede">We have not launched publicly. What we have is something more valuable: a captive beta with creators who are already invested in our success.</div>
+
+  <p>The agency roster provides 20–50 creators for private beta from launch day — zero acquisition cost, maximum qualitative feedback. These creators post regularly, care deeply about their analytics, and have strong opinions about what tools do and don't serve them. They are the ideal product development partners.</p>
+
+  <p>Early validation from the agency context tells us several things with confidence. <strong>First</strong>, talent managers spend significant time every week manually pulling and formatting analytics data for brand pitches — time that Mission Control eliminates entirely. The workflow problem is real and expensive. <strong>Second</strong>, creators consistently report that existing tools show them numbers but give them no direction. The demand for intelligent coaching is not hypothetical. <strong>Third</strong>, the Gravity Score concept — showing creators a single number that represents their true audience pull — resonates immediately in every conversation we have had. It solves a real problem: creators have no defensible, data-backed metric to use in brand negotiations.</p>
+
+  <p>The product is in active development. Instagram and TikTok API applications are in progress. The core data pipeline and normalisation engine are being built. The Gravity Score algorithm is designed and ready for calibration against the beta dataset.</p>
+</div>
+
+<!-- 05 Business model -->
+<div class="memo-sec">
+  <div class="sec-num">05</div>
+  <div class="sec-title">Business model</div>
+  <div class="div"></div>
+
+  <div class="lede">Three tiers. Two motions. One flywheel. The business model is designed to grow in two directions simultaneously — bottom-up from individual creators and top-down through agency partnerships.</div>
+
+  <p>The <strong>Creator tier at $29/month</strong> is the freemium conversion product. Free entry gives creators the Gravity Score and basic insights — enough to demonstrate value and create the activation moment. Paid unlocks the full benchmarking suite, Escape Velocity alerts, and Dark Matter briefings. The conversion mechanic is a feature gate at the moment of maximum curiosity: a creator sees their niche rank but has to upgrade to see the gap analysis. At $29, the conversion is a low-friction decision.</p>
+
+  <p>The <strong>Pro tier at $79/month</strong> is the target ARPU for our core creator segment. It unlocks Orbit Path trajectory modeling, content briefs from Dark Matter signals, and the shareable Gravity Score card for brand pitches. The Pro tier has the best unit economics in the product — at roughly 86% contribution margin after AI API costs, it generates significant cash per account. A creator who upgrades to Pro is signalling that they are serious about growth, which also means they are a high-retention user.</p>
+
+  <p>The <strong>Agency tier at $499/month</strong> is the profit engine. Each agency account covers the AI and infrastructure costs of approximately 30 Creator tier accounts. At 86% contribution margin, two or three agency clients essentially fund the entire variable cost base of the platform. The agency tier also creates a structural acquisition channel — each agency onboarded brings 10–50 creators with it, at zero acquisition cost per creator.</p>
+
+  <p>On our base case financial model — bootstrapped, 2 engineers, conservative growth assumptions — Orbit reaches <strong>break-even at month 14</strong> and exits year two at approximately <strong>$200K ARR</strong> from Orbit revenue alone, supplemented by the ongoing agency business. With the capital we are seeking, break-even accelerates to month 9 and year-two ARR exceeds <strong>$400K</strong>.</p>
+
+  <div class="inline-stats">
+    <div class="istat"><div class="istat-num">$29</div><div class="istat-label">Creator tier · 83% contribution margin</div></div>
+    <div class="istat"><div class="istat-num">$79</div><div class="istat-label">Pro tier · 86% contribution margin</div></div>
+    <div class="istat"><div class="istat-num">$499</div><div class="istat-label">Agency tier · 91% contribution margin</div></div>
+    <div class="istat"><div class="istat-num">Mo 9</div><div class="istat-label">Projected break-even with capital raised</div></div>
+  </div>
+</div>
+
+<!-- 06 The raise -->
+<div class="memo-sec">
+  <div class="sec-num">06</div>
+  <div class="sec-title">The raise</div>
+  <div class="div"></div>
+
+  <div class="lede">We are raising $350K–$500K on a SAFE with a most-favoured-nation clause. This is a focused, milestone-driven raise — not a runway extension.</div>
+
+  <div class="ask-box">
+    <div class="ask-eye">Use of funds</div>
+    <div class="ask-title">$400K target raise</div>
+    <div class="ask-row">
+      <div class="ask-item">
+        <div class="ask-item-label">Instrument</div>
+        <div class="ask-item-val">SAFE · MFN</div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-item-label">Valuation cap</div>
+        <div class="ask-item-val">$3M–$4M</div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-item-label">Discount</div>
+        <div class="ask-item-val">20%</div>
+      </div>
+      <div class="ask-item">
+        <div class="ask-item-label">Minimum check</div>
+        <div class="ask-item-val">$25K</div>
+      </div>
+    </div>
+    <div class="ask-use">
+      <div class="au-row">
+        <span class="au-label">Engineering headcount — 1 additional senior engineer</span>
+        <div class="au-bar-wrap"><div class="au-bar" style="width:112px"></div></div>
+        <span class="au-pct">40%</span>
+      </div>
+      <div class="au-row">
+        <span class="au-label">GTM — creator seeding, podcast sponsorships, content production</span>
+        <div class="au-bar-wrap"><div class="au-bar" style="width:84px;background:#a78bfa"></div></div>
+        <span class="au-pct">30%</span>
+      </div>
+      <div class="au-row">
+        <span class="au-label">Legal, compliance, and platform API partnerships</span>
+        <div class="au-bar-wrap"><div class="au-bar" style="width:42px;background:#4ade80"></div></div>
+        <span class="au-pct">15%</span>
+      </div>
+      <div class="au-row">
+        <span class="au-label">Infrastructure, tooling, and operational reserve</span>
+        <div class="au-bar-wrap"><div class="au-bar" style="width:42px;background:#EF9F27"></div></div>
+        <span class="au-pct">15%</span>
+      </div>
+    </div>
+  </div>
+
+  <p>The single most important use of capital is the additional engineering hire. With two engineers we build well but slowly. A third senior engineer — specifically with AI/ML experience — allows us to accelerate the Gravity Score model refinement and the Escape Velocity detection system, which together are the core of what differentiates Orbit from every existing tool.</p>
+
+  <p>The GTM allocation is deliberately focused on earned and organic channels — creator seeding and podcast sponsorships rather than paid social — because <strong>creator trust cannot be bought with ads</strong>. The 20–30 fitness creators we give free Pro access to in exchange for authentic content will drive more qualified signups than any equivalent spend in Meta ads. We know this because we have watched it work across the creators we already manage.</p>
+
+  <p>We are not raising to extend runway. We have runway from the agency business. We are raising to <strong>compress time</strong> — to reach the benchmarking critical mass, public launch, and first agency partnership milestones 6 months faster than the bootstrapped timeline allows.</p>
+</div>
+
+<!-- 07 Milestones -->
+<div class="memo-sec">
+  <div class="sec-num">07</div>
+  <div class="sec-title">Milestones with this capital</div>
+  <div class="div"></div>
+
+  <div class="lede">This raise funds three specific milestones. Each one builds on the last. Each one is measurable.</div>
+
+  <div class="milestone-row">
+    <div class="ms-item">
+      <div class="ms-dot-col">
+        <div class="ms-dot" style="background:#6C63FF"></div>
+        <div class="ms-line"></div>
+      </div>
+      <div class="ms-content">
+        <div class="ms-when">Months 1–3 · Foundation</div>
+        <div class="ms-what">MVP live with agency roster as beta users</div>
+        <div class="ms-why">50+ creators onboarded. IG and TikTok integrations live. Gravity Score calculating for all beta creators. First benchmarking data pool seeded. Three publishable case studies captured. This milestone proves the core product works and the data model is sound.</div>
+      </div>
+    </div>
+    <div class="ms-item">
+      <div class="ms-dot-col">
+        <div class="ms-dot" style="background:#a78bfa"></div>
+        <div class="ms-line"></div>
+      </div>
+      <div class="ms-content">
+        <div class="ms-when">Months 3–6 · Intelligence</div>
+        <div class="ms-what">Public freemium launch with full AI layer</div>
+        <div class="ms-why">Escape Velocity, Constellation benchmarking, and Dark Matter briefing all live. 200+ paying creator accounts. First two external agency partnerships signed. NPS of 50+. This milestone proves the product converts and retains at target economics.</div>
+      </div>
+    </div>
+    <div class="ms-item">
+      <div class="ms-dot-col">
+        <div class="ms-dot" style="background:#4ade80"></div>
+      </div>
+      <div class="ms-content">
+        <div class="ms-when">Months 6–12 · Scale</div>
+        <div class="ms-what">Series A-ready metrics</div>
+        <div class="ms-why">500 paying accounts, $26K MRR, 5 agency partners, &lt;5% monthly churn. "State of the Fitness Creator 2026" report published — first owned media asset that establishes Orbit as the intelligence authority in the space. YouTube integration live. This milestone positions us for a Series A at a defensible valuation with genuine traction.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 08 Team -->
+<div class="memo-sec">
+  <div class="sec-num">08</div>
+  <div class="sec-title">Team</div>
+  <div class="div"></div>
+
+  <div class="lede">The founding team is not a group of technologists who spotted a market. We are operators who have lived inside the problem we are solving.</div>
+
+  <p>The founder comes from the talent agency world. Years of managing lifestyle and fitness creators, negotiating brand deals, and watching creators struggle with the same analytics gap every quarter is what produced Orbit — not a market research report. The agency is not just a source of beta users. It is the product laboratory. Every feature in Orbit was designed by watching real creators and real managers hit real friction every day.</p>
+
+  <p>The founding team combines agency operations expertise, product thinking, and technical execution. We are actively hiring the senior AI/ML engineer that this raise enables — a hire that will define the depth of the intelligence layer and the speed at which we can widen the gap between Orbit and any potential competitor.</p>
+
+  <div class="team-row">
+    <div class="team-card">
+      <div class="tc-avatar">F</div>
+      <div class="tc-name">Founder & CEO</div>
+      <div class="tc-role">Agency operations · product vision</div>
+      <div class="tc-bio">Founded and operates a talent agency managing 20–50 lifestyle and fitness creators. Deep relationships with creators, brands, and the influencer marketing ecosystem. Product and business strategy for Orbit.</div>
+    </div>
+    <div class="team-card">
+      <div class="tc-avatar">E</div>
+      <div class="tc-name">Lead Engineer</div>
+      <div class="tc-role">Full-stack · data architecture</div>
+      <div class="tc-bio">Senior full-stack engineer with experience building data-intensive SaaS products. Responsible for the core platform architecture, data pipeline, and API integrations.</div>
+    </div>
+    <div class="team-card">
+      <div class="tc-avatar">+1</div>
+      <div class="tc-name">Senior AI Engineer</div>
+      <div class="tc-role">To be hired with this raise</div>
+      <div class="tc-bio">Target profile: ML engineering background with experience building recommendation systems or personalisation engines. Will own the Gravity Score model, Escape Velocity detection, and Orbit Path projection system.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 09 Risks -->
+<div class="memo-sec">
+  <div class="sec-num">09</div>
+  <div class="sec-title">Risks we are honest about</div>
+  <div class="div"></div>
+
+  <div class="lede">Every investor memo should name the risks plainly. Here are ours, and why we believe they are manageable.</div>
+
+  <div class="risk-row">
+    <div class="risk-item">
+      <span class="risk-badge rb-high">High</span>
+      <div class="risk-text"><strong>Platform API dependency.</strong> Meta and TikTok can restrict or revoke API access with limited notice. This is the most consequential risk in the business. Our mitigation: build the architecture so Orbit degrades gracefully if any single platform API is lost — the product still works with remaining platforms. We maintain strict compliance with platform terms and never request more scopes than we use. We will have multiple platforms live before public launch so no single API failure is catastrophic.</div>
+    </div>
+    <div class="risk-item">
+      <span class="risk-badge rb-high">High</span>
+      <div class="risk-text"><strong>A well-funded competitor enters the space.</strong> If a Later or Metricool adds AI coaching, or a new entrant raises $5M specifically for creator analytics, our differentiation narrows. Our mitigation: the data moat is the primary defence. A new entrant needs 12–18 months to build a comparable benchmarking dataset from scratch. We will be 18 months ahead on the data before they start. We also have the Gravity Score trademark and the agency acquisition flywheel — structural advantages beyond features.</div>
+    </div>
+    <div class="risk-item">
+      <span class="risk-badge rb-med">Medium</span>
+      <div class="risk-text"><strong>Creator churn if early AI insights are too generic.</strong> The product's retention depends entirely on the AI coaching feeling genuinely intelligent and specific. If the first insights a creator sees feel like generic tips they could have googled, they will not return. Our mitigation: we have an explicit quality standard — every AI output must reference specific data points from that creator's own performance history. Generic outputs are a product failure, not a product feature. We will instrument feedback from day one and treat low ratings as critical bugs.</div>
+    </div>
+    <div class="risk-item">
+      <span class="risk-badge rb-med">Medium</span>
+      <div class="risk-text"><strong>Sales cycle length for agency tier.</strong> Agency partnerships are our highest-value revenue line but require a different sales motion than creator self-serve. Agencies are slower to evaluate and onboard. Our mitigation: our own agency is the proof of concept and the case study. We are not cold-calling agencies — we are showing them the product we use ourselves, with data from creators we manage. The first few external agency wins will be warm referrals, not cold outbound.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 Why now -->
+<div class="memo-sec">
+  <div class="sec-num">10</div>
+  <div class="sec-title">Why now</div>
+  <div class="div"></div>
+
+  <div class="lede">Three things are true simultaneously that have never been true before. That convergence is what makes this the right moment for Orbit.</div>
+
+  <p><strong>First, AI is finally good enough to be a strategist.</strong> Two years ago, AI coaching meant generic tips from a rules engine. Today, large language models grounded in specific data can generate insights that feel genuinely intelligent — specific to this creator, this post, this audience. The Orbit AI coaching layer could not have been built to this standard eighteen months ago. It can be built today.</p>
+
+  <p><strong>Second, the creator economy has reached the inflection point where creators take their careers seriously.</strong> The growth from hobby to career means creators are now willing to pay for tools that give them real competitive advantage. The $29–79/month price point that felt like a stretch two years ago now feels like an obvious professional expense for someone earning a meaningful income from content. The market is ready to pay for intelligence, not just reporting.</p>
+
+  <p><strong>Third, nobody has built this yet.</strong> The feature matrix across every competitor in the space confirms what we see every day in practice: there is no AI-native, creator-native, niche-specific intelligence platform at this price point. The window to build it and establish the Gravity Score as the industry standard metric is open. It will not stay open indefinitely. A funded competitor who recognises this gap is 12–18 months away from being a real threat. We are building now.</p>
+
+  <p>The combination of a genuine market gap, a founding team with unique structural advantages, and a product window that has opened but will not stay open — that is why this is the right moment, and why we are moving with urgency.</p>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="cover-orbit-badge" style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:16px">
+    <svg width="16" height="16" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span style="font-family:Georgia,serif;font-size:14px;letter-spacing:3px;color:#4a5280">ORBIT</span>
+  </div>
+  <div class="cta-title">Ready to put a creator<br/>in <span>every orbit.</span></div>
+  <div class="cta-sub">We'd love to walk you through the product, the data, and the roadmap in a 30-minute call.</div>
+  <div class="cta-contact">
+    <div class="cta-btn">hello@orbitapp.io</div>
+    <div class="cta-btn ghost">orbitapp.io</div>
+  </div>
+  <div style="margin-top:20px;font-size:9px;color:#2d3260;line-height:1.6">This document is confidential and intended solely for the named recipient. It does not constitute an offer to sell or a solicitation of an offer to buy any security. Forward-looking statements involve risks and uncertainties. Past performance of the agency business is not indicative of future Orbit results.</div>
+</div>
+
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Investor Memo · Confidential · March 2026</span>
+    <span class="ftr-link">Not for distribution</span>
+    <span class="ftr-link">hello@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
