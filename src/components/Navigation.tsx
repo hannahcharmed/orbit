@@ -37,62 +37,29 @@ const mobileNavItems = [
   { href: '/ai-coach', label: 'AI', icon: Brain },
 ];
 
-function SysLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="px-4 pt-5 pb-1.5 flex items-center gap-2">
-      <div className="w-3 h-px" style={{ background: 'rgba(0,229,255,0.4)' }} />
-      <span className="font-display text-[7px] tracking-[0.25em] uppercase"
-        style={{ color: 'rgba(0,229,255,0.35)' }}>
-        {children}
-      </span>
-    </div>
-  );
-}
-
 function OrbitLogo() {
   return (
-    <div className="px-5 py-5 flex flex-col gap-2"
+    <div className="px-5 py-5 flex items-center gap-3"
       style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-      <div className="flex items-center gap-3">
-        {/* Orbit mark */}
-        <div className="relative flex-shrink-0">
-          <svg width="28" height="28" viewBox="0 0 96 96" fill="none"
-            className="animate-glow-breathe"
-            style={{ filter: 'drop-shadow(0 0 8px rgba(0,229,255,0.5))' }}>
-            <circle cx="48" cy="48" r="34" stroke="#00E5FF" strokeWidth="2.5" strokeLinecap="round"
-              strokeDasharray="170 44" strokeDashoffset="20" fill="none" />
-            <circle cx="48" cy="48" r="34" stroke="#3D7AFF" strokeWidth="1.2" strokeLinecap="round"
-              strokeDasharray="140 70" strokeDashoffset="38" fill="none" opacity="0.55" />
-            <circle cx="48" cy="48" r="34" stroke="#9B7FFF" strokeWidth="0.5"
-              fill="none" opacity="0.2" />
-            {/* Planet dot */}
-            <circle cx="76" cy="48" r="4.5" fill="#00E5FF"
-              style={{ filter: 'drop-shadow(0 0 6px rgba(0,229,255,0.9))' }} />
-            <circle cx="76" cy="48" r="9" stroke="#00E5FF" strokeWidth="0.5" fill="none" opacity="0.3" />
-          </svg>
-        </div>
-        <div>
-          <div className="font-display text-starlight tracking-[5px] text-sm font-700 leading-none"
-            style={{ textShadow: '0 0 20px rgba(0,229,255,0.3)' }}>
-            ORBIT
-          </div>
-          <div className="font-display text-[6.5px] tracking-[0.22em] uppercase mt-1"
-            style={{ color: 'rgba(0,229,255,0.45)' }}>
-            Intelligence
-          </div>
-        </div>
+      <div className="relative flex-shrink-0">
+        <svg width="28" height="28" viewBox="0 0 96 96" fill="none"
+          className="animate-glow-breathe">
+          <circle cx="48" cy="48" r="34" stroke="#9B7FFF" strokeWidth="3" strokeLinecap="round"
+            strokeDasharray="175 40" strokeDashoffset="20" fill="none" />
+          <circle cx="48" cy="48" r="34" stroke="#3D7AFF" strokeWidth="1.5" strokeLinecap="round"
+            strokeDasharray="145 65" strokeDashoffset="38" fill="none" opacity="0.5" />
+          <circle cx="48" cy="48" r="34" stroke="#00E5FF" strokeWidth="0.6"
+            fill="none" opacity="0.18" />
+          <circle cx="76" cy="48" r="5" fill="#9B7FFF" />
+          <circle cx="76" cy="48" r="9" stroke="#9B7FFF" strokeWidth="0.5" fill="none" opacity="0.3" />
+        </svg>
       </div>
-      {/* System status row */}
-      <div className="flex items-center gap-1.5 pl-0.5">
-        <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse"
-          style={{ boxShadow: '0 0 6px rgba(0,255,148,0.8)' }} />
-        <span className="font-mono text-[7px] tracking-[0.12em] uppercase"
-          style={{ color: 'rgba(0,255,148,0.6)' }}>
-          SYS ONLINE
+      <div>
+        <span className="font-display font-700 text-starlight tracking-[4px] text-sm block">
+          ORBIT
         </span>
-        <span className="ml-auto font-mono text-[7px]"
-          style={{ color: 'rgba(255,255,255,0.12)' }}>
-          v2.6
+        <span className="font-display text-[9px] text-text-quaternary">
+          Intelligence
         </span>
       </div>
     </div>
@@ -122,13 +89,10 @@ function NavItem({ href, label, icon: Icon, isActive }: { href: string; label: s
         className="flex-shrink-0 transition-colors"
         style={{ color: isActive ? '#00E5FF' : 'rgba(46,56,88,1)' }}
       />
-      <span className="font-display text-[10px] font-500 tracking-[0.06em] transition-colors"
+      <span className="font-sans text-[12px] font-500 transition-colors"
         style={{ color: isActive ? '#00E5FF' : 'rgba(106,122,156,1)' }}>
         {label}
       </span>
-      {isActive && (
-        <span className="ml-auto font-mono text-[7px]" style={{ color: 'rgba(0,229,255,0.4)' }}>►</span>
-      )}
     </Link>
   );
 }
@@ -148,24 +112,17 @@ export function Navigation() {
       >
         <OrbitLogo />
 
-        <SysLabel>Navigation</SysLabel>
-
-        <div className="flex-1 px-2 pb-2 space-y-0 overflow-y-auto">
+        <div className="flex-1 px-2 py-3 space-y-0 overflow-y-auto">
           {navItems.map(({ href, label, icon }) => (
             <NavItem key={href} href={href} label={label} icon={icon} isActive={pathname === href} />
           ))}
         </div>
 
-        {/* System section */}
         <div className="px-2 pb-2" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-          <SysLabel>System</SysLabel>
-          <NavItem href="/notifications" label="Notifications" icon={Bell} isActive={pathname === '/notifications'} />
-          {unreadCount > 0 && (
-            <div className="absolute right-3 font-mono text-[7px] bg-amber text-deep-void px-1 rounded-sm font-600">
-              {unreadCount}
-            </div>
-          )}
-          <NavItem href="/settings" label="Settings" icon={Settings} isActive={pathname === '/settings'} />
+          <div className="pt-2 space-y-0">
+            <NavItem href="/notifications" label="Notifications" icon={Bell} isActive={pathname === '/notifications'} />
+            <NavItem href="/settings" label="Settings" icon={Settings} isActive={pathname === '/settings'} />
+          </div>
         </div>
 
         {/* Operator panel */}
@@ -182,10 +139,10 @@ export function Navigation() {
               {user?.avatarInitials ?? 'JA'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-display text-[9px] font-600 tracking-wide text-starlight truncate group-hover:text-cyan-pulse transition-colors">
+              <p className="font-sans text-xs font-500 text-starlight truncate group-hover:text-orbit-blue transition-colors">
                 {user?.name ?? 'Jordan Avery'}
               </p>
-              <p className="font-mono text-[7px] truncate" style={{ color: 'rgba(0,229,255,0.35)' }}>
+              <p className="font-mono text-[9px] text-text-quaternary truncate">
                 {user?.handle ?? '@jordan.fit'}
               </p>
             </div>
