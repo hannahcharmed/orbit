@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Orbit — Mobile App Mockups</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#050810;font-family:'Helvetica Neue',Arial,sans-serif;color:#e8f0ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.wrap{max-width:1100px;margin:0 auto;padding:0 0 48px}
+
+.hdr{background:#0a0e1e;border-bottom:1px solid #1a2150;padding:16px 36px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px}
+.wm{font-family:Georgia,serif;font-size:14px;letter-spacing:4px;color:#e8f0ff}
+.ver{background:#1a1f35;border:1px solid #2d3260;border-radius:20px;padding:2px 10px;font-size:9px;color:#a78bfa}
+
+/* Screen grid */
+.screen-section{padding:32px 36px;border-bottom:1px solid #1a2150}
+.screen-section:last-child{border-bottom:none}
+.ss-eye{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px}
+.ss-title{font-family:Georgia,serif;font-size:18px;color:#e8f0ff;margin-bottom:4px}
+.ss-desc{font-size:11px;color:#6b7ab5;line-height:1.6;margin-bottom:20px;max-width:600px}
+.screens-row{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+
+/* Phone frame */
+.phone{flex-shrink:0;position:relative}
+.phone-label{font-size:9px;color:#3D3A9E;letter-spacing:.08em;text-align:center;margin-bottom:8px;text-transform:uppercase}
+.phone-frame{width:220px;background:#0a0e1e;border-radius:36px;border:2px solid #1a2150;overflow:hidden;position:relative}
+.phone-notch{height:28px;background:#080b14;display:flex;align-items:center;justify-content:center;position:relative}
+.phone-notch-pill{width:72px;height:22px;background:#000;border-radius:0 0 16px 16px;position:absolute;top:0;left:50%;transform:translateX(-50%)}
+.phone-time{font-size:9px;color:#e8f0ff;position:absolute;left:16px;top:8px;letter-spacing:.04em}
+.phone-signal{position:absolute;right:14px;top:7px;display:flex;gap:3px;align-items:center}
+.phone-screen{background:#080b14;min-height:440px}
+.phone-home{height:5px;background:#1a2150;border-radius:3px;width:80px;margin:8px auto}
+
+/* Reusable screen internals */
+.s-topbar{padding:12px 14px 8px;display:flex;align-items:center;justify-content:space-between}
+.s-tb-title{font-size:13px;font-weight:500;color:#e8f0ff;letter-spacing:.01em}
+.s-tb-sub{font-size:9px;color:#4a5280;margin-top:1px}
+.s-tb-right{display:flex;gap:6px;align-items:center}
+.s-icon-btn{width:26px;height:26px;background:#0d1228;border:1px solid #1a2150;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.s-avatar{width:26px;height:26px;border-radius:50%;background:#1a1f35;border:1px solid #2d3260;display:flex;align-items:center;justify-content:center;font-size:8px;color:#a78bfa;font-weight:500}
+.s-section{padding:0 14px;margin-bottom:12px}
+.s-sec-eye{font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px}
+.s-card{background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:11px;margin-bottom:8px}
+.s-card:last-child{margin-bottom:0}
+.s-pill{display:inline-block;border-radius:20px;padding:2px 8px;font-size:8px;font-weight:500}
+.sp-purple{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+.sp-blue{background:#06122a;color:#6C63FF;border:1px solid #1a2150}
+.sp-green{background:#0a1a10;color:#4ade80;border:1px solid #173404}
+.sp-amber{background:#1a1000;color:#EF9F27;border:1px solid #412402}
+.sp-gray{background:#111110;color:#B4B2A9;border:1px solid #2d2d2a}
+
+/* Gravity score ring */
+.gs-ring-wrap{display:flex;align-items:center;justify-content:center;padding:10px 0}
+
+/* Bar mini */
+.mini-bar-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.mini-bar-row:last-child{margin-bottom:0}
+.mb-label{font-size:8px;color:#6b7ab5;width:52px;flex-shrink:0}
+.mb-track{flex:1;height:3px;background:#1a2150;border-radius:2px}
+.mb-fill{height:3px;border-radius:2px;background:#6C63FF}
+.mb-val{font-size:8px;color:#4a5280;width:20px;text-align:right;font-family:'Courier New',monospace}
+
+/* Nav bar */
+.s-navbar{background:#0a0e1e;border-top:1px solid #1a2150;padding:8px 0 4px;display:flex;justify-content:space-around}
+.s-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 10px}
+.s-nav-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center}
+.s-nav-label{font-size:7px;color:#4a5280;letter-spacing:.04em}
+.s-nav-label.active{color:#6C63FF}
+.s-nav-dot{width:4px;height:4px;border-radius:50%;background:#a78bfa;margin-top:2px}
+
+/* Sparkline */
+.sparkline{width:100%;height:32px;overflow:visible}
+
+/* Insight card */
+.s-insight{background:#0a0818;border:1px solid #2d1a5e;border-radius:8px;padding:9px;margin-bottom:6px}
+.si-badge{display:inline-block;background:#1a1035;border:1px solid #2d1a5e;border-radius:20px;padding:1px 6px;font-size:7px;color:#a78bfa;margin-bottom:4px}
+.si-text{font-size:9px;color:#8892b0;line-height:1.5}
+.si-text strong{color:#c4b5fd;font-weight:500}
+
+/* Alert card */
+.s-alert{border-radius:8px;padding:9px;margin-bottom:6px;display:flex;gap:8px;align-items:flex-start}
+.s-alert.ev{background:#1a1000;border:1px solid #412402}
+.s-alert.dm{background:#0a0818;border:1px solid #2d1a5e}
+.s-alert.gs{background:#0a1a10;border:1px solid #173404}
+.sa-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.sa-title{font-size:9px;font-weight:500;color:#e8f0ff;margin-bottom:2px}
+.sa-body{font-size:8px;color:#8892b0;line-height:1.4}
+.sa-time{font-size:7px;color:#4a5280;margin-top:3px}
+
+/* Platform row */
+.s-plat-row{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.s-plat-row:last-child{margin-bottom:0}
+.sp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sp-name{font-size:9px;color:#a0aec0;flex:1;font-weight:500}
+.sp-track{width:56px;height:3px;background:#1a2150;border-radius:2px}
+.sp-fill{height:3px;border-radius:2px}
+.sp-val{font-size:8px;color:#6b7ab5;width:28px;text-align:right;font-family:'Courier New',monospace}
+
+/* Orbit path chart */
+.op-chart-area{padding:0 14px;margin-bottom:10px}
+
+/* Trend item */
+.s-trend{display:flex;align-items:center;gap:7px;padding:7px 9px;background:#0d1228;border:1px solid #1a2150;border-radius:7px;margin-bottom:5px}
+.st-rank{font-size:8px;color:#2d3260;width:12px;font-weight:500}
+.st-name{font-size:9px;color:#a0aec0;flex:1}
+.st-badge{font-size:7px;padding:1px 5px;border-radius:10px}
+.st-hot{background:#1a1035;color:#a78bfa;border:1px solid #2d1a5e}
+.st-up{color:#4ade80;font-size:8px}
+
+/* Constellation dots */
+.const-area{padding:10px 14px;display:flex;align-items:center;justify-content:center}
+
+/* Settings rows */
+.s-setting-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #0d1228}
+.s-setting-row:last-child{border-bottom:none}
+.sr-label{font-size:10px;color:#a0aec0}
+.sr-val{font-size:9px;color:#6b7ab5}
+.sr-toggle{width:28px;height:16px;background:#6C63FF;border-radius:8px;position:relative}
+.sr-toggle-off{background:#1a2150}
+.sr-thumb{width:12px;height:12px;background:#fff;border-radius:50%;position:absolute;top:2px;right:2px}
+.sr-thumb-off{right:auto;left:2px}
+
+/* Onboarding screens */
+.ob-center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px 16px}
+.ob-title{font-family:Georgia,serif;font-size:16px;color:#e8f0ff;line-height:1.3;margin-bottom:6px}
+.ob-sub{font-size:9px;color:#6b7ab5;line-height:1.5;margin-bottom:16px}
+.ob-btn{width:100%;background:#6C63FF;border-radius:8px;padding:10px;font-size:10px;font-weight:500;color:#fff;text-align:center}
+.ob-btn.ghost{background:transparent;border:1px solid #2d3260;color:#8892b0;margin-top:6px}
+.ob-progress{display:flex;gap:3px;margin-bottom:20px}
+.ob-dot{height:3px;border-radius:2px;flex:1}
+.ob-dot.done{background:#6C63FF}
+.ob-dot.active{background:#a78bfa}
+.ob-dot.todo{background:#1a2150}
+.ob-plat-btn{display:flex;align-items:center;gap:9px;background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px 12px;margin-bottom:6px;width:100%}
+.opb-name{font-size:10px;color:#e8f0ff;flex:1;text-align:left}
+.opb-action{font-size:8px;color:#6C63FF}
+.ob-niche-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:14px;width:100%}
+.ob-niche-btn{background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:7px;font-size:9px;color:#8892b0;text-align:center}
+.ob-niche-btn.sel{border-color:#6C63FF;color:#e8f0ff;background:#1a1f35}
+
+.ftr{background:#0a0e1e;border-top:1px solid #1a2150;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+.ftr-brand{font-family:Georgia,serif;font-size:10px;letter-spacing:3px;color:#2d3260}
+.ftr-link{font-size:8px;color:#3D3A9E}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 96 96">
+      <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+      <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+      <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.15" stroke-linecap="round"/>
+      <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.06" stroke-linecap="round"/>
+      <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+    </svg>
+    <span class="wm">ORBIT</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:9px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase">Mobile app mockups · iOS</span>
+    <span class="ver">v1.0 · 2026</span>
+  </div>
+</div>
+
+<!-- ONBOARDING FLOW -->
+<div class="screen-section">
+  <div class="ss-eye">Flow 01</div>
+  <div class="ss-title">Onboarding</div>
+  <div class="ss-desc">The four-screen onboarding sequence — account creation, niche selection, platform connect, and the Gravity Score reveal.</div>
+  <div class="screens-row">
+
+    <!-- Screen 1: Welcome -->
+    <div class="phone">
+      <div class="phone-label">Welcome</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span><div class="phone-signal"><div style="width:3px;height:6px;background:#e8f0ff;border-radius:1px"></div><div style="width:3px;height:8px;background:#e8f0ff;border-radius:1px"></div><div style="width:3px;height:10px;background:#e8f0ff;border-radius:1px"></div></div></div>
+        <div class="phone-screen">
+          <div style="position:relative;overflow:hidden;height:180px;background:#080b14;display:flex;align-items:center;justify-content:center">
+            <svg width="200" height="180" viewBox="0 0 200 180" style="position:absolute">
+              <circle cx="100" cy="90" r="70" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.12"/>
+              <circle cx="100" cy="90" r="50" fill="none" stroke="#6C63FF" stroke-width="0.5" opacity="0.1"/>
+              <circle cx="100" cy="90" r="30" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.1"/>
+            </svg>
+            <div style="text-align:center;position:relative;z-index:2">
+              <svg width="36" height="36" viewBox="0 0 96 96">
+                <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M48,18 A30,30 0 0,1 78,48" fill="none" stroke="#a78bfa" stroke-width="2" opacity="0.45" stroke-linecap="round"/>
+                <path d="M78,48 A30,30 0 0,1 48,78" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.18" stroke-linecap="round"/>
+                <path d="M48,78 A30,30 0 0,1 18,48" fill="none" stroke="#a78bfa" stroke-width="0.4" opacity="0.07" stroke-linecap="round"/>
+                <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+              </svg>
+              <div style="font-family:Georgia,serif;font-size:18px;letter-spacing:4px;color:#e8f0ff;margin-top:6px">ORBIT</div>
+            </div>
+          </div>
+          <div class="ob-center" style="padding-top:16px">
+            <div class="ob-title">Your Gravity Score<br/>is waiting.</div>
+            <div class="ob-sub">Find out where you rank among 800+ fitness creators. Takes 60 seconds.</div>
+            <div style="width:100%">
+              <div class="ob-btn">Create account →</div>
+              <div class="ob-btn ghost" style="margin-top:6px">Continue with Google</div>
+            </div>
+            <div style="margin-top:10px;font-size:8px;color:#4a5280">Already have an account? <span style="color:#6C63FF">Sign in</span></div>
+          </div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Niche -->
+    <div class="phone">
+      <div class="phone-label">Niche selection</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen" style="padding:12px 14px">
+          <div class="ob-progress"><div class="ob-dot done"></div><div class="ob-dot active"></div><div class="ob-dot todo"></div><div class="ob-dot todo"></div></div>
+          <div style="font-family:Georgia,serif;font-size:15px;color:#e8f0ff;margin-bottom:4px">What kind of creator are you?</div>
+          <div style="font-size:9px;color:#6b7ab5;margin-bottom:12px;line-height:1.5">This helps us find your true peer group.</div>
+          <div class="ob-niche-grid">
+            <div class="ob-niche-btn sel">Fitness</div>
+            <div class="ob-niche-btn">Lifestyle</div>
+            <div class="ob-niche-btn">Wellness</div>
+            <div class="ob-niche-btn">Nutrition</div>
+            <div class="ob-niche-btn">Beauty</div>
+            <div class="ob-niche-btn">Travel</div>
+          </div>
+          <div style="font-size:8px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px">Sub-niche (optional)</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">
+            <div style="background:#1a1f35;border:1px solid #6C63FF;border-radius:20px;padding:3px 8px;font-size:8px;color:#e8f0ff">Strength</div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 8px;font-size:8px;color:#6b7ab5">Yoga</div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 8px;font-size:8px;color:#6b7ab5">HIIT</div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:20px;padding:3px 8px;font-size:8px;color:#6b7ab5">Running</div>
+          </div>
+          <div class="ob-btn">Continue →</div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Connect -->
+    <div class="phone">
+      <div class="phone-label">Connect platform</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen" style="padding:12px 14px">
+          <div class="ob-progress"><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot active"></div><div class="ob-dot todo"></div></div>
+          <div style="font-family:Georgia,serif;font-size:15px;color:#e8f0ff;margin-bottom:4px">Connect your account</div>
+          <div style="font-size:9px;color:#6b7ab5;margin-bottom:12px;line-height:1.5">Read-only access. We never post, message, or change anything.</div>
+          <div class="ob-plat-btn">
+            <div style="width:20px;height:20px;border-radius:5px;background:#e1306c;display:flex;align-items:center;justify-content:center"><span style="font-size:9px;color:#fff;font-weight:500">IG</span></div>
+            <span class="opb-name">Connect Instagram</span>
+            <span class="opb-action">Connect →</span>
+          </div>
+          <div class="ob-plat-btn">
+            <div style="width:20px;height:20px;border-radius:5px;background:#010101;border:1px solid #2d2d2a;display:flex;align-items:center;justify-content:center"><span style="font-size:9px;color:#69c9d0;font-weight:500">TT</span></div>
+            <span class="opb-name">Connect TikTok</span>
+            <span class="opb-action">Connect →</span>
+          </div>
+          <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:9px;margin-top:8px">
+            <div style="font-size:8px;color:#3D3A9E;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">What Orbit reads</div>
+            <div style="font-size:8px;color:#6b7ab5;line-height:1.6">✓ Post performance · reach · saves<br/>✓ Follower count and growth<br/>✓ Audience demographics<br/>✗ Messages · passwords · payments</div>
+          </div>
+          <div style="text-align:center;font-size:8px;color:#4a5280;margin-top:8px">🔒 Disconnect any time · <span style="color:#6C63FF">Privacy Policy</span></div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Score reveal -->
+    <div class="phone">
+      <div class="phone-label">Score reveal ✦</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen" style="padding:12px 14px">
+          <div class="ob-progress"><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot active"></div></div>
+          <div style="text-align:center;margin-bottom:10px">
+            <div style="font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#3D3A9E;margin-bottom:6px">Your Gravity Score</div>
+            <div style="position:relative;display:inline-block">
+              <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#1a2150" stroke-width="6"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#a78bfa" stroke-width="6" stroke-linecap="round" stroke-dasharray="216" stroke-dashoffset="48" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="28" fill="none" stroke="#1a2150" stroke-width="0.5" opacity="0.5"/>
+                <text x="50" y="46" text-anchor="middle" font-family="Georgia,serif" font-size="26" fill="#e8f0ff" font-weight="400">72</text>
+                <text x="50" y="60" text-anchor="middle" font-size="7" fill="#3D3A9E" letter-spacing="1">GRAVITY</text>
+              </svg>
+            </div>
+            <div style="margin-top:4px"><span class="s-pill sp-purple">#14 of 840 · top 6%</span></div>
+          </div>
+          <div class="s-insight">
+            <div class="si-badge">Orbit AI · first insight</div>
+            <div class="si-text"><strong>Your Tuesday posts get 2.1× the engagement</strong> of your weekend posts. Your audience peaks 6–9am weekdays.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px;text-align:center">
+              <div style="font-family:Georgia,serif;font-size:16px;color:#e8f0ff">6.8%</div>
+              <div style="font-size:7px;color:#4a5280;margin-top:1px;text-transform:uppercase;letter-spacing:.06em">Engagement</div>
+            </div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px;text-align:center">
+              <div style="font-family:Georgia,serif;font-size:16px;color:#4ade80">+9.2K</div>
+              <div style="font-size:7px;color:#4a5280;margin-top:1px;text-transform:uppercase;letter-spacing:.06em">New followers</div>
+            </div>
+          </div>
+          <div class="ob-btn">Go to my dashboard →</div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CORE SCREENS -->
+<div class="screen-section">
+  <div class="ss-eye">Flow 02</div>
+  <div class="ss-title">Core app screens</div>
+  <div class="ss-desc">The five main tab screens — Home, Analytics, AI, Trends, and Profile.</div>
+  <div class="screens-row">
+
+    <!-- Home -->
+    <div class="phone">
+      <div class="phone-label">Home</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div>
+              <div class="s-tb-title">Good morning, Jess</div>
+              <div class="s-tb-sub">Tuesday · Mar 18</div>
+            </div>
+            <div class="s-tb-right">
+              <div class="s-icon-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b7ab5" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              </div>
+              <div class="s-avatar">JL</div>
+            </div>
+          </div>
+          <!-- Gravity Score strip -->
+          <div class="s-section">
+            <div style="background:#0d1228;border:1px solid #2d3260;border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px">
+              <svg width="44" height="44" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#1a2150" stroke-width="7"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#a78bfa" stroke-width="7" stroke-linecap="round" stroke-dasharray="216" stroke-dashoffset="48" transform="rotate(-90 50 50)"/>
+                <text x="50" y="56" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#e8f0ff">72</text>
+              </svg>
+              <div style="flex:1">
+                <div style="font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:2px">Gravity Score™</div>
+                <div style="font-size:9px;color:#4ade80;margin-bottom:2px">+4 this week · rising</div>
+                <div style="font-size:8px;color:#6b7ab5">Top 6% of fitness creators</div>
+              </div>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <!-- Stats row -->
+          <div class="s-section">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px">
+                <div style="font-size:7px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Total reach</div>
+                <div style="font-family:Georgia,serif;font-size:16px;color:#e8f0ff">2.4M</div>
+                <div style="font-size:8px;color:#4ade80">+18.3%</div>
+              </div>
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px">
+                <div style="font-size:7px;color:#3D3A9E;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px">Engagement</div>
+                <div style="font-family:Georgia,serif;font-size:16px;color:#e8f0ff">6.8%</div>
+                <div style="font-size:8px;color:#4ade80">+1.2pts</div>
+              </div>
+            </div>
+          </div>
+          <!-- AI insight -->
+          <div class="s-section">
+            <div class="s-sec-eye">Orbit AI · today</div>
+            <div class="s-insight">
+              <div class="si-badge">Coach</div>
+              <div class="si-text"><strong>Post between 6–8pm today.</strong> Your Thursday engagement peaks then — 62% of your weekly reach comes from Tue/Thu evenings.</div>
+            </div>
+          </div>
+          <!-- Alert -->
+          <div class="s-section">
+            <div class="s-alert ev">
+              <div class="sa-dot" style="background:#EF9F27"></div>
+              <div>
+                <div class="sa-title">Escape Velocity detected</div>
+                <div class="sa-body">Tuesday Reel is 6.2× above baseline. 38hrs left to capitalise.</div>
+                <div class="sa-time">2 hours ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="s-navbar">
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="s-nav-label active">Home</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="s-nav-label">Stats</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 96 96"><path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#4a5280" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="48" r="8" fill="#4a5280"/></svg></div><div class="s-nav-label">AI</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="s-nav-label">Trends</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="s-nav-label">Profile</div></div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Analytics -->
+    <div class="phone">
+      <div class="phone-label">Analytics</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div><div class="s-tb-title">Analytics</div><div class="s-tb-sub">Last 28 days</div></div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:3px 8px;font-size:8px;color:#6b7ab5">28d ▾</div>
+          </div>
+          <!-- Chart -->
+          <div class="s-section">
+            <div class="s-sec-eye">Engagement over time</div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px">
+              <svg width="170" height="50" viewBox="0 0 170 50">
+                <polyline points="5,40 20,35 35,30 50,28 65,22 80,18 95,20 110,14 125,10 140,8 155,6 165,5" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline points="5,40 20,35 35,30 50,28 65,22 80,18 95,20 110,14 125,10 140,8 155,6 165,5" fill="none" stroke="#6C63FF" stroke-width="8" opacity="0.06"/>
+                <circle cx="165" cy="5" r="3" fill="#a78bfa"/>
+              </svg>
+              <div style="display:flex;justify-content:space-between;margin-top:4px">
+                <span style="font-size:7px;color:#4a5280">Mar 1</span>
+                <span style="font-size:8px;color:#a78bfa;font-weight:500">6.8%</span>
+                <span style="font-size:7px;color:#4a5280">Mar 28</span>
+              </div>
+            </div>
+          </div>
+          <!-- Platform breakdown -->
+          <div class="s-section">
+            <div class="s-sec-eye">By platform</div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px">
+              <div class="s-plat-row">
+                <div class="sp-dot" style="background:#e1306c"></div>
+                <span class="sp-name">Instagram</span>
+                <div class="sp-track"><div class="sp-fill" style="width:88%;background:#e1306c"></div></div>
+                <span class="sp-val">8.2%</span>
+              </div>
+              <div class="s-plat-row">
+                <div class="sp-dot" style="background:#69c9d0"></div>
+                <span class="sp-name">TikTok</span>
+                <div class="sp-track"><div class="sp-fill" style="width:68%;background:#69c9d0"></div></div>
+                <span class="sp-val">6.7%</span>
+              </div>
+            </div>
+          </div>
+          <!-- Top content -->
+          <div class="s-section">
+            <div class="s-sec-eye">Top content</div>
+            <div class="s-card" style="display:flex;gap:8px;align-items:center">
+              <div style="width:32px;height:32px;background:#0a0e1e;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><polygon points="5 3 19 12 5 21 5 3" fill="#6C63FF" opacity="0.8"/></svg>
+              </div>
+              <div style="flex:1">
+                <div style="font-size:9px;color:#e8f0ff;margin-bottom:2px">Morning routine reel</div>
+                <div style="font-size:8px;color:#6b7ab5">284K reach · 11.2% eng</div>
+              </div>
+              <span class="s-pill sp-amber">3.4×</span>
+            </div>
+            <div class="s-card" style="display:flex;gap:8px;align-items:center">
+              <div style="width:32px;height:32px;background:#0a0e1e;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><polygon points="5 3 19 12 5 21 5 3" fill="#6C63FF" opacity="0.8"/></svg>
+              </div>
+              <div style="flex:1">
+                <div style="font-size:9px;color:#e8f0ff;margin-bottom:2px">Protein timing guide</div>
+                <div style="font-size:8px;color:#6b7ab5">196K reach · 9.8% eng</div>
+              </div>
+              <span class="s-pill sp-blue">2.8×</span>
+            </div>
+          </div>
+        </div>
+        <div class="s-navbar">
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="s-nav-label">Home</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="s-nav-label active">Stats</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 96 96"><path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#4a5280" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="48" r="8" fill="#4a5280"/></svg></div><div class="s-nav-label">AI</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="s-nav-label">Trends</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="s-nav-label">Profile</div></div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- AI Coach -->
+    <div class="phone">
+      <div class="phone-label">AI coach</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div><div class="s-tb-title">Orbit AI</div><div class="s-tb-sub">Weekly strategy · Mar 18</div></div>
+            <span class="s-pill sp-purple" style="font-size:7px">Pro</span>
+          </div>
+          <div class="s-section">
+            <div class="s-sec-eye">This week's priority</div>
+            <div class="s-insight">
+              <div class="si-badge">Orbit AI</div>
+              <div class="si-text"><strong>Post a follow-up to your Tuesday Reel within 48 hours.</strong> Same format, same audio family. Creators who capitalise on escape velocity within 48hrs see 2.3× sustained growth.</div>
+            </div>
+          </div>
+          <div class="s-section">
+            <div class="s-sec-eye">Recommended actions</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;gap:7px;align-items:flex-start;background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:8px">
+                <div style="width:16px;height:16px;border-radius:50%;background:#1a1035;border:1px solid #2d1a5e;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><span style="font-size:7px;color:#a78bfa;font-weight:500">1</span></div>
+                <div><div style="font-size:9px;color:#e8f0ff;margin-bottom:2px">Post Reel tonight 6–8pm</div><div style="font-size:8px;color:#6b7ab5">Follow up on escape velocity event</div></div>
+              </div>
+              <div style="display:flex;gap:7px;align-items:flex-start;background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:8px">
+                <div style="width:16px;height:16px;border-radius:50%;background:#0d1228;border:1px solid #2d3260;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><span style="font-size:7px;color:#6C63FF;font-weight:500">2</span></div>
+                <div><div style="font-size:9px;color:#e8f0ff;margin-bottom:2px">Try trending audio #FitCheck</div><div style="font-size:8px;color:#6b7ab5">+44% momentum in your niche</div></div>
+              </div>
+              <div style="display:flex;gap:7px;align-items:flex-start;background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:8px">
+                <div style="width:16px;height:16px;border-radius:50%;background:#0d1228;border:1px solid #2d3260;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><span style="font-size:7px;color:#6C63FF;font-weight:500">3</span></div>
+                <div><div style="font-size:9px;color:#e8f0ff;margin-bottom:2px">Shift Saturday post to Thursday</div><div style="font-size:8px;color:#6b7ab5">Your Thu/Fri reach is 1.8× Saturday</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="s-section">
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:8px">
+              <div style="font-size:8px;color:#4a5280;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Ask the coach</div>
+              <div style="background:#080b14;border:1px solid #1a2150;border-radius:6px;padding:7px;font-size:9px;color:#4a5280;display:flex;justify-content:space-between;align-items:center">
+                <span>Why did my last post underperform?</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="s-navbar">
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="s-nav-label">Home</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="s-nav-label">Stats</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 96 96"><path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="48" r="8" fill="#a78bfa"/></svg></div><div class="s-nav-label active">AI</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="s-nav-label">Trends</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="s-nav-label">Profile</div></div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Dark Matter / Trends -->
+    <div class="phone">
+      <div class="phone-label">Dark Matter</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div><div class="s-tb-title">Dark Matter</div><div class="s-tb-sub">Fitness niche · week of Mar 18</div></div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <div class="s-section">
+            <div class="s-sec-eye">Trending audio</div>
+            <div class="s-trend">
+              <span class="st-rank">1</span>
+              <span class="st-name">"Espresso" — Sabrina C.</span>
+              <span class="st-badge st-hot">hot</span>
+            </div>
+            <div class="s-trend">
+              <span class="st-rank">2</span>
+              <span class="st-name">Original sound #FitCheck</span>
+              <span class="st-up">+44%</span>
+            </div>
+            <div class="s-trend">
+              <span class="st-rank">3</span>
+              <span class="st-name">POV workout beat</span>
+              <span class="st-up">+28%</span>
+            </div>
+          </div>
+          <div class="s-section">
+            <div class="s-sec-eye">Rising hashtags</div>
+            <div class="s-trend">
+              <span class="st-rank">1</span>
+              <span class="st-name">#MorningRitual</span>
+              <span class="st-badge st-hot">hot</span>
+            </div>
+            <div class="s-trend">
+              <span class="st-rank">2</span>
+              <span class="st-name">#BodyRecomp</span>
+              <span class="st-up">+31%</span>
+            </div>
+            <div class="s-trend">
+              <span class="st-rank">3</span>
+              <span class="st-name">#75Hard</span>
+              <span class="st-up">+22%</span>
+            </div>
+          </div>
+          <div class="s-section">
+            <div class="s-sec-eye">Format momentum</div>
+            <div class="s-trend">
+              <span class="st-rank">1</span>
+              <span class="st-name">POV workout format</span>
+              <span class="st-badge st-hot">hot</span>
+            </div>
+            <div class="s-trend">
+              <span class="st-rank">2</span>
+              <span class="st-name">Day-in-life (14s)</span>
+              <span class="st-up">+38%</span>
+            </div>
+          </div>
+          <div class="s-section">
+            <div style="background:#0d1228;border:1px solid #2d1a5e;border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:9px;color:#c4b5fd;font-weight:500;margin-bottom:1px">Generate content brief</div>
+                <div style="font-size:8px;color:#6b7ab5">Turn any signal into a ready-to-post idea</div>
+              </div>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="s-navbar">
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="s-nav-label">Home</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="s-nav-label">Stats</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 96 96"><path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#4a5280" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="48" r="8" fill="#4a5280"/></svg></div><div class="s-nav-label">AI</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="s-nav-label active">Trends</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="s-nav-label">Profile</div></div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="phone">
+      <div class="phone-label">Profile</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div><div class="s-tb-title">My profile</div></div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <!-- Profile header -->
+          <div style="padding:0 14px 10px;display:flex;gap:10px;align-items:center">
+            <div style="width:44px;height:44px;border-radius:50%;background:#1a1f35;border:2px solid #3D3A9E;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:14px;color:#a78bfa;flex-shrink:0">JL</div>
+            <div style="flex:1">
+              <div style="font-size:12px;font-weight:500;color:#e8f0ff">Jessica Lee</div>
+              <div style="font-size:9px;color:#4a5280">@jessicalee · Fitness · Strength</div>
+              <div style="display:flex;gap:4px;margin-top:4px"><span class="s-pill sp-purple">Pro</span><span class="s-pill sp-green">Rising</span></div>
+            </div>
+          </div>
+          <!-- Gravity Score -->
+          <div class="s-section">
+            <div style="background:#0d1228;border:1px solid #2d3260;border-radius:8px;padding:10px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <div style="font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E">Gravity Score™</div>
+                <span style="font-family:Georgia,serif;font-size:20px;color:#e8f0ff">72</span>
+              </div>
+              <div class="mini-bar-row"><span class="mb-label">Return viewers</span><div class="mb-track"><div class="mb-fill" style="width:82%"></div></div><span class="mb-val">82</span></div>
+              <div class="mini-bar-row"><span class="mb-label">Save/share depth</span><div class="mb-track"><div class="mb-fill" style="width:76%"></div></div><span class="mb-val">76</span></div>
+              <div class="mini-bar-row"><span class="mb-label">Comment quality</span><div class="mb-track"><div class="mb-fill" style="width:71%"></div></div><span class="mb-val">71</span></div>
+            </div>
+          </div>
+          <!-- Connections -->
+          <div class="s-section">
+            <div class="s-sec-eye">Connected platforms</div>
+            <div class="s-card">
+              <div class="s-setting-row">
+                <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#e1306c"></div><span class="sr-label">Instagram</span></div>
+                <span class="s-pill sp-green" style="font-size:7px">Active</span>
+              </div>
+              <div class="s-setting-row">
+                <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#69c9d0"></div><span class="sr-label">TikTok</span></div>
+                <span class="s-pill sp-green" style="font-size:7px">Active</span>
+              </div>
+              <div class="s-setting-row" style="border-bottom:none">
+                <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#2d3260"></div><span class="sr-label" style="color:#4a5280">Add YouTube</span></div>
+                <span style="font-size:8px;color:#6C63FF">+ Connect</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="s-navbar">
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="s-nav-label">Home</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="s-nav-label">Stats</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 96 96"><path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#4a5280" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="48" r="8" fill="#4a5280"/></svg></div><div class="s-nav-label">AI</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a5280" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="s-nav-label">Trends</div></div>
+          <div class="s-nav-item"><div class="s-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="s-nav-label active">Profile</div></div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FEATURE SCREENS -->
+<div class="screen-section">
+  <div class="ss-eye">Flow 03</div>
+  <div class="ss-title">Feature screens</div>
+  <div class="ss-desc">Deep-dive screens for Escape Velocity, Constellation, and the Escape Velocity push notification.</div>
+  <div class="screens-row">
+
+    <!-- Escape Velocity detail -->
+    <div class="phone">
+      <div class="phone-label">Escape Velocity</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div style="display:flex;align-items:center;gap:6px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7ab5" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+              <div class="s-tb-title">Escape Velocity</div>
+            </div>
+            <span class="s-pill sp-amber">38hrs left</span>
+          </div>
+          <div class="s-section">
+            <div style="background:#1a1000;border:1px solid #412402;border-radius:10px;padding:12px;text-align:center;margin-bottom:10px">
+              <div style="font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#EF9F27;margin-bottom:4px">Baseline multiple</div>
+              <div style="font-family:Georgia,serif;font-size:36px;color:#e8f0ff;line-height:1">6.2×</div>
+              <div style="font-size:9px;color:#8892b0;margin-top:3px">above your 30-day baseline</div>
+            </div>
+            <div style="font-size:9px;font-weight:500;color:#e8f0ff;margin-bottom:6px">Why this post broke out</div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:7px;display:flex;gap:7px;align-items:center">
+                <div style="width:5px;height:5px;border-radius:50%;background:#a78bfa;flex-shrink:0"></div>
+                <div><div style="font-size:8px;color:#c4b5fd;font-weight:500">Audio</div><div style="font-size:8px;color:#6b7ab5">Trending +280% in fitness niche</div></div>
+              </div>
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:7px;display:flex;gap:7px;align-items:center">
+                <div style="width:5px;height:5px;border-radius:50%;background:#a78bfa;flex-shrink:0"></div>
+                <div><div style="font-size:8px;color:#c4b5fd;font-weight:500">Length</div><div style="font-size:8px;color:#6b7ab5">14s — your top 5% length range</div></div>
+              </div>
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:7px;padding:7px;display:flex;gap:7px;align-items:center">
+                <div style="width:5px;height:5px;border-radius:50%;background:#a78bfa;flex-shrink:0"></div>
+                <div><div style="font-size:8px;color:#c4b5fd;font-weight:500">Timing</div><div style="font-size:8px;color:#6b7ab5">7:14am — optimal posting window</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="s-section">
+            <div style="background:#0a0818;border:1px solid #2d1a5e;border-radius:8px;padding:10px">
+              <div class="si-badge" style="margin-bottom:6px">48-hour playbook</div>
+              <div style="font-size:9px;color:#8892b0;line-height:1.6;margin-bottom:8px">Post a <strong style="color:#c4b5fd">follow-up Reel tonight</strong> using the same audio. 14–18 seconds. Post between 6–8pm.</div>
+              <div style="background:#6C63FF;border-radius:6px;padding:8px;text-align:center;font-size:9px;font-weight:500;color:#fff">Create follow-up →</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Constellation -->
+    <div class="phone">
+      <div class="phone-label">Constellation</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div><div class="s-tb-title">Constellation</div><div class="s-tb-sub">Fitness · 100K–500K tier</div></div>
+          </div>
+          <!-- Rank hero -->
+          <div class="s-section">
+            <div style="background:#0d1228;border:1px solid #2d3260;border-radius:10px;padding:10px;text-align:center">
+              <div style="font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#3D3A9E;margin-bottom:4px">Your niche rank</div>
+              <div style="font-family:Georgia,serif;font-size:32px;color:#a78bfa;line-height:1">#14</div>
+              <div style="font-size:9px;color:#6b7ab5;margin-top:2px">of 840 fitness creators · top 6%</div>
+            </div>
+          </div>
+          <!-- Benchmark bars -->
+          <div class="s-section">
+            <div class="s-sec-eye">vs peer median</div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:10px">
+              <div style="margin-bottom:7px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:8px;color:#8892b0">Engagement rate</span><span style="font-size:8px;color:#4ade80">6.8% vs 4.2%</span></div>
+                <div style="height:4px;background:#1a2150;border-radius:2px;position:relative">
+                  <div style="height:4px;width:68%;background:#4ade80;border-radius:2px"></div>
+                  <div style="position:absolute;top:-1px;left:42%;width:1px;height:6px;background:#6C63FF;border-radius:1px"></div>
+                </div>
+              </div>
+              <div style="margin-bottom:7px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:8px;color:#8892b0">Gravity Score</span><span style="font-size:8px;color:#4ade80">72 vs 58</span></div>
+                <div style="height:4px;background:#1a2150;border-radius:2px;position:relative">
+                  <div style="height:4px;width:72%;background:#4ade80;border-radius:2px"></div>
+                  <div style="position:absolute;top:-1px;left:58%;width:1px;height:6px;background:#6C63FF;border-radius:1px"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:8px;color:#8892b0">Follower growth</span><span style="font-size:8px;color:#EF9F27">1.8% vs 1.1%</span></div>
+                <div style="height:4px;background:#1a2150;border-radius:2px;position:relative">
+                  <div style="height:4px;width:55%;background:#EF9F27;border-radius:2px"></div>
+                  <div style="position:absolute;top:-1px;left:34%;width:1px;height:6px;background:#6C63FF;border-radius:1px"></div>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:6px">
+                <div style="display:flex;align-items:center;gap:4px"><div style="width:6px;height:2px;background:#4ade80;border-radius:1px"></div><span style="font-size:7px;color:#4a5280">You</span></div>
+                <div style="display:flex;align-items:center;gap:4px"><div style="width:1px;height:8px;background:#6C63FF"></div><span style="font-size:7px;color:#4a5280">Peer median</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Gap analysis teaser -->
+          <div class="s-section">
+            <div style="background:#0a0818;border:1px solid #2d1a5e;border-radius:8px;padding:9px">
+              <div class="si-badge" style="margin-bottom:5px">Gap analysis</div>
+              <div style="font-size:9px;color:#8892b0;line-height:1.5;margin-bottom:6px">The top 10 creators post 34% more consistently and use trending audio on 60% of Reels. You use it on 20%.</div>
+              <div style="font-size:8px;color:#a78bfa">See full gap analysis →</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+    <!-- Push notification -->
+    <div class="phone">
+      <div class="phone-label">Push notification</div>
+      <div class="phone-frame" style="background:#1a1a2e">
+        <div class="phone-notch" style="background:#1a1a2e"><div class="phone-notch-pill"></div><span class="phone-time" style="color:#e8f0ff">9:41</span></div>
+        <div class="phone-screen" style="background:#1a1a2e;padding:16px 12px">
+          <!-- Lock screen background suggestion -->
+          <div style="text-align:center;margin-bottom:24px">
+            <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:2px">Tuesday, March 18</div>
+            <div style="font-family:Georgia,serif;font-size:42px;color:#fff;line-height:1">9:41</div>
+          </div>
+          <!-- Notification card -->
+          <div style="background:rgba(13,18,40,.95);border:1px solid #2d3260;border-radius:14px;padding:12px;backdrop-filter:blur(10px)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <div style="width:24px;height:24px;border-radius:6px;background:#080b14;border:1px solid #1a2150;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="12" height="12" viewBox="0 0 96 96">
+                  <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+                </svg>
+              </div>
+              <div style="flex:1">
+                <div style="font-size:10px;font-weight:500;color:#e8f0ff">ORBIT</div>
+                <div style="font-size:8px;color:#4a5280">now</div>
+              </div>
+            </div>
+            <div style="font-size:10px;font-weight:500;color:#e8f0ff;margin-bottom:4px">Escape Velocity detected</div>
+            <div style="font-size:9px;color:#8892b0;line-height:1.5;margin-bottom:8px">Your Tuesday Reel is performing <strong style="color:#EF9F27">6.2× above baseline.</strong> You have 48 hours to capitalise. Tap to see your playbook.</div>
+            <div style="display:flex;gap:6px">
+              <div style="flex:1;background:#1a1000;border:1px solid #412402;border-radius:6px;padding:5px;text-align:center;font-size:8px;color:#EF9F27">See playbook</div>
+              <div style="flex:1;background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:5px;text-align:center;font-size:8px;color:#6b7ab5">Later</div>
+            </div>
+          </div>
+          <!-- Second notification -->
+          <div style="background:rgba(13,18,40,.85);border:1px solid #1a2150;border-radius:14px;padding:10px;margin-top:8px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <div style="width:22px;height:22px;border-radius:6px;background:#080b14;border:1px solid #1a2150;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="10" height="10" viewBox="0 0 96 96">
+                  <path d="M18,48 A30,30 0 0,1 48,18" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="18" cy="48" r="8" fill="#a78bfa"/>
+                </svg>
+              </div>
+              <div style="font-size:9px;font-weight:500;color:#e8f0ff;flex:1">Dark Matter · weekly briefing</div>
+              <div style="font-size:7px;color:#4a5280">2m ago</div>
+            </div>
+            <div style="font-size:8px;color:#8892b0;line-height:1.4">3 trending signals in fitness this week. #MorningRitual is hot — tap to see your content brief.</div>
+          </div>
+        </div>
+        <div class="phone-home" style="background:#2d3260"></div>
+      </div>
+    </div>
+
+    <!-- Orbit Path -->
+    <div class="phone">
+      <div class="phone-label">Orbit Path</div>
+      <div class="phone-frame">
+        <div class="phone-notch"><div class="phone-notch-pill"></div><span class="phone-time">9:41</span></div>
+        <div class="phone-screen">
+          <div class="s-topbar">
+            <div><div class="s-tb-title">Orbit Path</div><div class="s-tb-sub">Your growth trajectory</div></div>
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:6px;padding:3px 8px;font-size:8px;color:#6b7ab5">90d ▾</div>
+          </div>
+          <!-- Trajectory chart -->
+          <div class="s-section">
+            <div style="background:#0d1228;border:1px solid #1a2150;border-radius:10px;padding:12px">
+              <svg width="170" height="80" viewBox="0 0 170 80">
+                <line x1="10" y1="70" x2="160" y2="70" stroke="#1a2150" stroke-width="0.5"/>
+                <path d="M10,60 C30,55 50,48 80,38 C100,30 120,22 140,16" fill="none" stroke="#6C63FF" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M140,16 C150,12 155,9 160,8" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 2"/>
+                <path d="M140,16 C148,18 154,16 160,14" fill="none" stroke="#1a2150" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 2"/>
+                <path d="M140,16 C148,22 153,24 160,22" fill="none" stroke="#1a2150" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 2"/>
+                <circle cx="140" cy="16" r="3" fill="#6C63FF"/>
+                <circle cx="160" cy="8" r="3" fill="#a78bfa"/>
+                <text x="10" y="78" font-size="7" fill="#4a5280" font-family="sans-serif">Mar</text>
+                <text x="72" y="78" font-size="7" fill="#4a5280" font-family="sans-serif">Today</text>
+                <text x="140" y="78" font-size="7" fill="#a78bfa" font-family="sans-serif">Jun</text>
+              </svg>
+              <div style="display:flex;gap:10px;margin-top:4px">
+                <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:2px;background:#6C63FF;border-radius:1px"></div><span style="font-size:7px;color:#4a5280">Actual</span></div>
+                <div style="display:flex;align-items:center;gap:4px"><div style="width:10px;height:1px;background:#a78bfa;border-radius:1px;border-top:1px dashed #a78bfa"></div><span style="font-size:7px;color:#4a5280">Projected</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Projections -->
+          <div class="s-section">
+            <div class="s-sec-eye">90-day projections</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-family:Georgia,serif;font-size:14px;color:#4ade80">+48K</div>
+                <div style="font-size:7px;color:#4a5280;margin-top:1px;line-height:1.3">Followers by June</div>
+              </div>
+              <div style="background:#0d1228;border:1px solid #1a2150;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-family:Georgia,serif;font-size:14px;color:#e8f0ff">7.4%</div>
+                <div style="font-size:7px;color:#4a5280;margin-top:1px;line-height:1.3">Projected eng. rate</div>
+              </div>
+              <div style="background:#0d1228;border:1px solid #2d3260;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-family:Georgia,serif;font-size:14px;color:#a78bfa">#8</div>
+                <div style="font-size:7px;color:#4a5280;margin-top:1px;line-height:1.3">Projected rank</div>
+              </div>
+            </div>
+          </div>
+          <!-- Momentum -->
+          <div class="s-section">
+            <div style="background:#0a1a10;border:1px solid #173404;border-radius:8px;padding:9px;display:flex;gap:8px;align-items:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              <div>
+                <div style="font-size:9px;color:#4ade80;font-weight:500">Accelerating</div>
+                <div style="font-size:8px;color:#6b7ab5">Momentum is building. Current trajectory is your strongest in 90 days.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="ftr">
+  <span class="ftr-brand">ORBIT</span>
+  <div style="display:flex;gap:16px">
+    <span class="ftr-link">Mobile App Mockups · iOS · v1.0 · 2026</span>
+    <span class="ftr-link">Confidential</span>
+    <span class="ftr-link">product@orbitapp.io</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
