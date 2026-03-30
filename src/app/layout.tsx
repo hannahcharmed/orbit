@@ -32,8 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="text-starlight antialiased">
-        {/* Film grain */}
-        <div className="grain-overlay" aria-hidden="true" />
         <AuthProvider>
           <AppShell>{children}</AppShell>
         </AuthProvider>
